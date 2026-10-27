@@ -1,7 +1,7 @@
 # Goal
 This is just a simple balatro mod to dump all of the data the rest of the mod
 needs into an easy to parse table
-## JSON format
+## Table format
 ```
 GAME
 ├──STATE:int // Represents the state of the game, google balatro states
@@ -29,13 +29,19 @@ GAME
 │   ├──SMALL:long // the score needed for the small blind
 │   ├──BIG:long // the score needed for the big blind
 │   ├──BOSS:long // the score needed for the boss blind
+│   ├──CURRENT:int // the current blind 0 if next blind is small, 1 big, 2 boss
 │   └──BOSS_TYPE
 │       ├──NAME:str // the name of the boss
-│       ├──DESC:str // the description of the boss
-│       └──BOSS_TYPE
+│       └──DESC:str // the description of the boss
+├──CTX
+│   ├──HANDS:int // the amt of hands remaining
+│   ├──DISCARDS:int // the amt of discards remaining
+│   ├──MAX_HANDS:int
+│   ├──MAX_DISCARDS:int
+│   ├──HANDS_PLAYED:int // bit packed based on hand idx, played in current blind
+│   └──MOST_PLAYED_HAND:int // the hand played the most throughout the run
 ├──HAND_LVL:[arr of hand levels indexed by hand type]
 └──DECK:[cards in deck]
-
 ```
 ## OBJECT formats
 ```
@@ -80,3 +86,24 @@ SPECTRAL
 ├──DESC:str // the desc of the spectral card
 └──SELL_VALUE:int // the sell value of the spectral card
 ```
+```
+STICKER
+├──NAME:str // the name of the joker sticker
+└──DESC:str // the desc of the joker sticker
+```
+```
+EDITION
+├──NAME:str // the name of the joker edition
+└──DESC:str // the desc of the joker edition
+```
+```
+SEAL
+├──NAME:str // the name of the card seal
+└──DESC:str // the desc of the card seal
+```
+```
+ENHANCEMENT
+├──NAME:str // the name of the card enhancement
+└──DESC:str // the desc of the card enhancement
+```
+
