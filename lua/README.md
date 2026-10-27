@@ -48,8 +48,8 @@ GAME
 CARD
 ├──RANK:int // the rank of the card 2-13
 ├──SUIT:int // the suit of the card 0=H, 1=D, 2=C, 3=S
-├──ENHANCEMENT:int // the enhancement of the card
-├──SEAL:int // the seal on the card, 0=NONE
+├──ENHANCEMENT:ENHANCEMENT // the enhancement of the card
+├──SEAL:SEAL // the seal on the card,
 ├──DISABLED:bool
 └──FACE_DOWN:bool
 ```
@@ -57,10 +57,10 @@ CARD
 JOKER
 ├──NAME:str // the name of the joker
 ├──DESC:str // the description of the joker
-├──EDITION:int // the edition of the joker, 0 = NONE
+├──EDITION:EDITION // the edition of the joker,
 ├──SELL_VALUE:int // the sell value of the joker, 0 = unsellable
 ├──DISABLED:bool
-└──STICKER:int // the sticker on the joker, 0 = NONE
+└──STICKER:STICKER // the sticker on the joker,
 ```
 ```
 VOUCHER
