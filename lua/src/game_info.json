@@ -1,8 +1,0 @@
-{
- "id": "game_info", // [required] ! Must be unique. "Steamodded", "Lovely" and "Balatro" are disallowed.
- "name": "Game info dumper", // [required]
- "author": ["lawyer2@purdue.edu"], // [required]
- "description": "dumps all relevant info on the game state into a Lua table for other programs to access", // [required] ! To use more advanced typesetting, specify your description as a localization entry at G.localization.descriptions.Mod[id]
- "prefix": "jsd", // [required] ! Must be unique. This prefix is added to the keys of all objects your mod registers. UNLIKE LEGACY HEADERS, THERE IS NO DEFAULT VALUE.
- "main_file": "main.lua",
-}
