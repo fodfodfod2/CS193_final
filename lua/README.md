@@ -60,6 +60,8 @@ JOKER
 ├──EDITION:EDITION // the edition of the joker,
 ├──SELL_VALUE:int // the sell value of the joker, 0 = unsellable
 ├──DISABLED:bool
+├──INVISIBLE_CNT:int // how long left on invis jokers timer or 0 n/a
+├──PERISH_CNT:int // if perishable, how long left to live or 0 if n/a
 └──STICKER:STICKER // the sticker on the joker,
 ```
 ```
