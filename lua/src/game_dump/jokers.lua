@@ -11,10 +11,20 @@ local facing = {
   ["back"] = true,
 }
 
+
+local function sticker(s)
+  if s == nil then
+    return {"",""}
+  end
+  sendDebugMessage("got stickers:"..s)
+  return stickers[s]
+end
+
 local function edition(e)
   if e == nil then
     return {"",""}
   end
+  sendDebugMessage("got editions:"..e)
   return editions[e]
 end
 
