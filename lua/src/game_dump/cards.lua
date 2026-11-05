@@ -22,22 +22,22 @@ local suits = {
 }
 
 local seals = {
-  ["Gold"] = {"Gold", "Gain +3$ when scored"},
-  ["Red"] = {"Red", "Retrigger this card 1 time"},
-  ["Blue"] = {"Blue", "Creates the Planet card for final played poker hand of round if held in hand"},
-  ["Purple"] = {"Purple","Creates a random Tarot card when discarded"},
+  ["Gold"] = {NAME = "Gold", DESC = "Gain +3$ when scored"},
+  ["Red"] = {NAME = "Red", DESC = "Retrigger this card 1 time"},
+  ["Blue"] = {NAME = "Blue", DESC = "Creates the Planet card for final played poker hand of round if held in hand"},
+  ["Purple"] = {NAME = "Purple", DESC = "Creates a random Tarot card when discarded"},
 }
 
 local enhancements = {
-  ["Base"] = {"",""},
-  ["Bonus card"] = {"bonus", "+30 chips when scored"},
-  ["Mult card"] = {"mult", "+4 mult when scored"},
-  ["Wild card"] = {"wild", "counts as any suit"},
-  ["Glass card"] = {"glass", "*2 mult, 1 in 4 chance to be destroyed when triggered"},
-  ["Steel card"] = {"steel", "*1.5 mult if held in hand when a hand is scored"},
-  ["Stone card"] = {"stone", "+50 chips when scored. Always scores"},
-  ["Gold card"] = {"gold", "+3$ if held in hand at the end of a round"},
-  ["Lucky card"] = {"lucky", "1 in 5 chance for +20 mult, 1 in 15 chance for +20$"},
+  ["Base"] = {NAME = "", DESC = ""},
+  ["Bonus card"] = {NAME = "bonus", DESC = "+30 chips when scored"},
+  ["Mult card"] = {NAME = "mult", DESC = "+4 mult when scored"},
+  ["Wild card"] = {NAME = "wild", DESC = "counts as any suit"},
+  ["Glass card"] = {NAME = "glass", DESC = "*2 mult, 1 in 4 chance to be destroyed when triggered"},
+  ["Steel card"] = {NAME = "steel", DESC = "*1.5 mult if held in hand when a hand is scored"},
+  ["Stone card"] = {NAME = "stone", DESC = "+50 chips when scored. Always scores"},
+  ["Gold card"] = {NAME = "gold", DESC = "+3$ if held in hand at the end of a round"},
+  ["Lucky card"] = {NAME = "lucky", DESC = "1 in 5 chance for +20 mult, 1 in 15 chance for +20$"},
 }
 
 local facing = {
@@ -54,11 +54,10 @@ end
 
 local function seal(s)
   if s == nil then
-    return {"",""}
+    return {NAME = "", DESC = ""}
   end
   return seals[s]
 end
-
 
 function card(c)
   if c == nil or c.base == nil then
