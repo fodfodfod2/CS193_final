@@ -1,19 +1,19 @@
 assert(SMODS.load_file("description.lua"))()
 
 function shop_voucher(v)
-  vars = card_vars(v)
-  key = v.config.center.key
+  local vars = card_vars(v)
+  local key = v.config.center.key
   local name, desc = loc_text("Voucher", key, vars)
-  return { NAME = name, DESC = desc }
+  return {NAME = name, DESC = desc}
 end
 
 
 function owned_voucher(v)
-  local cfg = card_or_center.config or {}
-  vars = { cfg.extra, cfg.dollars, cfg.hand_size,
+  local cfg = v.config or {}
+  local vars = { cfg.extra, cfg.dollars, cfg.hand_size,
   cfg.joker_slot, cfg.hands, cfg.discards }
   local name, desc = loc_text("Voucher", key, vars)
-  return { NAME = name, DESC = desc }
+  return {NAME = name, DESC = desc}
 end
 
 function get_vouchers()

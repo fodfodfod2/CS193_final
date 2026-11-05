@@ -11,7 +11,7 @@ local function dump(o)
     ks = ""
     for k,v in pairs(o) do
       if type(k) ~= 'number' then ks = '"'..k..'"' else ks = k end
-      s = s .. '['..ks..'] = ' .. dump(v) .. ','
+      s = s .. '['..ks..']=' .. dump(v) .. ','
     end
     return s .. '}'
   else
