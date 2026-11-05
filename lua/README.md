@@ -46,7 +46,7 @@ GAME
 ## OBJECT formats
 ```
 CARD
-├──RANK:int // the rank of the card 2-13
+├──RANK:int // the rank of the card 2-14
 ├──SUIT:int // the suit of the card 0=H, 1=D, 2=C, 3=S
 ├──ENHANCEMENT:ENHANCEMENT // the enhancement of the card
 ├──SEAL:SEAL // the seal on the card,
