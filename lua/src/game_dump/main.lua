@@ -15,6 +15,7 @@ local function dump(o)
     end
     return s .. '}'
   else
+    if type(o) == 'string' then return '"'..o..'"' end
     return tostring(o)
   end
 end
