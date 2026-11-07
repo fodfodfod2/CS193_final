@@ -14,8 +14,8 @@ local facing = {
 }
 
 
-local function sticker(s)
-  if s == nil then
+local function sticker(card)
+  if card == nil then
     return {NAME = "", DESC = ""}
   end
   local k, v = "", ""
@@ -35,11 +35,14 @@ local function sticker(s)
   return {NAME = name, DESC = desc}
 end
 
-local function edition(e)
+local function edition(card)
+  e = card.edition
   if e == nil then
     return {NAME = "", DESC = ""}
   end
-  sendDebugMessage("got editions:"..e)
+  if editions[e] == nil then
+    sendDebugMessage("failed to read edition"..e)
+  end
   return editions[e]
 end
 
@@ -54,7 +57,7 @@ function joker(j)
     ["EDITION"] = edition(j.edition),
     ["SELL_VALUE"] = j.sell_cost,
     ["DISABLED"] = j.debuff,
-    ["STICKER"] = sticker(j.sticker),
+    ["STICKER"] = sticker(j),
     ["PERISH_CNT"] = j.perish_tally,
     ["INVIS_ROUNDS"] = j.invis_rounds,
   }
