@@ -28,11 +28,11 @@ end
 
 local function dump_data()
   local d = {}
-  d.STATE = G.GAME.STATE
+  d.STATE = G.STATE
   d.DECK = get_deck()
   d.VOUCHERS_OWNED = get_owned_vouchers()
   d.JOKERS_OWNED = get_owned_jokers()
-
+  d.HAND = get_hand()
   write_file(dump(d))
   sendDebugMessage("wrote playing_cards!")
   return true

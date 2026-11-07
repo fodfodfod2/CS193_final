@@ -95,3 +95,7 @@ end
 function get_deck()
   return get_cards(G.deck)
 end
+
+function get_hand()
+  return get_cards(G.hand)
+end
