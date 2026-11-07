@@ -30,14 +30,14 @@ local seals = {
 
 local enhancements = {
   ["Base"] = {NAME = "", DESC = ""},
-  ["Bonus card"] = {NAME = "bonus", DESC = "+30 chips when scored"},
-  ["Mult card"] = {NAME = "mult", DESC = "+4 mult when scored"},
-  ["Wild card"] = {NAME = "wild", DESC = "counts as any suit"},
-  ["Glass card"] = {NAME = "glass", DESC = "*2 mult, 1 in 4 chance to be destroyed when triggered"},
-  ["Steel card"] = {NAME = "steel", DESC = "*1.5 mult if held in hand when a hand is scored"},
-  ["Stone card"] = {NAME = "stone", DESC = "+50 chips when scored. Always scores"},
-  ["Gold card"] = {NAME = "gold", DESC = "+3$ if held in hand at the end of a round"},
-  ["Lucky card"] = {NAME = "lucky", DESC = "1 in 5 chance for +20 mult, 1 in 15 chance for +20$"},
+  ["Bonus Card"] = {NAME = "bonus", DESC = "+30 chips when scored"},
+  ["Mult Card"] = {NAME = "mult", DESC = "+4 mult when scored"},
+  ["Wild Card"] = {NAME = "wild", DESC = "counts as any suit"},
+  ["Glass Card"] = {NAME = "glass", DESC = "*2 mult, 1 in 4 chance to be destroyed when triggered"},
+  ["Steel Card"] = {NAME = "steel", DESC = "*1.5 mult if held in hand when a hand is scored"},
+  ["Stone Card"] = {NAME = "stone", DESC = "+50 chips when scored. Always scores"},
+  ["Gold Card"] = {NAME = "gold", DESC = "+3$ if held in hand at the end of a round"},
+  ["Lucky Card"] = {NAME = "lucky", DESC = "1 in 5 chance for +20 mult, 1 in 15 chance for +20$"},
 }
 
 local facing = {
@@ -45,16 +45,25 @@ local facing = {
   ["back"] = true,
 }
 
-local function enhancement(e)
+local function enhancement(card)
+  e = card.ability.effect
   if e == nil then
     return {"",""}
+  end
+
+  if enhancements[e] == nil then
+    sendDebugMessage("failed to read enhancement "..e)
   end
   return enhancements[e]
 end
 
-local function seal(s)
+local function seal(card)
+  s = card.seal
   if s == nil then
     return {NAME = "", DESC = ""}
+  end
+  if seals[s] == nil then
+    sendDebugMessage("Failed to read seal "..s)
   end
   return seals[s]
 end
@@ -66,8 +75,8 @@ function card(c)
   return {
     ["SUIT"] = suits[c.base.suit],
     ["RANK"] = c.base.id,
-    ["ENHANCEMENT"] = enhancement(c.ability.effect),
-    ["SEAL"] = seal(c.seal),
+    ["ENHANCEMENT"] = enhancement(c),
+    ["SEAL"] = seal(c),
     ["DISABLED"] = c.debuff,
     ["FACE_DOWN"] = facing[c.facing],
   }
