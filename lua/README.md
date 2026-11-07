@@ -38,9 +38,9 @@ GAME
 │   ├──DISCARDS:int // the amt of discards remaining
 │   ├──MAX_HANDS:int
 │   ├──MAX_DISCARDS:int
-│   ├──HANDS_PLAYED:int // bit packed based on hand idx, played in current blind
+│   ├──HANDS_PLAYED:[table of hand name to int] 1 for played, 0 for not
+│   ├──HAND_LVL:[table of hand name to level]
 │   └──MOST_PLAYED_HAND:int // the hand played the most throughout the run
-├──HAND_LVL:[arr of hand levels indexed by hand type]
 └──DECK:[cards in deck]
 ```
 ## OBJECT formats
