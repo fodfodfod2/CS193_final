@@ -19,15 +19,7 @@ local function dump(o)
   end
 end
 
-local function get_cards(a, fn)
-  local res = {}
-  if a and a.cards then
-    for i, c in ipairs(a.cards) do
-      res[#res + 1] = fn(c)
-    end
-  end
-  return res
-end
+
 
 
 local function write_file(s)
@@ -37,9 +29,9 @@ end
 local function dump_data()
   local d = {}
   d.STATE = G.GAME.STATE
-  d.DECK = get_cards(G.deck, card)
+  d.DECK = get_deck()
   d.VOUCHERS_OWNED = get_owned_vouchers()
-  d.JOKERS_OWNED = get_cards(G.jokers, joker)
+  d.JOKERS_OWNED = get_owned_jokers()
 
   write_file(dump(d))
   sendDebugMessage("wrote playing_cards!")

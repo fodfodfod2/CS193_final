@@ -81,3 +81,17 @@ function card(c)
     ["FACE_DOWN"] = facing[c.facing],
   }
 end
+
+local function get_cards(a)
+  local res = {}
+  if a and a.cards then
+    for i, c in ipairs(a.cards) do
+      res[#res + 1] = card(c)
+    end
+  end
+  return res
+end
+
+function get_deck()
+  return get_cards(G.deck)
+end

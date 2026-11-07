@@ -62,3 +62,17 @@ function joker(j)
     ["INVIS_ROUNDS"] = j.invis_rounds,
   }
 end
+
+local function get_jokers(a)
+  local res = {}
+  if a and a.cards then
+    for i, c in ipairs(a.cards) do
+      res[#res + 1] = joker(c)
+    end
+  end
+  return res
+end
+
+function get_owned_jokers()
+  return get_jokers(G.jokers)
+end
