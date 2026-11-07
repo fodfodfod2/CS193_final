@@ -36,9 +36,9 @@ end
 
 local function dump_data()
   local d = {}
-  d.STATE = G.GAME_STATE
+  d.STATE = G.GAME.STATE
   d.DECK = get_cards(G.deck, card)
-  d.VOUCHERS_OWNED = get_vouchers()
+  d.VOUCHERS_OWNED = get_owned_vouchers()
   d.JOKERS_OWNED = get_cards(G.jokers, joker)
 
   write_file(dump(d))
