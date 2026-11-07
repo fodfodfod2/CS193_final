@@ -90,3 +90,7 @@ end
 function get_owned_jokers()
   return get_jokers(G.jokers)
 end
+
+function get_shop_jokers()
+  return get_jokers(G.shop_jokers)
+end
