@@ -33,6 +33,31 @@ local function dump_data()
   d.VOUCHERS_OWNED = get_owned_vouchers()
   d.JOKERS_OWNED = get_owned_jokers()
   d.HAND = get_hand()
+
+  local ctx = {}
+  ctx.HANDS = G.GAME.current_round.hands_left
+  ctx.DISCARDS = G.GAME.current_round.discards_left
+  ctx.MAX_HANDS = G.GAME.round_resets.hands
+  ctx.MAX_DISCARDS = G.GAME.round_resets.discards
+
+  local hand_lvls = {}
+  local hands_played = {}
+  local max_played = 0
+  local max_played_hand = ""
+  for i, name in ipairs(G.handlist) do
+    local h = G.GAME.hands[name]
+    hand_lvls[name] = h.level
+    hands_played[name] = (h.played_this_round and 1) or 0
+    if h.played > max_played then
+      max_played = h.played
+      max_played_hand = name
+    end
+  end
+  ctx.HANDS_PLAYED = hands_played
+  ctx.MOST_PLAYED_HAND = max_played_hand
+  ctx.HAND_LVLS = hand_lvls
+
+  d.CTX = ctx
   write_file(dump(d))
   sendDebugMessage("wrote playing_cards!")
   return true
