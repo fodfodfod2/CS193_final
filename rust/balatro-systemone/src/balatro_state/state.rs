@@ -1,5 +1,6 @@
+#![allow(unused)]
 
-
+use std::fmt;
 /* This file will hold all of the pub structs and pub enums used for the game state */
 
 #[derive(Debug)]
@@ -51,13 +52,13 @@ pub struct Planet<'a> {
 
 impl<'a> Planet<'a> {
     pub fn new(name:&'a str, desc:&'a str, sell_value:i16, hand:HandType)
-                                                                    -> Self {
-        Planet {
-            name,
-            desc,
-            sell_value,
-            hand,
-        }
+        -> Self {
+            Planet {
+                name,
+                desc,
+                sell_value,
+                hand,
+            }
     }
 }
 
@@ -219,6 +220,50 @@ pub enum Rank {
     King,
     Queen,
     Ace,
+    Other,
+}
+
+impl Rank {
+    fn from_int(int: i16) -> Self {
+        match  int {
+            2 => Rank::Two,
+            3 => Rank::Three,
+            4 => Rank::Four,
+            5 => Rank::Five,
+            6 => Rank::Six,
+            7 => Rank::Seven,
+            8 => Rank::Eight,
+            9 => Rank::Nine,
+            10 => Rank::Ten,
+            11 => Rank::Jack,
+            13 => Rank::King,
+            12 => Rank::Queen,
+            14 => Rank::Ace,
+            _ => Rank::Other,
+
+        }
+    }
+}
+
+impl fmt::Display for Rank {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Rank::Two => write!(f, "Two"),
+            Rank::Three => write!(f, "Three"),
+            Rank::Four => write!(f, "Four"),
+            Rank::Five => write!(f, "Five"),
+            Rank::Six => write!(f, "Six"),
+            Rank::Seven => write!(f, "Seven"),
+            Rank::Eight => write!(f, "Eight"),
+            Rank::Nine => write!(f, "Nine"),
+            Rank::Ten => write!(f, "Ten"),
+            Rank::Jack => write!(f, "Jack"),
+            Rank::King => write!(f, "King"),
+            Rank::Queen => write!(f, "Queen"),
+            Rank::Ace => write!(f, "Ace"),
+            _ => write!(f, "RANK_NOT_RECOGNIZED"),
+        }
+    }
 }
 
 /* This represents the possible suits a card can be */
@@ -228,4 +273,29 @@ pub enum Suit {
     Hearts,
     Spades,
     Clubs,
+    Other,
+}
+
+impl Suit {
+    fn from_str(string: &str) -> Self {
+        match string {
+            "Diamonds" => Suit::Diamonds,
+            "Hearts" => Suit::Hearts,
+            "Spades" => Suit::Spades,
+            "Clubs" => Suit::Clubs,
+            _ => Suit::Other,
+        }
+    }
+}
+
+impl fmt::Display for Suit {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Suit::Diamonds => write!(f, "Diamonds"),
+            Suit::Hearts => write!(f, "Hearts"),
+            Suit::Spades => write!(f, "Spades"),
+            Suit::Clubs => write!(f, "Clubs"),
+            Suit::Other => write!(f, "SUIT_NOT_RECOGNIZED"),
+        }
+    }
 }
