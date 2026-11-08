@@ -3,6 +3,7 @@ local INTERVAL = 1
 assert(SMODS.load_file("cards.lua"))()
 assert(SMODS.load_file("jokers.lua"))()
 assert(SMODS.load_file("vouchers.lua"))()
+assert(SMODS.load_file("consumeables.lua"))()
 
 -- Credit for this func https://blog.stephansama.info/articles/how-to-print-a-lua-table/
 local function dump(o)
