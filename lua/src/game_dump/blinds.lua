@@ -9,11 +9,16 @@ local function blind_amount(kind)
 end
 
 local function blind_tag(kind)
-  local key = G.GAME.round_resets.blind_tags[kind]
-  if not key then return {} end
+  local key = G.GAME.round_resets.blind_tags and
+              G.GAME.round_resets.blind_tags[kind]
+  if not key then
+    sendDebugMessage("failed to get tags for "..kind)
+    return {}
+  end
 
-  local ok, tag = pcall(Tag, key, true, kind)
-  if not (ok and tag) then return {} end
+  local ok, t = pcall(Tag, key, true, kind)
+  if not (ok and t) then return {} end
+  return tag(t)
 end
 
 local function get_small_blind()
@@ -37,11 +42,10 @@ end
 local function get_boss_blind()
   local score = blind_amount("Boss")
   local boss_key = G.GAME.round_resets.blind_choices.Boss
-  local boss = G.P_BLINDS[boss_key]
-  local _, desc = loc_text("Blind", boss_key, {})
+  local name, desc = loc_text("Blind", boss_key, {})
   return {
     SCORE = score,
-    NAME = boss,
+    NAME = name,
     DESC = desc,
   }
 end

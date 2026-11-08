@@ -4,6 +4,8 @@ assert(SMODS.load_file("cards.lua"))()
 assert(SMODS.load_file("jokers.lua"))()
 assert(SMODS.load_file("vouchers.lua"))()
 assert(SMODS.load_file("consumeables.lua"))()
+assert(SMODS.load_file("tags.lua"))()
+assert(SMODS.load_file("blinds.lua"))()
 
 -- Credit for this func https://blog.stephansama.info/articles/how-to-print-a-lua-table/
 local function dump(o)
@@ -49,6 +51,7 @@ local function dump_data()
   d.CONSUMEABLES = get_owned_consumables()
   d.SHOP = get_shop()
   d.BLINDS = get_blinds()
+  d.TAGS_OWNED = get_owned_tags()
 
   local ctx = {}
   ctx.HANDS = G.GAME.current_round.hands_left
@@ -87,6 +90,7 @@ function love.update(dt)
   acc = acc + dt
   if acc >= (INTERVAL or 1) then
     acc = 0
+    sendDebugMessage("Starting dump!")
     local ok, err = xpcall(dump_data, debug.traceback)
     if not ok then sendDebugMessage("dump_data FAILED: " .. tostring(err)) end
   end
