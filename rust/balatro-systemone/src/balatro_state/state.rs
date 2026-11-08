@@ -3,6 +3,7 @@
 use std::fmt;
 use std::collections::HashMap;
 
+
 #[derive(Debug)]
 pub struct GameState {
     state: u8,
@@ -18,9 +19,31 @@ pub struct GameState {
     deck: Vec<Card>
 }
 
+impl GameState {
+    pub fn default() -> Self {
+        GameState {
+            state: 255,
+            hand: Vec::new(),
+            vouchers_owned: Vec::new(),
+            jokers_owned: Vec::new(),
+            tags_owned: Vec::new(),
+            consumables: Vec::new(),
+            shop: Shop::empty(),
+            pack: OpenPack::new(0, PackContents::Other),
+            blinds: [
+                Blind::Small(0, Tag::default()),
+                Blind::Big(0, Tag::default()),
+                Blind::Boss(0, String::from(""), String::from("")),
+            ],
+            ctx: Ctx::default(),
+            deck: Vec::new(),
+        }
+    }
+}
+
 
 #[derive(Debug)]
-struct Ctx {
+pub struct Ctx {
     hands: i8,
     discards: i8,
     max_hands: i8,
@@ -31,8 +54,23 @@ struct Ctx {
     most_played_hand: HandType,
 }
 
+impl Ctx {
+    fn default() -> Self {
+        Ctx {
+            hands: -1,
+            discards: -1,
+            max_hands: -1,
+            max_discards: -1,
+            last_played_consumable: Consumable::Other,
+            hand_played: HashMap::new(),
+            hand_lvls: HashMap::new(),
+            most_played_hand: HandType::HighCard,
+        }
+    }
+}
+
 #[derive(Debug)]
-struct Shop {
+pub struct Shop {
     joker: Vec<Joker>,
     planet: Vec<Planet>,
     tarot: Vec<Tarot>,
@@ -42,11 +80,26 @@ struct Shop {
     vouchers: Vec<Voucher>,
 }
 
+impl Shop {
+    fn empty() -> Self {
+        Shop {
+            joker: Vec::new(),
+            planet: Vec::new(),
+            tarot: Vec::new(),
+            spectral: Vec::new(),
+            card: Vec::new(),
+            packs: Vec::new(),
+            vouchers: Vec::new(),
+        }
+    }
+}
+
 #[derive(Debug)]
-enum Consumable {
+pub enum Consumable {
     Planet(Planet),
     Tarot(Tarot),
     Spectral(Spectral),
+    Other,
 }
 
 
@@ -225,6 +278,13 @@ impl Tag {
             desc,
         }
     }
+
+    pub fn default() -> Self {
+        Tag {
+            name: String::from(""),
+            desc: String::from(""),
+        }
+    }
 }
 
 
@@ -235,6 +295,7 @@ pub enum PackType {
     Planet,
     Tarot,
     Spectral,
+    Other,
 }
 
 #[derive(Debug)]
@@ -264,20 +325,19 @@ pub enum PackContents{
     Planet(Vec<Planet>),
     Tarot(Vec<Tarot>),
     Spectral(Vec<Spectral>),
+    Other,
 }
 
 #[derive(Debug)]
 pub struct OpenPack {
-    pack_type: PackType,
     select_num: i8,
     items: PackContents,
 }
 
 impl OpenPack {
-    pub fn new(pack_type: PackType, select_num: i8, items: PackContents)
+    pub fn new(select_num: i8, items: PackContents)
         -> Self {
             OpenPack {
-                pack_type,
                 select_num,
                 items,
             }
@@ -384,7 +444,7 @@ pub enum Suit {
 }
 
 impl Suit {
-    fn from_str(string: &str) -> Self {
+    fn from(string: &str) -> Self {
         match string {
             "Diamonds" => Suit::Diamonds,
             "Hearts" => Suit::Hearts,

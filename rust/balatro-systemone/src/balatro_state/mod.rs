@@ -1,2 +1,2 @@
 pub mod balatro_state;
-mod state;
+pub(super) mod state;

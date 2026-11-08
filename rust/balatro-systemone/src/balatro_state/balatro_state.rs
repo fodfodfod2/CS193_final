@@ -1,5 +1,7 @@
 #![allow(unused)]
 
+use crate::balatro_state::state::*;
+
 use std::fs;
 use mlua::{Lua, Table};
 
@@ -15,5 +17,9 @@ fn get_master_table() -> Table {
     let lua_str = format!("return {}", read_file());
     let res: Table = lua.load(&lua_str).eval().unwrap();
     res
+}
+
+pub fn read_game_state() {
+    let table: Table = get_master_table();
 }
 
