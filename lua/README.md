@@ -8,16 +8,16 @@ GAME
 ├──HAND:[cards in hand] // This is only updated if the state is relevant
 ├──VOUCHERS_OWNED:[vouchers owned]
 ├──JOKERS_OWNED:[jokers owned]
+├──TAGS_OWNED:[jokers owned]
 ├──CONSUMABLES // consumables owned
 │   ├──PLANET:[arr of planets held]
 │   ├──TAROT:[arr of tarot held]
 │   └──SPECTRAL:[arr of spectral held]
 ├──SHOP // this contains items in the shop, only updated at new shops
-│   │   // each of these items will be [item, price]
-│   │   // for example PLANET:[[MARS,2],[JUPITER,3]]
 │   ├──JOKER:[arr of jokers in shop]
 │   ├──PLANET:[arr of planets in shop]
 │   ├──TAROT:[arr of tarot in shop]
+│   ├──SPECTRAL:[arr of spectral in shop]
 │   ├──CARD:[arr of cards in shop]
 │   ├──PACKS:[arr of the packs offered in the shop]
 │   └──VOUCHERS:[arr of the vouchers offered in the shop]
@@ -27,17 +27,24 @@ GAME
 │   └──ITEMS:[arr of items in the pack]
 ├──BLINDS
 │   ├──SMALL:long // the score needed for the small blind
+│   │    ├──SCORE:long
+│   │    └──TAG:Tag // the tag gained by skipping the blind
 │   ├──BIG:long // the score needed for the big blind
+│   │    ├──SCORE:long
+│   │    └──TAG:Tag // the tag gained by skipping the blind
 │   ├──BOSS:long // the score needed for the boss blind
-│   ├──CURRENT:int // the current blind 0 if next blind is small, 1 big, 2 boss
-│   └──BOSS_TYPE
-│       ├──NAME:str // the name of the boss
-│       └──DESC:str // the description of the boss
+│   │    ├──SCORE:long
+│   │    ├──NAME:str // the name of the boss
+│   │    └──DESC:str // the description of the boss
+│   └──CURRENT:int // the current blind 0 if next blind is small, 1 big, 2 boss
 ├──CTX
 │   ├──HANDS:int // the amt of hands remaining
 │   ├──DISCARDS:int // the amt of discards remaining
 │   ├──MAX_HANDS:int
 │   ├──MAX_DISCARDS:int
+│   ├──LAST_PLAYED_CONSUMEABLE // the last played tarot or planet card
+│   │   ├──TAROT:{TAROT} //iff applicable
+│   │   └──PLANET:{PLANET} // iff applicable
 │   ├──HANDS_PLAYED:[table of hand name to int] 1 for played, 0 for not
 │   ├──HAND_LVL:[table of hand name to level]
 │   └──MOST_PLAYED_HAND:int // the hand played the most throughout the run
@@ -107,5 +114,10 @@ SEAL
 ENHANCEMENT
 ├──NAME:str // the name of the card enhancement
 └──DESC:str // the desc of the card enhancement
+```
+```
+TAG
+├──NAME:str // the name of the card tag
+└──DESC:str // the desc of the card tag
 ```
 
