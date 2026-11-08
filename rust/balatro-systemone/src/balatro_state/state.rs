@@ -6,7 +6,7 @@ use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct GameState {
-    state: u8,
+    state: State,
     hand: Vec<Card>,
     vouchers_owned: Vec<Voucher>,
     jokers_owned: Vec<Joker>,
@@ -15,6 +15,7 @@ pub struct GameState {
     shop: Shop,
     pack: OpenPack,
     blinds: [Blind; 3],
+    current_blind: u8,
     ctx: Ctx,
     deck: Vec<Card>
 }
@@ -22,7 +23,7 @@ pub struct GameState {
 impl GameState {
     pub fn default() -> Self {
         GameState {
-            state: 255,
+            state: State::Other,
             hand: Vec::new(),
             vouchers_owned: Vec::new(),
             jokers_owned: Vec::new(),
@@ -35,6 +36,7 @@ impl GameState {
                 Blind::Big(0, Tag::default()),
                 Blind::Boss(0, String::from(""), String::from("")),
             ],
+            current_blind: 255,
             ctx: Ctx::default(),
             deck: Vec::new(),
         }
@@ -107,24 +109,56 @@ pub enum Consumable {
 
 #[derive(Debug)]
 pub struct Card {
-    rank:Rank,
-    suit:Suit,
-    enhancement:Enhancement,
-    seal:Seal,
-    disabled:bool,
-    face_down:bool,
+    rank: Rank,
+    suit: Suit,
+    enhancement: Enhancement,
+    seal: Seal,
+    disabled: bool,
+    face_down: bool,
+}
+
+impl Card {
+    pub fn new(rank: Rank, suit: Suit, enhancement: Enhancement, seal: Seal,
+        disabled: bool, face_down: bool) -> Self {
+        Card {
+            rank,
+            suit,
+            enhancement,
+            seal,
+            disabled,
+            face_down,
+        }
+    }
 }
 
 /* This will represent a Joker the player can own or buy */
 #[derive(Debug)]
 pub struct Joker {
-    name:String,
-    desc:String,
-    edition:Edition,
-    sell_value:i16,
-    disabled:bool,
-    invisible_cnt:i16,
-    sticker:Sticker,
+    name: String,
+    desc: String,
+    edition: Edition,
+    sell_value: i16,
+    disabled: bool,
+    invisible_cnt: i16,
+    perish_cnt: i16,
+    sticker: Sticker,
+}
+
+impl Joker {
+    pub fn new(name: String, desc: String, edition: Edition, sell_value: i16,
+        disabled: bool, invisible_cnt: i16, perish_cnt: i16,
+        sticker: Sticker) -> Self {
+        Joker {
+            name,
+            desc,
+            edition,
+            sell_value,
+            disabled,
+            invisible_cnt,
+            perish_cnt,
+            sticker,
+        }
+    }
 }
 
 /* This will represent a Voucher */
@@ -369,6 +403,31 @@ pub enum HandType {
     FiveOfAKind,
     FlushHouse,
     FlushFive,
+    Other,
+}
+
+impl HandType {
+    pub fn from_str(string: &str) -> Self {
+        match string {
+            "High Card" => HandType::HighCard,
+            "Pair" => HandType::Pair,
+            "Two Pair" => HandType::TwoPair,
+            "Three Of A Kind" => HandType::ThreeOfAKind,
+            "Straight" => HandType::Straight,
+            "Flush" => HandType::Flush,
+            "Full House" => HandType::FullHouse,
+            "Four Of A Kind" => HandType::FourOfAKind,
+            "Straight Flush" => HandType::StraightFlush,
+            "Royal Flush" => HandType::RoyalFlush,
+            "Five Of A Kind" => HandType::FiveOfAKind,
+            "Flush House" => HandType::FlushHouse,
+            "Flush Five" => HandType::FlushFive,
+            _ => {
+                println!("Failed to match string to a hand type");
+                HandType::Other
+            },
+        }
+    }
 }
 
 /* This represents the possible ranks a card can be */
@@ -391,7 +450,7 @@ pub enum Rank {
 }
 
 impl Rank {
-    fn from_int(int: i16) -> Self {
+    pub fn from_int(int: i16) -> Self {
         match  int {
             2 => Rank::Two,
             3 => Rank::Three,
@@ -444,7 +503,7 @@ pub enum Suit {
 }
 
 impl Suit {
-    fn from(string: &str) -> Self {
+    pub fn from_str(string: &str) -> Self {
         match string {
             "Diamonds" => Suit::Diamonds,
             "Hearts" => Suit::Hearts,
@@ -466,3 +525,66 @@ impl fmt::Display for Suit {
         }
     }
 }
+
+#[derive(Debug)]
+pub enum State {
+    BlindSelect,
+    Tutorial,
+    SelectingHand,
+    PlayTarot,
+    HandPlayed,
+    RoundEval,
+    DrawToHand,
+    Shop,
+    TarotPack,
+    PlanetPack,
+    SpectralPack,
+    StandardPack,
+    BuffPack,
+    MainMenu,
+    GameOver,
+    NewRound,
+    Splash,
+    RedeemCustomVoucher,
+    CustomPack,
+    Sandbox,
+    Other,
+}
+
+impl State {
+    pub fn from(int: i32) -> Self {
+        match int {
+            1 => State::SelectingHand,
+            2 => State::HandPlayed,
+            3 => State::DrawToHand,
+            4 => State::GameOver,
+            5 => State::Shop,
+            6 => State::PlayTarot,
+            7 => State::BlindSelect,
+            8 => State::RoundEval,
+            9 => State::TarotPack,
+            10 => State::PlanetPack,
+            11 => State::MainMenu,
+            12 => State::Tutorial,
+            13 => State::Splash,
+            14 => State::Sandbox,
+            15 => State::SpectralPack,
+            17 => State::StandardPack,
+            18 => State::BuffPack,
+            19 => State::NewRound,
+            998 => State::RedeemCustomVoucher,
+            999 => State::CustomPack,
+            _ => State::Other,
+        }
+    }
+
+    pub fn is_decision_state(&self) -> bool {
+        match self {
+            State::SelectingHand | State::TarotPack | State::PlanetPack |
+                State::SpectralPack | State::StandardPack | State::BuffPack |
+                State::Shop => true,
+            _ => false,
+        }
+    }
+}
+
