@@ -22,6 +22,17 @@ local function dump(o)
 end
 
 
+local function get_shop()
+  local s = {}
+  s.JOKER = get_shop_jokers()
+  s.PLANET = get_shop_planets()
+  s.TAROT = get_shop_tarots()
+  s.SPECTRAL = get_shop_spectrals()
+  s.CARD = get_shop_cards()
+  s.VOUCHER = get_shop_vouchers()
+  return s
+end
+
 
 
 local function write_file(s)
@@ -35,12 +46,15 @@ local function dump_data()
   d.VOUCHERS_OWNED = get_owned_vouchers()
   d.JOKERS_OWNED = get_owned_jokers()
   d.HAND = get_hand()
+  d.CONSUMEABLES = get_owned_consumables()
+  d.SHOP = get_shop()
 
   local ctx = {}
   ctx.HANDS = G.GAME.current_round.hands_left
   ctx.DISCARDS = G.GAME.current_round.discards_left
   ctx.MAX_HANDS = G.GAME.round_resets.hands
   ctx.MAX_DISCARDS = G.GAME.round_resets.discards
+  ctx.LAST_PLAYED_CONSUMEABLE = get_last_played_planet_or_tarot()
 
   local hand_lvls = {}
   local hands_played = {}
@@ -74,7 +88,6 @@ function love.update(dt)
     acc = 0
     local ok, err = xpcall(dump_data, debug.traceback)
     if not ok then sendDebugMessage("dump_data FAILED: " .. tostring(err)) end
-    sendDebugMessage("tick")
   end
 end
 

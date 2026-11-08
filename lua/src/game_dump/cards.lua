@@ -85,8 +85,12 @@ end
 local function get_cards(a)
   local res = {}
   if a and a.cards then
-    for i, c in ipairs(a.cards) do
-      res[#res + 1] = card(c)
+    for _, c in ipairs(a.cards) do
+      local set = c.ability.set
+      if c.base and (set == "Default" or set == "Enhanced") then
+        -- if c is a card
+        res[#res + 1] = card(c)
+      end
     end
   end
   return res
@@ -98,4 +102,8 @@ end
 
 function get_hand()
   return get_cards(G.hand)
+end
+
+function get_shop_cards()
+  return get_cards(G.shop_jokers)
 end

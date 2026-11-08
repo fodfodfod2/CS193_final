@@ -8,7 +8,7 @@ function shop_voucher(v)
 end
 
 
-function owned_voucher(v, key)
+local function owned_voucher(v, key)
   local cfg = v.config or {}
   local vars = { cfg.extra, cfg.dollars, cfg.hand_size,
   cfg.joker_slot, cfg.hands, cfg.discards }
@@ -21,6 +21,15 @@ function get_owned_vouchers()
   for key in pairs(G.GAME.used_vouchers or {}) do
     local center = G.P_CENTERS[key]
     if center then res[#res + 1] = owned_voucher(center, key) end
+  end
+  return res
+end
+
+function get_shop_vouchers()
+  local res = {}
+  for key in pairs(G.shop_vouchers and G.shop_vouchers.cards or {}) do
+    local center = G.P_CENTERS[key]
+    if center then res[#res + 1] = shop_voucher(center, key) end
   end
   return res
 end

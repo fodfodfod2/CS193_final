@@ -3,7 +3,7 @@ assert(SMODS.load_file("description.lua"))()
 
 
 local function tarot(card)
-    local name, desc = loc_text("tarot", card.config.center.key, card_vars(card))
+    local name, desc = loc_text("Tarot", card.config.center.key, card_vars(card))
     local res = {}
     res.NAME = name
     res.DESC = desc
@@ -13,7 +13,7 @@ local function tarot(card)
 end
 
 local function planet(card)
-    local name, desc = loc_text("planet", card.config.center.key, card_vars(card))
+    local name, desc = loc_text("Planet", card.config.center.key, card_vars(card))
     local res = {}
     res.NAME = name
     res.DESC = desc
@@ -24,7 +24,7 @@ local function planet(card)
 end
 
 local function spectral(card)
-    local name, desc = loc_text("spectral", card.config.center.key, card_vars(card))
+    local name, desc = loc_text("Spectral", card.config.center.key, card_vars(card))
     local res = {}
     res.NAME = name
     res.DESC = desc
@@ -46,15 +46,15 @@ local function get_consumeable_from_area(area, set, fn)
 end
 
 local function get_planets(area)
-  return get_consumeable_from_area(area, "planet", planet)
+  return get_consumeable_from_area(area, "Planet", planet)
 end
 
 local function get_tarots(area)
-  return get_consumeable_from_area(area, "tarot", tarot)
+  return get_consumeable_from_area(area, "Tarot", tarot)
 end
 
 local function get_spectrals(area)
-  return get_consumeable_from_area(area, "spectral", spectral)
+  return get_consumeable_from_area(area, "Spectral", spectral)
 end
 
 function get_owned_consumables()
@@ -77,4 +77,31 @@ end
 
 function get_shop_spectrals()
   return get_spectrals(G.shop_jokers)
+end
+
+function get_last_played_planet_or_tarot()
+  local key = G.GAME.last_tarot_planet
+  local center = key and G.P_CENTERS[key]
+  if not center then return false end
+
+  local set = center.set
+
+  local res = {
+    TAROT = {},
+    PLANET = {},
+  }
+
+  if set == "Tarot" then
+    local name, desc = loc_text("Tarot", key, {})
+    res.TAROT = {NAME = name, desc = DESC, SELL_VALUE = 0}
+  elseif set == "Planet" then
+    local name, desc = loc_text("Planet", key, {})
+    res.PLANET = {
+      NAME = name,
+      desc = DESC, SELL_VALUE = 0, 
+      HAND_ID = center.config.hand_type,
+    }
+  end
+
+  return res
 end

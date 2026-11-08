@@ -50,9 +50,10 @@ local function edition(card)
 end
 
 function joker(j)
-  if j == nil or j.base == nil then
+  if j == nil or j.base == nil or j.ability.set ~= "Joker" then
     return nil
   end
+
 
   local invis = 0
   if j.ability.name == "Invisible Joker" then
