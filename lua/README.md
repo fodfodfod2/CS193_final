@@ -26,13 +26,13 @@ GAME
 │   ├──SELECT_NUM:int // the numer of items you can select
 │   └──ITEMS:[arr of items in the pack]
 ├──BLINDS
-│   ├──SMALL:long // the score needed for the small blind
+│   ├──SMALL
 │   │    ├──SCORE:long
 │   │    └──TAG:Tag // the tag gained by skipping the blind
-│   ├──BIG:long // the score needed for the big blind
+│   ├──BIG
 │   │    ├──SCORE:long
 │   │    └──TAG:Tag // the tag gained by skipping the blind
-│   ├──BOSS:long // the score needed for the boss blind
+│   ├──BOSS
 │   │    ├──SCORE:long
 │   │    ├──NAME:str // the name of the boss
 │   │    └──DESC:str // the description of the boss
