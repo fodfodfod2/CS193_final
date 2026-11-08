@@ -186,14 +186,8 @@ fn parse_joker(table: Table) -> Joker {
     let sell_value: i16 = table
         .get("SELL_VALUE")
         .expect("Failed to parse sell_value while parsing Joker");
-    let invis_cnt: i16 = match table.get("INVISIBLE_CNT") {
-        Ok(v) => v,
-        Err(_) => 0,
-    };
-    let perish_cnt: i16 = match table.get("PERISH_CNT") {
-        Ok(v) => v,
-        Err(_) => 0,
-    };
+    let invis_cnt: i16 = table.get("INVISIBLE_CNT").unwrap_or_default();
+    let perish_cnt: i16 = table.get("PERISH_CNT").unwrap_or_default();
 
     let edition = parse_edition(edition_t);
     let sticker = parse_sticker(sticker_t);

@@ -148,6 +148,7 @@ pub struct Joker {
 }
 
 impl Joker {
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         name: String,
         desc: String,
@@ -562,15 +563,12 @@ impl State {
     }
 
     pub fn is_decision_state(&self) -> bool {
-        match self {
-            State::SelectingHand
+        matches!(self, State::SelectingHand
             | State::TarotPack
             | State::PlanetPack
             | State::SpectralPack
             | State::StandardPack
             | State::BuffPack
-            | State::Shop => true,
-            _ => false,
-        }
+            | State::Shop)
     }
 }
