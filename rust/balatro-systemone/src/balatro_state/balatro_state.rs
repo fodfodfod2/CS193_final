@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use std::fs;
 use mlua::{Lua, Table};
 
