@@ -1,8 +1,7 @@
 #![allow(unused)]
 
-use std::fmt;
 use std::collections::HashMap;
-
+use std::fmt;
 
 #[derive(Debug)]
 pub struct GameState {
@@ -17,7 +16,7 @@ pub struct GameState {
     blinds: [Blind; 3],
     current_blind: u8,
     ctx: Ctx,
-    deck: Vec<Card>
+    deck: Vec<Card>,
 }
 
 impl GameState {
@@ -42,7 +41,6 @@ impl GameState {
         }
     }
 }
-
 
 #[derive(Debug)]
 pub struct Ctx {
@@ -104,7 +102,6 @@ pub enum Consumable {
     Other,
 }
 
-
 /* This file will hold all of the pub structs and pub enums used for the game state */
 
 #[derive(Debug)]
@@ -118,8 +115,14 @@ pub struct Card {
 }
 
 impl Card {
-    pub fn new(rank: Rank, suit: Suit, enhancement: Enhancement, seal: Seal,
-        disabled: bool, face_down: bool) -> Self {
+    pub fn new(
+        rank: Rank,
+        suit: Suit,
+        enhancement: Enhancement,
+        seal: Seal,
+        disabled: bool,
+        face_down: bool,
+    ) -> Self {
         Card {
             rank,
             suit,
@@ -145,9 +148,16 @@ pub struct Joker {
 }
 
 impl Joker {
-    pub fn new(name: String, desc: String, edition: Edition, sell_value: i16,
-        disabled: bool, invisible_cnt: i16, perish_cnt: i16,
-        sticker: Sticker) -> Self {
+    pub fn new(
+        name: String,
+        desc: String,
+        edition: Edition,
+        sell_value: i16,
+        disabled: bool,
+        invisible_cnt: i16,
+        perish_cnt: i16,
+        sticker: Sticker,
+    ) -> Self {
         Joker {
             name,
             desc,
@@ -164,50 +174,46 @@ impl Joker {
 /* This will represent a Voucher */
 #[derive(Debug)]
 pub struct Voucher {
-    name:String,
-    desc:String,
+    name: String,
+    desc: String,
 }
 
 impl Voucher {
-    pub fn new(name:String, desc:String) -> Self {
-        Voucher {
-            name,
-            desc,
-        }
+    pub fn new(name: String, desc: String) -> Self {
+        Voucher { name, desc }
     }
 }
 
 /* This will represent a Planet card */
 #[derive(Debug)]
 pub struct Planet {
-    name:String,
-    desc:String,
-    sell_value:i16,
-    hand:HandType,
+    name: String,
+    desc: String,
+    sell_value: i16,
+    hand: HandType,
 }
 
 impl Planet {
-    pub fn new(name:String, desc:String, sell_value:i16, hand:HandType)
-        -> Self {
-            Planet {
-                name,
-                desc,
-                sell_value,
-                hand,
-            }
+    pub fn new(name: String, desc: String, sell_value: i16, hand: HandType) -> Self {
+        Planet {
+            name,
+            desc,
+            sell_value,
+            hand,
+        }
     }
 }
 
 /* This will represent a Tarot card */
 #[derive(Debug)]
 pub struct Tarot {
-    name:String,
-    desc:String,
-    sell_value:i16,
+    name: String,
+    desc: String,
+    sell_value: i16,
 }
 
 impl Tarot {
-    pub fn new(name:String, desc:String, sell_value:i16) -> Self {
+    pub fn new(name: String, desc: String, sell_value: i16) -> Self {
         Tarot {
             name,
             desc,
@@ -219,13 +225,13 @@ impl Tarot {
 /* This will represent a spectral card */
 #[derive(Debug)]
 pub struct Spectral {
-    name:String,
-    desc:String,
-    sell_value:i16,
+    name: String,
+    desc: String,
+    sell_value: i16,
 }
 
 impl Spectral {
-    pub fn new(name:String, desc:String, sell_value:i16) -> Self {
+    pub fn new(name: String, desc: String, sell_value: i16) -> Self {
         Spectral {
             name,
             desc,
@@ -237,80 +243,65 @@ impl Spectral {
 /* This will store a sticker applicable to jokers */
 #[derive(Debug)]
 pub struct Sticker {
-    name:String,
-    desc:String,
+    name: String,
+    desc: String,
 }
 
 impl Sticker {
-    pub fn new(name:String, desc:String) -> Self {
-        Sticker {
-            name,
-            desc,
-        }
+    pub fn new(name: String, desc: String) -> Self {
+        Sticker { name, desc }
     }
 }
 
 /* This will store an edition applicable to jokers */
 #[derive(Debug)]
 pub struct Edition {
-    name:String,
-    desc:String,
+    name: String,
+    desc: String,
 }
 
 impl Edition {
-    pub fn new(name:String, desc:String) -> Self {
-        Edition {
-            name,
-            desc,
-        }
+    pub fn new(name: String, desc: String) -> Self {
+        Edition { name, desc }
     }
 }
 
 /* This will store a Seal applicable to cards */
 #[derive(Debug)]
 pub struct Seal {
-    name:String,
-    desc:String,
+    name: String,
+    desc: String,
 }
 
 impl Seal {
-    pub fn new(name:String, desc:String) -> Self {
-        Seal {
-            name,
-            desc,
-        }
+    pub fn new(name: String, desc: String) -> Self {
+        Seal { name, desc }
     }
 }
 
 /* This will store a Enhancement applicable to cards */
 #[derive(Debug)]
 pub struct Enhancement {
-    name:String,
-    desc:String,
+    name: String,
+    desc: String,
 }
 
 impl Enhancement {
-    pub fn new(name:String, desc:String) -> Self {
-        Enhancement {
-            name,
-            desc,
-        }
+    pub fn new(name: String, desc: String) -> Self {
+        Enhancement { name, desc }
     }
 }
 
 /* This represents possible skip tags the player may gain/be offered */
 #[derive(Debug)]
 pub struct Tag {
-    name:String,
-    desc:String,
+    name: String,
+    desc: String,
 }
 
 impl Tag {
-    pub fn new(name:String, desc:String) -> Self {
-        Tag {
-            name,
-            desc,
-        }
+    pub fn new(name: String, desc: String) -> Self {
+        Tag { name, desc }
     }
 
     pub fn default() -> Self {
@@ -320,7 +311,6 @@ impl Tag {
         }
     }
 }
-
 
 #[derive(Debug)]
 pub enum PackType {
@@ -341,19 +331,18 @@ pub struct ShopPack {
 }
 
 impl ShopPack {
-    pub fn new(pack_type: PackType, item_cnt: i8, price: i8, select_num: i8)
-        -> Self {
-            ShopPack {
-                pack_type,
-                item_cnt,
-                price,
-                select_num,
-            }
+    pub fn new(pack_type: PackType, item_cnt: i8, price: i8, select_num: i8) -> Self {
+        ShopPack {
+            pack_type,
+            item_cnt,
+            price,
+            select_num,
+        }
     }
 }
 
 #[derive(Debug)]
-pub enum PackContents{
+pub enum PackContents {
     Card(Vec<Card>),
     Joker(Vec<Joker>),
     Planet(Vec<Planet>),
@@ -369,15 +358,10 @@ pub struct OpenPack {
 }
 
 impl OpenPack {
-    pub fn new(select_num: i8, items: PackContents)
-        -> Self {
-            OpenPack {
-                select_num,
-                items,
-            }
+    pub fn new(select_num: i8, items: PackContents) -> Self {
+        OpenPack { select_num, items }
     }
 }
-
 
 /* This represents possible blinds the player may face */
 #[derive(Debug)]
@@ -425,7 +409,7 @@ impl HandType {
             _ => {
                 println!("Failed to match string to a hand type");
                 HandType::Other
-            },
+            }
         }
     }
 }
@@ -451,7 +435,7 @@ pub enum Rank {
 
 impl Rank {
     pub fn from_int(int: i16) -> Self {
-        match  int {
+        match int {
             2 => Rank::Two,
             3 => Rank::Three,
             4 => Rank::Four,
@@ -466,7 +450,6 @@ impl Rank {
             12 => Rank::Queen,
             14 => Rank::Ace,
             _ => Rank::Other,
-
         }
     }
 }
@@ -580,11 +563,14 @@ impl State {
 
     pub fn is_decision_state(&self) -> bool {
         match self {
-            State::SelectingHand | State::TarotPack | State::PlanetPack |
-                State::SpectralPack | State::StandardPack | State::BuffPack |
-                State::Shop => true,
+            State::SelectingHand
+            | State::TarotPack
+            | State::PlanetPack
+            | State::SpectralPack
+            | State::StandardPack
+            | State::BuffPack
+            | State::Shop => true,
             _ => false,
         }
     }
 }
-
