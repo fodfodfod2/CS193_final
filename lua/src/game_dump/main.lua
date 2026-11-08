@@ -48,6 +48,7 @@ local function dump_data()
   d.HAND = get_hand()
   d.CONSUMEABLES = get_owned_consumables()
   d.SHOP = get_shop()
+  d.BLINDS = get_blinds()
 
   local ctx = {}
   ctx.HANDS = G.GAME.current_round.hands_left
