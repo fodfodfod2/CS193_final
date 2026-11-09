@@ -37,14 +37,18 @@ pub fn read_game_state() {
 }
 
 fn parse_owned_consumables(table: Table) -> Vec<Consumable> {
-    let consumable_table: Table = table.get("CONSUMEABLES")
+    let consumable_table: Table = table
+        .get("CONSUMEABLES")
         .expect("Failed to read consumeables table");
 
-    let tarot_table: Table = consumable_table.get("TAROT")
+    let tarot_table: Table = consumable_table
+        .get("TAROT")
         .expect("Failed to read tarot from consumeables");
-    let planet_table: Table = consumable_table.get("PLANET")
+    let planet_table: Table = consumable_table
+        .get("PLANET")
         .expect("Failed to read planet from consumeables");
-    let spectral_table: Table = consumable_table.get("SPECTRAL")
+    let spectral_table: Table = consumable_table
+        .get("SPECTRAL")
         .expect("Failed to read spectral from consumeables");
 
     let mut tarot = parse_type_vec(tarot_table, parse_tarot);
@@ -104,7 +108,8 @@ fn parse_blinds(table: Table) -> (u8, [Blind; 3]) {
     let big_blind: Blind = Blind::Big(big_score, big_tag);
     let boss_blind: Blind = Blind::Boss(boss_score, boss_name, boss_desc);
 
-    let cur_blind: u8 = blinds.get("CURRENT")
+    let cur_blind: u8 = blinds
+        .get("CURRENT")
         .expect("Failed to read cur_blind from boss blind");
 
     (cur_blind, [small_blind, big_blind, boss_blind])

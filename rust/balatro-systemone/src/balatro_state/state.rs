@@ -3,7 +3,6 @@
 use std::collections::HashMap;
 use std::fmt;
 
-#[derive(Debug)]
 pub struct GameState {
     state: State,
     hand: Vec<Card>,
@@ -42,7 +41,6 @@ impl GameState {
     }
 }
 
-#[derive(Debug)]
 pub struct Ctx {
     hands: i8,
     discards: i8,
@@ -69,7 +67,6 @@ impl Ctx {
     }
 }
 
-#[derive(Debug)]
 pub struct Shop {
     joker: Vec<Joker>,
     planet: Vec<Planet>,
@@ -94,7 +91,6 @@ impl Shop {
     }
 }
 
-#[derive(Debug)]
 pub enum Consumable {
     Planet(Planet),
     Tarot(Tarot),
@@ -104,7 +100,6 @@ pub enum Consumable {
 
 /* This file will hold all of the pub structs and pub enums used for the game state */
 
-#[derive(Debug)]
 pub struct Card {
     rank: Rank,
     suit: Suit,
@@ -135,7 +130,6 @@ impl Card {
 }
 
 /* This will represent a Joker the player can own or buy */
-#[derive(Debug)]
 pub struct Joker {
     name: String,
     desc: String,
@@ -173,7 +167,6 @@ impl Joker {
 }
 
 /* This will represent a Voucher */
-#[derive(Debug)]
 pub struct Voucher {
     name: String,
     desc: String,
@@ -186,7 +179,6 @@ impl Voucher {
 }
 
 /* This will represent a Planet card */
-#[derive(Debug)]
 pub struct Planet {
     name: String,
     desc: String,
@@ -206,7 +198,6 @@ impl Planet {
 }
 
 /* This will represent a Tarot card */
-#[derive(Debug)]
 pub struct Tarot {
     name: String,
     desc: String,
@@ -224,7 +215,6 @@ impl Tarot {
 }
 
 /* This will represent a spectral card */
-#[derive(Debug)]
 pub struct Spectral {
     name: String,
     desc: String,
@@ -242,7 +232,6 @@ impl Spectral {
 }
 
 /* This will store a sticker applicable to jokers */
-#[derive(Debug)]
 pub struct Sticker {
     name: String,
     desc: String,
@@ -255,7 +244,6 @@ impl Sticker {
 }
 
 /* This will store an edition applicable to jokers */
-#[derive(Debug)]
 pub struct Edition {
     name: String,
     desc: String,
@@ -268,7 +256,6 @@ impl Edition {
 }
 
 /* This will store a Seal applicable to cards */
-#[derive(Debug)]
 pub struct Seal {
     name: String,
     desc: String,
@@ -281,7 +268,6 @@ impl Seal {
 }
 
 /* This will store a Enhancement applicable to cards */
-#[derive(Debug)]
 pub struct Enhancement {
     name: String,
     desc: String,
@@ -294,7 +280,6 @@ impl Enhancement {
 }
 
 /* This represents possible skip tags the player may gain/be offered */
-#[derive(Debug)]
 pub struct Tag {
     name: String,
     desc: String,
@@ -313,7 +298,14 @@ impl Tag {
     }
 }
 
-#[derive(Debug)]
+impl fmt::Display for Tag {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let n = &self.name;
+        let d = &self.desc;
+        write!(f, "Tag: {n} | Ability: {d}")
+    }
+}
+
 pub enum PackType {
     Card,
     Joker,
@@ -323,7 +315,6 @@ pub enum PackType {
     Other,
 }
 
-#[derive(Debug)]
 pub struct ShopPack {
     pack_type: PackType,
     item_cnt: i8,
@@ -342,7 +333,6 @@ impl ShopPack {
     }
 }
 
-#[derive(Debug)]
 pub enum PackContents {
     Card(Vec<Card>),
     Joker(Vec<Joker>),
@@ -352,7 +342,6 @@ pub enum PackContents {
     Other,
 }
 
-#[derive(Debug)]
 pub struct OpenPack {
     select_num: i8,
     items: PackContents,
@@ -365,15 +354,24 @@ impl OpenPack {
 }
 
 /* This represents possible blinds the player may face */
-#[derive(Debug)]
 pub enum Blind {
     Small(u64, Tag),
     Big(u64, Tag),
     Boss(u64, String, String),
 }
 
+impl fmt::Display for Blind {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Blind::Small(s, t) => write!(f, "Small Blind Score:{s} Skip tag:{t}"),
+            Blind::Big(s, t) => write!(f, "Big Blind Score:{s} Skip tag:{t}"),
+            Blind::Boss(s, n, d) => write!(f, "Boss:{n}, Ability:{d} Blind Score:{s}"),
+            _ => write!(f, "BLIND_NOT_RECOGNIZED"),
+        }
+    }
+}
+
 /* This represents the different hands the player can level and play */
-#[derive(Debug)]
 pub enum HandType {
     HighCard,
     Pair,
@@ -415,8 +413,28 @@ impl HandType {
     }
 }
 
+impl fmt::Display for HandType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            HandType::HighCard => write!(f, "High Card"),
+            HandType::Pair => write!(f, "Pair"),
+            HandType::TwoPair => write!(f, "Two Pair"),
+            HandType::ThreeOfAKind => write!(f, "Three Of A Kind"),
+            HandType::Straight => write!(f, "Straight"),
+            HandType::Flush => write!(f, "Flush"),
+            HandType::FullHouse => write!(f, "Full House"),
+            HandType::FourOfAKind => write!(f, "Four Of A Kind"),
+            HandType::StraightFlush => write!(f, "Straight Flush"),
+            HandType::RoyalFlush => write!(f, "Royal Flush"),
+            HandType::FiveOfAKind => write!(f, "Five Of A Kind"),
+            HandType::FlushHouse => write!(f, "Flush House"),
+            HandType::FlushFive => write!(f, "Flush Five"),
+            _ => write!(f, "HANDTYPE_NOT_RECOGNIZED"),
+        }
+    }
+}
+
 /* This represents the possible ranks a card can be */
-#[derive(Debug)]
 pub enum Rank {
     Two,
     Three,
@@ -477,7 +495,6 @@ impl fmt::Display for Rank {
 }
 
 /* This represents the possible suits a card can be */
-#[derive(Debug)]
 pub enum Suit {
     Diamonds,
     Hearts,
@@ -510,7 +527,6 @@ impl fmt::Display for Suit {
     }
 }
 
-#[derive(Debug)]
 pub enum State {
     BlindSelect,
     Tutorial,
@@ -563,12 +579,43 @@ impl State {
     }
 
     pub fn is_decision_state(&self) -> bool {
-        matches!(self, State::SelectingHand
-            | State::TarotPack
-            | State::PlanetPack
-            | State::SpectralPack
-            | State::StandardPack
-            | State::BuffPack
-            | State::Shop)
+        matches!(
+            self,
+            State::SelectingHand
+                | State::TarotPack
+                | State::PlanetPack
+                | State::SpectralPack
+                | State::StandardPack
+                | State::BuffPack
+                | State::Shop
+        )
+    }
+}
+
+impl fmt::Display for State {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            State::BlindSelect => write!(f, "Blind Select"),
+            State::Tutorial => write!(f, "Tutorial"),
+            State::SelectingHand => write!(f, "Selecting Hand"),
+            State::PlayTarot => write!(f, "Play Tarot"),
+            State::HandPlayed => write!(f, "Hand Played"),
+            State::RoundEval => write!(f, "Round Eval"),
+            State::DrawToHand => write!(f, "Draw To Hand"),
+            State::Shop => write!(f, "Shop"),
+            State::TarotPack => write!(f, "TarotP ack"),
+            State::PlanetPack => write!(f, "Planet Pack"),
+            State::SpectralPack => write!(f, "Spectral Pack"),
+            State::StandardPack => write!(f, "Standard Pack"),
+            State::BuffPack => write!(f, "Buffoon Pack"),
+            State::MainMenu => write!(f, "Main Menu"),
+            State::GameOver => write!(f, "Game Over"),
+            State::NewRound => write!(f, "New Round"),
+            State::Splash => write!(f, "Splash Screen"),
+            State::RedeemCustomVoucher => write!(f, "Redeeming Custom Voucher"),
+            State::CustomPack => write!(f, "Custom Pack Opening"),
+            State::Sandbox => write!(f, "Sandbox"),
+            _ => write!(f, "STATE_NOT_RECOGNIZED"),
+        }
     }
 }
