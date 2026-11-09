@@ -1,6 +1,6 @@
 #![allow(unused)]
 
-use crate::balatro_state::state::*;
+use crate::balatro_state::structs::*;
 
 use mlua::{Lua, Table};
 use std::fs;
