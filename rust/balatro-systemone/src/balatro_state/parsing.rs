@@ -21,15 +21,51 @@ fn get_master_table() -> (Lua, Table) {
 
 pub fn read_game_state() {
     let (lua, table) = get_master_table();
-    let deck = parse_deck(table.clone());
+
+    let state = parse_state(table.clone());
     let hand = parse_hand(table.clone());
-    let tags = parse_owned_tags(table.clone());
     let owned_vouchers = parse_owned_vouchers(table.clone());
-    let blinds = parse_blinds(table.clone());
-    let jokers = parse_owned_jokers(table.clone());
+    let owned_jokers = parse_owned_jokers(table.clone());
+    let owned_tags = parse_owned_tags(table.clone());
+    let owned_consumables = parse_owned_consumables(table.clone());
+    // SHOP
+    // OPENPACK
+    let tags = parse_owned_tags(table.clone());
+    let (current_blind, blinds) = parse_blinds(table.clone());
+    //CTX
+    let deck = parse_deck(table.clone());
 }
 
-fn parse_blinds(table: Table) -> [Blind; 3] {
+fn parse_owned_consumables(table: Table) -> Vec<Consumable> {
+    let consumable_table: Table = table.get("CONSUMEABLES")
+        .expect("Failed to read consumeables table");
+
+    let tarot_table: Table = consumable_table.get("TAROT")
+        .expect("Failed to read tarot from consumeables");
+    let planet_table: Table = consumable_table.get("PLANET")
+        .expect("Failed to read planet from consumeables");
+    let spectral_table: Table = consumable_table.get("SPECTRAL")
+        .expect("Failed to read spectral from consumeables");
+
+    let mut tarot = parse_type_vec(tarot_table, parse_tarot);
+    let mut planet = parse_type_vec(planet_table, parse_planet);
+    let mut spectral = parse_type_vec(spectral_table, parse_spectral);
+
+    let mut res: Vec<Consumable> = Vec::new();
+    for t in tarot {
+        res.push(Consumable::Tarot(t));
+    }
+    for p in planet {
+        res.push(Consumable::Planet(p));
+    }
+    for s in spectral {
+        res.push(Consumable::Spectral(s));
+    }
+
+    res
+}
+
+fn parse_blinds(table: Table) -> (u8, [Blind; 3]) {
     let blinds: Table = table
         .get("BLINDS")
         .expect("Failed to read owned blinds from master");
@@ -68,7 +104,10 @@ fn parse_blinds(table: Table) -> [Blind; 3] {
     let big_blind: Blind = Blind::Big(big_score, big_tag);
     let boss_blind: Blind = Blind::Boss(boss_score, boss_name, boss_desc);
 
-    [small_blind, big_blind, boss_blind]
+    let cur_blind: u8 = blinds.get("CURRENT")
+        .expect("Failed to read cur_blind from boss blind");
+
+    (cur_blind, [small_blind, big_blind, boss_blind])
 }
 
 fn parse_owned_tags(table: Table) -> Vec<Tag> {
