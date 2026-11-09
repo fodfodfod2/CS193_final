@@ -15,7 +15,6 @@ pub enum HandType {
     FiveOfAKind,
     FlushHouse,
     FlushFive,
-    Other,
 }
 
 impl HandType {
@@ -34,10 +33,7 @@ impl HandType {
             "Five Of A Kind" => HandType::FiveOfAKind,
             "Flush House" => HandType::FlushHouse,
             "Flush Five" => HandType::FlushFive,
-            _ => {
-                println!("Failed to match string to a hand type");
-                HandType::Other
-            }
+            s => panic!("Unrecognized HandType {s}"),
         }
     }
 }
@@ -58,7 +54,7 @@ impl fmt::Display for HandType {
             HandType::FiveOfAKind => write!(f, "Five Of A Kind"),
             HandType::FlushHouse => write!(f, "Flush House"),
             HandType::FlushFive => write!(f, "Flush Five"),
-            _ => write!(f, "HANDTYPE_NOT_RECOGNIZED"),
+            s => panic!("handtype {s} not recognized"),
         }
     }
 }

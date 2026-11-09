@@ -19,6 +19,16 @@ impl Planet {
     }
 }
 
+impl fmt::Display for Planet {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let n = &self.name;
+        let d = &self.desc;
+        let sv = &self.sell_value;
+        let h = &self.hand;
+        write!(f, "{n} | upgrades {h} or can be sold for {sv}")
+    }
+}
+
 /* This will represent a Tarot card */
 pub struct Tarot {
     name: String,
@@ -33,6 +43,15 @@ impl Tarot {
             desc,
             sell_value,
         }
+    }
+}
+
+impl fmt::Display for Tarot {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let n = &self.name;
+        let d = &self.desc;
+        let sv = &self.sell_value;
+        write!(f, "{n} | use to {d} or can be sold for {sv}")
     }
 }
 
@@ -53,9 +72,27 @@ impl Spectral {
     }
 }
 
+impl fmt::Display for Spectral {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let n = &self.name;
+        let d = &self.desc;
+        let sv = &self.sell_value;
+        write!(f, "{n} | use to {d} or can be sold for {sv}")
+    }
+}
+
 pub enum Consumable {
     Planet(Planet),
     Tarot(Tarot),
     Spectral(Spectral),
-    Other,
+}
+
+impl fmt::Display for Consumable {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Consumable::Planet(p) => write!(f, "{p}"),
+            Consumable::Tarot(t) => write!(f, "{t}"),
+            Consumable::Spectral(s) => write!(f, "{s}"),
+        }
+    }
 }

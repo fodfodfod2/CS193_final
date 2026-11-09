@@ -25,5 +25,5 @@ pub(crate) use state::*;
 pub mod handtype;
 pub(crate) use handtype::*;
 
-pub(crate) use std::fmt;
 pub(crate) use std::collections::HashMap;
+pub(crate) use std::fmt;

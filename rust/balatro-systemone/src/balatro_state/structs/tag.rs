@@ -26,5 +26,3 @@ impl fmt::Display for Tag {
         write!(f, "Tag: {n} | Ability: {d}")
     }
 }
-
-

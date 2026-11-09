@@ -6,7 +6,6 @@ pub enum PackType {
     Planet,
     Tarot,
     Spectral,
-    Other,
 }
 
 pub struct ShopPack {
@@ -27,13 +26,38 @@ impl ShopPack {
     }
 }
 
+impl fmt::Display for ShopPack {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let ptn = match &self.pack_type {
+            PackType::Card => "Standard",
+            PackType::Joker => "Buffoon",
+            PackType::Planet => "Celestial",
+            PackType::Tarot => "Arcana",
+            PackType::Spectral => "Spectral",
+        };
+        let pcn = match &self.pack_type {
+            PackType::Card => "Card",
+            PackType::Joker => "Joker",
+            PackType::Planet => "Planet Card",
+            PackType::Tarot => "Tarot Card",
+            PackType::Spectral => "Spectral Card",
+        };
+        let p = &self.price;
+        let sn = &self.select_num;
+        let ic = &self.item_cnt;
+        write!(
+            f,
+            "{ptn} Pack, Open to select {sn} out of {ic} random {pcn}s. Costs {p}$"
+        )
+    }
+}
+
 pub enum PackContents {
     Card(Vec<Card>),
     Joker(Vec<Joker>),
     Planet(Vec<Planet>),
     Tarot(Vec<Tarot>),
     Spectral(Vec<Spectral>),
-    Other,
 }
 
 pub struct OpenPack {

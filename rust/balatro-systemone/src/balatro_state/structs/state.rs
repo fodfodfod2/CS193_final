@@ -22,7 +22,6 @@ pub enum State {
     RedeemCustomVoucher,
     CustomPack,
     Sandbox,
-    Other,
 }
 
 impl State {
@@ -48,7 +47,7 @@ impl State {
             19 => State::NewRound,
             998 => State::RedeemCustomVoucher,
             999 => State::CustomPack,
-            _ => State::Other,
+            n => panic!("Unrecognized state {n}"),
         }
     }
 
@@ -89,7 +88,6 @@ impl fmt::Display for State {
             State::RedeemCustomVoucher => write!(f, "Redeeming Custom Voucher"),
             State::CustomPack => write!(f, "Custom Pack Opening"),
             State::Sandbox => write!(f, "Sandbox"),
-            _ => write!(f, "STATE_NOT_RECOGNIZED"),
         }
     }
 }

@@ -12,6 +12,14 @@ impl Seal {
     }
 }
 
+impl fmt::Display for Seal {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let n = &self.name;
+        let d = &self.desc;
+        write!(f, "{n} Seal | Ability: {d}")
+    }
+}
+
 /* This will store a Enhancement applicable to cards */
 pub struct Enhancement {
     name: String,
@@ -24,16 +32,13 @@ impl Enhancement {
     }
 }
 
-/* This file will hold all of the pub structs and pub enums used for the game state */
-pub struct Card {
-    rank: Rank,
-    suit: Suit,
-    enhancement: Enhancement,
-    seal: Seal,
-    disabled: bool,
-    face_down: bool,
+impl fmt::Display for Enhancement {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let n = &self.name;
+        let d = &self.desc;
+        write!(f, "{n} | Ability: {d}")
+    }
 }
-
 
 /* This represents the possible ranks a card can be */
 pub enum Rank {
@@ -50,7 +55,6 @@ pub enum Rank {
     King,
     Queen,
     Ace,
-    Other,
 }
 
 impl Rank {
@@ -69,7 +73,7 @@ impl Rank {
             13 => Rank::King,
             12 => Rank::Queen,
             14 => Rank::Ace,
-            _ => Rank::Other,
+            n => panic!("Invalid rank {n}"),
         }
     }
 }
@@ -90,11 +94,9 @@ impl fmt::Display for Rank {
             Rank::King => write!(f, "King"),
             Rank::Queen => write!(f, "Queen"),
             Rank::Ace => write!(f, "Ace"),
-            _ => write!(f, "RANK_NOT_RECOGNIZED"),
         }
     }
 }
-
 
 /* This represents the possible suits a card can be */
 pub enum Suit {
@@ -102,7 +104,6 @@ pub enum Suit {
     Hearts,
     Spades,
     Clubs,
-    Other,
 }
 
 impl Suit {
@@ -112,7 +113,7 @@ impl Suit {
             "Hearts" => Suit::Hearts,
             "Spades" => Suit::Spades,
             "Clubs" => Suit::Clubs,
-            _ => Suit::Other,
+            s => panic!("Unrecognized suit {s}"),
         }
     }
 }
@@ -124,9 +125,18 @@ impl fmt::Display for Suit {
             Suit::Hearts => write!(f, "Hearts"),
             Suit::Spades => write!(f, "Spades"),
             Suit::Clubs => write!(f, "Clubs"),
-            Suit::Other => write!(f, "SUIT_NOT_RECOGNIZED"),
         }
     }
+}
+
+/* This will hold all of the pub structs and pub enums used for the game state */
+pub struct Card {
+    rank: Rank,
+    suit: Suit,
+    enhancement: Enhancement,
+    seal: Seal,
+    disabled: bool,
+    face_down: bool,
 }
 
 impl Card {
@@ -145,6 +155,25 @@ impl Card {
             seal,
             disabled,
             face_down,
+        }
+    }
+}
+
+impl fmt::Display for Card {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let r = &self.rank;
+        let su = &self.suit;
+        let e = &self.enhancement;
+        let se = &self.seal;
+        let d = &self.disabled;
+        let ds = match d {
+            true => "Disabled",
+            false => "",
+        };
+        let fd = &self.face_down;
+        match fd {
+            true => write!(f, "Face down card"),
+            false => write!(f, "{ds} {r} of {su} - {e} - {se}"),
         }
     }
 }
