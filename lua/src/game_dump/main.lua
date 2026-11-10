@@ -67,7 +67,7 @@ local function dump_data()
   for i, name in ipairs(G.handlist) do
     local h = G.GAME.hands[name]
     hand_lvls[name] = h.level
-    hands_played[name] = (h.played_this_round and 1) or 0
+    hands_played[name] = h.played > 0
     if h.played > max_played then
       max_played = h.played
       max_played_hand = name
