@@ -70,3 +70,53 @@ impl OpenPack {
         OpenPack { select_num, items }
     }
 }
+
+impl fmt::Display for OpenPack {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let ptn = match &self.items {
+            PackContents::Card(_) => "Standard",
+            PackContents::Joker(_) => "Buffoon",
+            PackContents::Planet(_) => "Celestial",
+            PackContents::Tarot(_) => "Arcana",
+            PackContents::Spectral(_) => "Spectral",
+        };
+        let pcn = match &self.items {
+            PackContents::Card(_) => "Card",
+            PackContents::Joker(_) => "Joker",
+            PackContents::Planet(_) => "Planet Card",
+            PackContents::Tarot(_) => "Tarot Card",
+            PackContents::Spectral(_) => "Spectral Card",
+        };
+        let pst: String = match &self.items {
+            PackContents::Card(c) => c
+                .iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<String>>()
+                .join("\n"),
+            PackContents::Joker(j) => j
+                .iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<String>>()
+                .join("\n"),
+            PackContents::Planet(p) => p
+                .iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<String>>()
+                .join("\n"),
+            PackContents::Tarot(t) => t
+                .iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<String>>()
+                .join("\n"),
+            PackContents::Spectral(s) => s
+                .iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<String>>()
+                .join("\n"),
+        };
+
+        let sn = &self.select_num;
+
+        write!(f, "{ptn} Pack, select {sn} items from the following\n{pst}")
+    }
+}

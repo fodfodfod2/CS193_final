@@ -11,3 +11,11 @@ impl Voucher {
         Voucher { name, desc }
     }
 }
+
+impl fmt::Display for Voucher {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let n = &self.name;
+        let d = &self.desc;
+        write!(f, "Voucher:{n} | Ability:{d}")
+    }
+}
