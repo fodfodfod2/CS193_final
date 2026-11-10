@@ -13,7 +13,6 @@ impl fmt::Display for Blind {
             Blind::Small(s, t) => write!(f, "Small Blind Score:{s} Skip tag:{t}"),
             Blind::Big(s, t) => write!(f, "Big Blind Score:{s} Skip tag:{t}"),
             Blind::Boss(s, n, d) => write!(f, "Boss:{n}, Ability:{d} Blind Score:{s}"),
-            _ => write!(f, "BLIND_NOT_RECOGNIZED"),
         }
     }
 }
