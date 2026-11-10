@@ -116,6 +116,15 @@ impl Suit {
             s => panic!("Unrecognized suit {s}"),
         }
     }
+    pub fn from_int(int: u8) -> Self {
+        match int {
+            0 => Suit::Hearts,
+            1 => Suit::Diamonds,
+            2 => Suit::Clubs,
+            3 => Suit::Spades,
+            i => panic!("Unrecognized suit {i}"),
+        }
+    }
 }
 
 impl fmt::Display for Suit {
