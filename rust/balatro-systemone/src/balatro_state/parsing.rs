@@ -28,7 +28,7 @@ pub fn read_game_state() {
     let owned_jokers = parse_owned_jokers(table.clone());
     let owned_tags = parse_owned_tags(table.clone());
     let owned_consumables = parse_owned_consumables(table.clone());
-    // SHOP
+    // Shop
     // OPENPACK
     let tags = parse_owned_tags(table.clone());
     let (current_blind, blinds) = Blind::parse(table.clone());
@@ -158,7 +158,7 @@ fn parse_type_vec<T: Parsable>(table: Table) -> Vec<T> {
         };
         println!("successful parse");
 
-        res.push(T::parse(cur_card));
+        res.push(T::parse(cur_card).unwrap());
         counter += 1;
     }
     res

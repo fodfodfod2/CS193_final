@@ -15,15 +15,17 @@ impl Sticker {
 }
 
 impl Parsable for Sticker {
-    fn parse(table: Table) -> Self {
-        let name: String = table
+    fn parse(t: Table) -> Result<Self, &'static str> {
+        let name: String = t
             .get("NAME")
-            .expect("Failed to parse Name while parsing Sticker");
-        let desc: String = table
+            .ok()
+            .ok_or("Failed to parse Name while parsing Sticker")?;
+        let desc: String = t
             .get("DESC")
-            .expect("Failed to parse Desc while parsing Sticker");
+            .ok()
+            .ok_or("Failed to parse Desc while parsing Sticker")?;
 
-        Sticker { name, desc }
+        Ok(Sticker { name, desc })
     }
 }
 
@@ -48,15 +50,17 @@ impl Edition {
 }
 
 impl Parsable for Edition {
-    fn parse(table: Table) -> Self {
-        let name: String = table
+    fn parse(t: Table) -> Result<Self, &'static str> {
+        let name: String = t
             .get("NAME")
-            .expect("Failed to parse Name while parsing Edition");
-        let desc: String = table
+            .ok()
+            .ok_or("Failed to parse Name while parsing Edition")?;
+        let desc: String = t
             .get("DESC")
-            .expect("Failed to parse Desc while parsing Edition");
+            .ok()
+            .ok_or("Failed to parse Desc while parsing Edition")?;
 
-        Edition { name, desc }
+        Ok(Edition { name, desc })
     }
 }
 
@@ -106,34 +110,40 @@ impl Joker {
 }
 
 impl Parsable for Joker {
-    fn parse(table: Table) -> Self {
-        let name: String = table
+    fn parse(t: Table) -> Result<Self, &'static str> {
+        let name: String = t
             .get("NAME")
-            .expect("Failed to parse name while parsing Joker");
-        let desc: String = table
+            .ok()
+            .ok_or("Failed to parse name while parsing Joker")?;
+        let desc: String = t
             .get("DESC")
-            .expect("Failed to parse desc while parsing Joker");
-        let edition_t: Table = table
+            .ok()
+            .ok_or("Failed to parse desc while parsing Joker")?;
+        let edition_t: Table = t
             .get("EDITION")
-            .expect("Failed to parse edition while parsing Joker");
-        let sticker_t: Table = table
+            .ok()
+            .ok_or("Failed to parse edition while parsing Joker")?;
+        let sticker_t: Table = t
             .get("STICKER")
-            .expect("Failed to parse sticker while parsing Joker");
-        let disabled: bool = table
+            .ok()
+            .ok_or("Failed to parse sticker while parsing Joker")?;
+        let disabled: bool = t
             .get("DISABLED")
-            .expect("Failed to parse disabled while parsing Joker");
-        let sell_value: i16 = table
+            .ok()
+            .ok_or("Failed to parse disabled while parsing Joker")?;
+        let sell_value: i16 = t
             .get("SELL_VALUE")
-            .expect("Failed to parse sell_value while parsing Joker");
-        let invis_cnt: i16 = table.get("INVISIBLE_CNT").unwrap_or_default();
-        let perish_cnt: i16 = table.get("PERISH_CNT").unwrap_or_default();
+            .ok()
+            .ok_or("Failed to parse sell_value while parsing Joker")?;
+        let invis_cnt: i16 = t.get("INVISIBLE_CNT").unwrap_or_default();
+        let perish_cnt: i16 = t.get("PERISH_CNT").unwrap_or_default();
 
-        let edition = Edition::parse(edition_t);
-        let sticker = Sticker::parse(sticker_t);
+        let edition = Edition::parse(edition_t)?;
+        let sticker = Sticker::parse(sticker_t)?;
 
-        Joker::new(
+        Ok(Joker::new(
             name, desc, edition, sell_value, disabled, invis_cnt, perish_cnt, sticker,
-        )
+        ))
     }
 }
 

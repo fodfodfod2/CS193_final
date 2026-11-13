@@ -22,27 +22,31 @@ impl Planet {
 }
 
 impl Parsable for Planet {
-    fn parse(t: Table) -> Self {
+    fn parse(t: Table) -> Result<Self, &'static str> {
         let name: String = t
             .get("NAME")
-            .expect("Failed to parse Name while parsing Planet");
+            .ok()
+            .ok_or("Failed to parse Name while parsing Planet")?;
         let desc: String = t
             .get("DESC")
-            .expect("Failed to parse Desc while parsing Planet");
+            .ok()
+            .ok_or("Failed to parse Desc while parsing Planet")?;
         let sell_value: i16 = t
             .get("SELL_VALUE")
-            .expect("Failed to parse sell value while parsing Planet");
+            .ok()
+            .ok_or("Failed to parse sell value while parsing Planet")?;
         let hand_id: String = t
             .get("HAND_ID")
-            .expect("Failed to parse hand id while parsing Planet");
+            .ok()
+            .ok_or("Failed to parse hand id while parsing Planet")?;
         let hand = HandType::from_str(&hand_id);
 
-        Planet {
+        Ok(Planet {
             name,
             desc,
             sell_value,
             hand,
-        }
+        })
     }
 }
 impl fmt::Display for Planet {
@@ -73,22 +77,25 @@ impl Tarot {
 }
 
 impl Parsable for Tarot {
-    fn parse(t: Table) -> Self {
+    fn parse(t: Table) -> Result<Self, &'static str> {
         let name: String = t
             .get("NAME")
-            .expect("Failed to parse Name while parsing Tarot");
+            .ok()
+            .ok_or("Failed to parse Name while parsing Tarot")?;
         let desc: String = t
             .get("DESC")
-            .expect("Failed to parse Desc while parsing Tarot");
+            .ok()
+            .ok_or("Failed to parse Desc while parsing Tarot")?;
         let sell_value: i16 = t
             .get("SELL_VALUE")
-            .expect("Failed to parse sell value while parsing Tarot");
+            .ok()
+            .ok_or("Failed to parse sell value while parsing Tarot")?;
 
-        Tarot {
+        Ok(Tarot {
             name,
             desc,
             sell_value,
-        }
+        })
     }
 }
 impl fmt::Display for Tarot {
@@ -118,22 +125,25 @@ impl Spectral {
 }
 
 impl Parsable for Spectral {
-    fn parse(t: Table) -> Self {
+    fn parse(t: Table) -> Result<Self, &'static str> {
         let name: String = t
             .get("NAME")
-            .expect("Failed to parse Name while parsing Spectral");
+            .ok()
+            .ok_or("Failed to parse Name while parsing Spectral")?;
         let desc: String = t
             .get("DESC")
-            .expect("Failed to parse Desc while parsing Spectral");
+            .ok()
+            .ok_or("Failed to parse Desc while parsing Spectral")?;
         let sell_value: i16 = t
             .get("SELL_VALUE")
-            .expect("Failed to parse sell value while parsing Spectral");
+            .ok()
+            .ok_or("Failed to parse sell value while parsing Spectral")?;
 
-        Spectral {
+        Ok(Spectral {
             name,
             desc,
             sell_value,
-        }
+        })
     }
 }
 

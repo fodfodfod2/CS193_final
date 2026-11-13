@@ -15,15 +15,17 @@ impl Voucher {
 }
 
 impl Parsable for Voucher {
-    fn parse(table: Table) -> Self {
-        let name: String = table
+    fn parse(t: Table) -> Result<Self, &'static str> {
+        let name: String = t
             .get("NAME")
-            .expect("Failed to parse Name while parsing Voucher");
-        let desc: String = table
+            .ok()
+            .ok_or("Failed to parse Name while parsing Voucher")?;
+        let desc: String = t
             .get("DESC")
-            .expect("Failed to parse Desc while parsing Voucher");
+            .ok()
+            .ok_or("Failed to parse Desc while parsing Voucher")?;
 
-        Voucher { name, desc }
+        Ok(Voucher { name, desc })
     }
 }
 

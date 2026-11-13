@@ -18,6 +18,6 @@ pub fn vec_to_str<T: fmt::Display>(title: &str, v: &Vec<T>) -> String {
     res
 }
 
-pub trait Parsable {
-    fn parse(t: Table) -> Self;
+pub trait Parsable: Sized {
+    fn parse(t: Table) -> Result<Self, &'static str>;
 }

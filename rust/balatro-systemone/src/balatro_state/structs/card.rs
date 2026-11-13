@@ -15,15 +15,17 @@ impl Seal {
 }
 
 impl Parsable for Seal {
-    fn parse(t: Table) -> Self {
+    fn parse(t: Table) -> Result<Self, &'static str> {
         let name: String = t
             .get("NAME")
-            .expect("Failed to parse Name while parsing Seal");
+            .ok()
+            .ok_or("Failed to parse Name while parsing Seal")?;
         let desc: String = t
             .get("DESC")
-            .expect("Failed to parse Desc while parsing Seal");
+            .ok()
+            .ok_or("Failed to parse Desc while parsing Seal")?;
 
-        Seal { name, desc }
+        Ok(Seal { name, desc })
     }
 }
 
@@ -48,15 +50,17 @@ impl Enhancement {
 }
 
 impl Parsable for Enhancement {
-    fn parse(t: Table) -> Self {
+    fn parse(t: Table) -> Result<Self, &'static str> {
         let name: String = t
             .get("NAME")
-            .expect("Failed to parse Name while parsing Enhancement");
+            .ok()
+            .ok_or("Failed to parse Name while parsing Enhancement")?;
         let desc: String = t
             .get("DESC")
-            .expect("Failed to parse Desc while parsing Enhancement");
+            .ok()
+            .ok_or("Failed to parse Desc while parsing Enhancement")?;
 
-        Enhancement { name, desc }
+        Ok(Enhancement { name, desc })
     }
 }
 
@@ -197,39 +201,45 @@ impl Card {
 }
 
 impl Parsable for Card {
-    fn parse(t: Table) -> Self {
+    fn parse(t: Table) -> Result<Self, &'static str> {
         let rank_v: i16 = t
             .get("RANK")
-            .expect("Failed to parse rank while parsing Card");
+            .ok()
+            .ok_or("Failed to parse rank while parsing Card")?;
         let suit_i: u8 = t
             .get("SUIT")
-            .expect("Failed to parse suit while parsing Card");
+            .ok()
+            .ok_or("Failed to parse suit while parsing Card")?;
         let enhancement_t: Table = t
             .get("ENHANCEMENT")
-            .expect("Failed to parse enhancement while parsing Card");
+            .ok()
+            .ok_or("Failed to parse enhancement while parsing Card")?;
         let seal_t: Table = t
             .get("SEAL")
-            .expect("Failed to parse seal while parsing Card");
+            .ok()
+            .ok_or("Failed to parse seal while parsing Card")?;
         let disabled: bool = t
             .get("DISABLED")
-            .expect("Failed to parse disabled while parsing Card");
+            .ok()
+            .ok_or("Failed to parse disabled while parsing Card")?;
         let face_down: bool = t
             .get("FACE_DOWN")
-            .expect("Failed to parse face_down while parsing Card");
+            .ok()
+            .ok_or("Failed to parse face_down while parsing Card")?;
 
         let rank = Rank::from_int(rank_v);
         let suit = Suit::from_int(suit_i);
-        let enhancement = Enhancement::parse(enhancement_t);
-        let seal = Seal::parse(seal_t);
+        let enhancement = Enhancement::parse(enhancement_t)?;
+        let seal = Seal::parse(seal_t)?;
 
-        Card {
+        Ok(Card {
             rank,
             suit,
             enhancement,
             seal,
             disabled,
             face_down,
-        }
+        })
     }
 }
 

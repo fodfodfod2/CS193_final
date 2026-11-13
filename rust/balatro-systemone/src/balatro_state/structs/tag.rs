@@ -22,15 +22,17 @@ impl Tag {
 }
 
 impl Parsable for Tag {
-    fn parse(t: Table) -> Self {
+    fn parse(t: Table) -> Result<Self, &'static str> {
         let name: String = t
             .get("NAME")
-            .expect("Failed to parse Name while parsing Enhancement");
+            .ok()
+            .ok_or("Failed to parse Name while parsing Enhancement")?;
         let desc: String = t
             .get("DESC")
-            .expect("Failed to parse Desc while parsing Enhancement");
+            .ok()
+            .ok_or("Failed to parse Desc while parsing Enhancement")?;
 
-        Tag::new(name, desc)
+        Ok(Tag::new(name, desc))
     }
 }
 

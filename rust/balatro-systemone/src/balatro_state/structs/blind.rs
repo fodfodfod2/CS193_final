@@ -25,7 +25,7 @@ impl Blind {
         let small_tag_table: Table = small_table
             .get("TAG")
             .expect("Failed to read tag from small blind");
-        let small_tag = Tag::parse(small_tag_table);
+        let small_tag = Tag::parse(small_tag_table).expect("Failed to parse small blind tag table");
 
         let big_score: u64 = big_table
             .get("SCORE")
@@ -33,7 +33,7 @@ impl Blind {
         let big_tag_table: Table = big_table
             .get("TAG")
             .expect("Failed to read tag from big blind");
-        let big_tag = Tag::parse(big_tag_table);
+        let big_tag = Tag::parse(big_tag_table).expect("Failed to parse big blind tag table");
 
         let boss_score: u64 = boss_table
             .get("SCORE")
