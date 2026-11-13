@@ -19,7 +19,7 @@ fn get_master_table() -> (Lua, Table) {
     (lua, res)
 }
 
-pub fn read_game_state() -> GameState {
+pub fn read_game_state() {
     let (lua, table) = get_master_table();
 
     let state = parse_state(table.clone());
