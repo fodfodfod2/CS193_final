@@ -5,7 +5,7 @@ pub fn indent(s: &str, n: usize) -> String {
 }
 
 pub fn vec_to_str<T: fmt::Display>(title: &str, v: &Vec<T>) -> String {
-    if v.len() == 0 {
+    if v.is_empty() {
         return String::from("");
     }
 

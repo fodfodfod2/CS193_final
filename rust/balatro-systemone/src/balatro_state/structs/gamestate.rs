@@ -58,7 +58,10 @@ impl fmt::Display for GameState {
         let cns_str = vec_to_str("consumables", &self.consumables);
         let ov_str = vec_to_str("Vouchers Owned", &self.vouchers_owned);
 
-        let blind_str = format!("Blinds\n\t{}\n\t{}\n\t{}", &self.blinds[0], &self.blinds[1], &self.blinds[2]);
+        let blind_str = format!(
+            "Blinds\n\t{}\n\t{}\n\t{}",
+            self.blinds[0], self.blinds[1], self.blinds[2]
+        );
         let cur_blind_str = match &self.current_blind {
             0 => String::from("Current Blind: Small Blind"),
             1 => String::from("Current Blind: Big Blind"),
@@ -71,6 +74,9 @@ impl fmt::Display for GameState {
         let pack = &self.pack;
         let ctx = &self.ctx;
 
-        write!(f, "Current state:{state}\n\n{deck_str}\n{hand_str}\n\n{jkr_str}\n{cns_str}\n{ov_str}\n{tag_str}\n\n{blind_str}\n{cur_blind_str}\n\n{ctx}\n{pack}\n{shop}")
+        write!(
+            f,
+            "Current state:{state}\n\n{deck_str}\n{hand_str}\n\n{jkr_str}\n{cns_str}\n{ov_str}\n{tag_str}\n\n{blind_str}\n{cur_blind_str}\n\n{ctx}\n{pack}\n{shop}"
+        )
     }
 }
