@@ -1,3 +1,5 @@
+use mlua::Table;
+
 use super::*;
 
 /* This represents possible skip tags the player may gain/be offered */
@@ -16,6 +18,19 @@ impl Tag {
             name: String::from(""),
             desc: String::from(""),
         }
+    }
+}
+
+impl Parsable for Tag {
+    fn parse(t: Table) -> Self {
+        let name: String = t
+            .get("NAME")
+            .expect("Failed to parse Name while parsing Enhancement");
+        let desc: String = t
+            .get("DESC")
+            .expect("Failed to parse Desc while parsing Enhancement");
+
+        Tag::new(name, desc)
     }
 }
 

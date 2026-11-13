@@ -1,3 +1,5 @@
+use mlua::Table;
+
 use super::*;
 
 /* This will represent a Planet card */
@@ -19,6 +21,30 @@ impl Planet {
     }
 }
 
+impl Parsable for Planet {
+    fn parse(t: Table) -> Self {
+        let name: String = t
+            .get("NAME")
+            .expect("Failed to parse Name while parsing Planet");
+        let desc: String = t
+            .get("DESC")
+            .expect("Failed to parse Desc while parsing Planet");
+        let sell_value: i16 = t
+            .get("SELL_VALUE")
+            .expect("Failed to parse sell value while parsing Planet");
+        let hand_id: String = t
+            .get("HAND_ID")
+            .expect("Failed to parse hand id while parsing Planet");
+        let hand = HandType::from_str(&hand_id);
+
+        Planet {
+            name,
+            desc,
+            sell_value,
+            hand,
+        }
+    }
+}
 impl fmt::Display for Planet {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let n = &self.name;
@@ -46,6 +72,25 @@ impl Tarot {
     }
 }
 
+impl Parsable for Tarot {
+    fn parse(t: Table) -> Self {
+        let name: String = t
+            .get("NAME")
+            .expect("Failed to parse Name while parsing Tarot");
+        let desc: String = t
+            .get("DESC")
+            .expect("Failed to parse Desc while parsing Tarot");
+        let sell_value: i16 = t
+            .get("SELL_VALUE")
+            .expect("Failed to parse sell value while parsing Tarot");
+
+        Tarot {
+            name,
+            desc,
+            sell_value,
+        }
+    }
+}
 impl fmt::Display for Tarot {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let n = &self.name;
@@ -64,6 +109,26 @@ pub struct Spectral {
 
 impl Spectral {
     pub fn new(name: String, desc: String, sell_value: i16) -> Self {
+        Spectral {
+            name,
+            desc,
+            sell_value,
+        }
+    }
+}
+
+impl Parsable for Spectral {
+    fn parse(t: Table) -> Self {
+        let name: String = t
+            .get("NAME")
+            .expect("Failed to parse Name while parsing Spectral");
+        let desc: String = t
+            .get("DESC")
+            .expect("Failed to parse Desc while parsing Spectral");
+        let sell_value: i16 = t
+            .get("SELL_VALUE")
+            .expect("Failed to parse sell value while parsing Spectral");
+
         Spectral {
             name,
             desc,

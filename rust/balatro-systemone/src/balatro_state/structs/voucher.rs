@@ -1,3 +1,5 @@
+use mlua::Table;
+
 use super::*;
 
 /* This will represent a Voucher */
@@ -8,6 +10,19 @@ pub struct Voucher {
 
 impl Voucher {
     pub fn new(name: String, desc: String) -> Self {
+        Voucher { name, desc }
+    }
+}
+
+impl Parsable for Voucher {
+    fn parse(table: Table) -> Self {
+        let name: String = table
+            .get("NAME")
+            .expect("Failed to parse Name while parsing Voucher");
+        let desc: String = table
+            .get("DESC")
+            .expect("Failed to parse Desc while parsing Voucher");
+
         Voucher { name, desc }
     }
 }

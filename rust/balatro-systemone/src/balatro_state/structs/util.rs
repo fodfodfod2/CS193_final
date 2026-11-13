@@ -1,3 +1,5 @@
+use mlua::Table;
+
 use super::*;
 
 pub fn indent(s: &str, n: usize) -> String {
@@ -14,4 +16,8 @@ pub fn vec_to_str<T: fmt::Display>(title: &str, v: &Vec<T>) -> String {
         res.push_str("\n\t{i}");
     }
     res
+}
+
+pub trait Parsable {
+    fn parse(t: Table) -> Self;
 }

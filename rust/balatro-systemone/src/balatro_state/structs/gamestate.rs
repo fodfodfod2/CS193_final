@@ -4,13 +4,13 @@ use super::*;
 
 pub struct GameState {
     state: State,
-    hand: Vec<Card>,
+    hand: Option<Vec<Card>>,
     vouchers_owned: Vec<Voucher>,
     jokers_owned: Vec<Joker>,
     tags_owned: Vec<Tag>,
     consumables: Vec<Consumable>,
-    shop: Shop,
-    pack: OpenPack,
+    shop: Option<Shop>,
+    pack: Option<OpenPack>,
     blinds: [Blind; 3],
     current_blind: u8,
     ctx: Ctx,
@@ -20,13 +20,13 @@ pub struct GameState {
 impl GameState {
     pub fn new(
         state: State,
-        hand: Vec<Card>,
+        hand: Option<Vec<Card>>,
         vouchers_owned: Vec<Voucher>,
         jokers_owned: Vec<Joker>,
         tags_owned: Vec<Tag>,
         consumables: Vec<Consumable>,
-        shop: Shop,
-        pack: OpenPack,
+        shop: Option<Shop>,
+        pack: Option<OpenPack>,
         blinds: [Blind; 3],
         current_blind: u8,
         ctx: Ctx,
@@ -51,7 +51,11 @@ impl GameState {
 
 impl fmt::Display for GameState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let hand_str = vec_to_str("Hand", &self.hand);
+        let hand_str = match &self.hand {
+            Some(v) => vec_to_str("Hand", v),
+            None => String::new(),
+        };
+
         let deck_str = vec_to_str("Deck", &self.deck);
         let jkr_str = vec_to_str("Jokers Owned", &self.jokers_owned);
         let tag_str = vec_to_str("Tags owned", &self.tags_owned);
@@ -74,9 +78,30 @@ impl fmt::Display for GameState {
         let pack = &self.pack;
         let ctx = &self.ctx;
 
+        let shop_str = match shop {
+            Some(s) => format!("{}", s),
+            None => String::new(),
+        };
+
+        let pack_str = match pack {
+            Some(p) => format!("{}", p),
+            None => String::new(),
+        };
+
         write!(
             f,
-            "Current state:{state}\n\n{deck_str}\n{hand_str}\n\n{jkr_str}\n{cns_str}\n{ov_str}\n{tag_str}\n\n{blind_str}\n{cur_blind_str}\n\n{ctx}\n{pack}\n{shop}"
+            "Current state:{state}\
+            \n\n{deck_str}\
+            \n{hand_str}\
+            \n\n{jkr_str}\
+            \n{cns_str}\
+            \n{ov_str}\
+            \n{tag_str}\
+            \n\n{blind_str}\
+            \n{cur_blind_str}\
+            \n\n{ctx}\
+            \n{pack_str}\
+            \n{shop_str}"
         )
     }
 }
