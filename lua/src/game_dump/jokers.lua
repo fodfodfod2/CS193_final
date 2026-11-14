@@ -75,6 +75,7 @@ function joker(j)
     ["STICKER"] = sticker(j),
     ["PERISH_CNT"] = perish,
     ["INVIS_ROUNDS"] = invis,
+    ["COST"] = j.cost,
   }
 end
 

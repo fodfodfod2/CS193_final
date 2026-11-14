@@ -7,6 +7,7 @@ function tarot(card)
     local res = {}
     res.NAME = name
     res.DESC = desc
+    res.COST = card.cost
     res.SELL_VALUE = card.sell_cost
 
     return res
@@ -18,6 +19,7 @@ function planet(card)
     res.NAME = name
     res.DESC = desc
     res.HAND_ID = card.ability.hand_type
+    res.COST = card.cost
     res.SELL_VALUE = card.sell_cost
 
     return res
@@ -28,6 +30,7 @@ function spectral(card)
     local res = {}
     res.NAME = name
     res.DESC = desc
+    res.COST = card.cost
     res.SELL_VALUE = card.sell_cost
 
     return res
@@ -93,12 +96,13 @@ function get_last_played_planet_or_tarot()
 
   if set == "Tarot" then
     local name, desc = loc_text("Tarot", key, {})
-    res.TAROT = {NAME = name, DESC = desc, SELL_VALUE = 0}
+    res.TAROT = {NAME = name, DESC = desc, COST = 0, SELL_VALUE = 0}
   elseif set == "Planet" then
     local name, desc = loc_text("Planet", key, {})
     res.PLANET = {
       NAME = name,
       DESC = desc, SELL_VALUE = 0,
+      COST = 0,
       HAND_ID = center.config.hand_type,
     }
   end

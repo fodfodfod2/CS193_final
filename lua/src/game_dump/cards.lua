@@ -79,6 +79,7 @@ function card(c)
     ["SEAL"] = seal(c),
     ["DISABLED"] = c.debuff,
     ["FACE_DOWN"] = facing[c.facing],
+    ["COST"] = c.cost,
   }
 end
 

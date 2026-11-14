@@ -4,7 +4,7 @@ function shop_voucher(v)
   local vars = card_vars(v)
   local key = v.config.center.key
   local name, desc = loc_text("Voucher", key, vars)
-  return {NAME = name, DESC = desc}
+  return {NAME = name, COST = v.cost, DESC = desc}
 end
 
 
@@ -13,7 +13,7 @@ local function owned_voucher(v, key)
   local vars = { cfg.extra, cfg.dollars, cfg.hand_size,
   cfg.joker_slot, cfg.hands, cfg.discards }
   local name, desc = loc_text("Voucher", key, vars)
-  return {NAME = name, DESC = desc}
+  return {NAME = name, COST = 0, DESC = desc}
 end
 
 function get_owned_vouchers()

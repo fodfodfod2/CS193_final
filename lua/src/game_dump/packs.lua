@@ -10,6 +10,7 @@ function shop_pack(p)
         NAME = name ~= "" and name or p.ability.name,
         SELECT_NUM = cfg.choose or 1,
         SIZE = cfg.extra or 0,
+        COST = p.cost,
     }
 end
 
