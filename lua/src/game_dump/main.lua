@@ -6,6 +6,7 @@ assert(SMODS.load_file("vouchers.lua"))()
 assert(SMODS.load_file("consumeables.lua"))()
 assert(SMODS.load_file("tags.lua"))()
 assert(SMODS.load_file("blinds.lua"))()
+assert(SMODS.load_file("packs.lua"))()
 
 -- Credit for this func https://blog.stephansama.info/articles/how-to-print-a-lua-table/
 local function dump(o)
@@ -32,6 +33,7 @@ local function get_shop()
   s.SPECTRAL = get_shop_spectrals()
   s.CARD = get_shop_cards()
   s.VOUCHER = get_shop_vouchers()
+  s.PACK=get_shop_packs()
   return s
 end
 
@@ -52,6 +54,7 @@ local function dump_data()
   d.SHOP = get_shop()
   d.BLINDS = get_blinds()
   d.TAGS_OWNED = get_owned_tags()
+  d.PACK = get_open_pack()
 
   local ctx = {}
   ctx.HANDS = G.GAME.current_round.hands_left

@@ -2,7 +2,7 @@ assert(SMODS.load_file("description.lua"))()
 
 
 
-local function tarot(card)
+function tarot(card)
     local name, desc = loc_text("Tarot", card.config.center.key, card_vars(card))
     local res = {}
     res.NAME = name
@@ -12,7 +12,7 @@ local function tarot(card)
     return res
 end
 
-local function planet(card)
+function planet(card)
     local name, desc = loc_text("Planet", card.config.center.key, card_vars(card))
     local res = {}
     res.NAME = name
@@ -23,7 +23,7 @@ local function planet(card)
     return res
 end
 
-local function spectral(card)
+function spectral(card)
     local name, desc = loc_text("Spectral", card.config.center.key, card_vars(card))
     local res = {}
     res.NAME = name
@@ -33,7 +33,7 @@ local function spectral(card)
     return res
 end
 
-local function get_consumeable_from_area(area, set, fn)
+function get_consumeable_from_area(area, set, fn)
   if area == nil then return nil end
   cards = {}
 
@@ -82,7 +82,7 @@ end
 function get_last_played_planet_or_tarot()
   local key = G.GAME.last_tarot_planet
   local center = key and G.P_CENTERS[key]
-  if not center then return false end
+  if not center then return {TAROT={},PLANET={}} end
 
   local set = center.set
 
@@ -93,12 +93,12 @@ function get_last_played_planet_or_tarot()
 
   if set == "Tarot" then
     local name, desc = loc_text("Tarot", key, {})
-    res.TAROT = {NAME = name, desc = DESC, SELL_VALUE = 0}
+    res.TAROT = {NAME = name, DESC = desc, SELL_VALUE = 0}
   elseif set == "Planet" then
     local name, desc = loc_text("Planet", key, {})
     res.PLANET = {
       NAME = name,
-      desc = DESC, SELL_VALUE = 0, 
+      DESC = desc, SELL_VALUE = 0,
       HAND_ID = center.config.hand_type,
     }
   end
