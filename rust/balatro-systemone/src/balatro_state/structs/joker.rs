@@ -164,7 +164,7 @@ impl fmt::Display for Joker {
 
         write!(
             f,
-            " {ds} {n} | Ability: {d} | \n\t{e}\n\t{st}\n\tCan be sold for {sv}"
+            " {ds} {n} | Ability: {d} | {e} | {st} | Can be sold for {sv}$"
         )
     }
 }

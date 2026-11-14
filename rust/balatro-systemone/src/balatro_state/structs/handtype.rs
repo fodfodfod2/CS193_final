@@ -1,6 +1,7 @@
 use super::*;
 
 /* This represents the different hands the player can level and play */
+#[derive(Eq, Hash, PartialEq)]
 pub enum HandType {
     HighCard,
     Pair,
@@ -23,17 +24,17 @@ impl HandType {
             "High Card" => HandType::HighCard,
             "Pair" => HandType::Pair,
             "Two Pair" => HandType::TwoPair,
-            "Three Of A Kind" => HandType::ThreeOfAKind,
+            "Three of a Kind" => HandType::ThreeOfAKind,
             "Straight" => HandType::Straight,
             "Flush" => HandType::Flush,
             "Full House" => HandType::FullHouse,
-            "Four Of A Kind" => HandType::FourOfAKind,
+            "Four of a Kind" => HandType::FourOfAKind,
             "Straight Flush" => HandType::StraightFlush,
             "Royal Flush" => HandType::RoyalFlush,
-            "Five Of A Kind" => HandType::FiveOfAKind,
+            "Five of a Kind" => HandType::FiveOfAKind,
             "Flush House" => HandType::FlushHouse,
             "Flush Five" => HandType::FlushFive,
-            s => panic!("Unrecognized HandType {s}"),
+            s => panic!("Unrecognized HandType \"{s}\""),
         }
     }
 }

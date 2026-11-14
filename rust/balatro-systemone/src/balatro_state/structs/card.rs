@@ -255,9 +255,6 @@ impl fmt::Display for Card {
             false => "",
         };
         let fd = &self.face_down;
-        match fd {
-            true => write!(f, "Face down card"),
-            false => write!(f, "{ds} {r} of {su} - {e} - {se}"),
-        }
+        write!(f, "{ds} {r} of {su} - {e} - {se}")
     }
 }

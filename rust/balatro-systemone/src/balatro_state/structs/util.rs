@@ -11,9 +11,9 @@ pub fn vec_to_str<T: fmt::Display>(title: &str, v: &Vec<T>) -> String {
         return String::from("");
     }
 
-    let mut res = String::from("{title}:\n");
+    let mut res = format!("{}:\n", title);
     for i in v {
-        res.push_str("\n\t{i}");
+        res += &format!("\n\t{}", i);
     }
     res
 }
