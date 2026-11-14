@@ -12,6 +12,10 @@ impl Seal {
     pub fn new(name: String, desc: String) -> Self {
         Seal { name, desc }
     }
+
+    pub fn exists(&self) -> bool {
+        !(self.name.is_empty() && self.desc.is_empty())
+    }
 }
 
 impl Parsable for Seal {
@@ -46,6 +50,10 @@ pub struct Enhancement {
 impl Enhancement {
     pub fn new(name: String, desc: String) -> Self {
         Enhancement { name, desc }
+    }
+
+    pub fn exists(&self) -> bool {
+        !(self.name.is_empty() && self.desc.is_empty())
     }
 }
 
@@ -176,6 +184,7 @@ pub struct Card {
     suit: Suit,
     enhancement: Enhancement,
     seal: Seal,
+    cost: i8,
     disabled: bool,
     face_down: bool,
 }
@@ -186,6 +195,7 @@ impl Card {
         suit: Suit,
         enhancement: Enhancement,
         seal: Seal,
+        cost: i8,
         disabled: bool,
         face_down: bool,
     ) -> Self {
@@ -194,6 +204,7 @@ impl Card {
             suit,
             enhancement,
             seal,
+            cost,
             disabled,
             face_down,
         }
@@ -226,6 +237,10 @@ impl Parsable for Card {
             .get("FACE_DOWN")
             .ok()
             .ok_or("Failed to parse face_down while parsing Card")?;
+        let cost: i8 = t
+            .get("COST")
+            .ok()
+            .ok_or("Failed to read cost when parsing card")?;
 
         let rank = Rank::from_int(rank_v);
         let suit = Suit::from_int(suit_i);
@@ -237,6 +252,7 @@ impl Parsable for Card {
             suit,
             enhancement,
             seal,
+            cost,
             disabled,
             face_down,
         })
@@ -247,14 +263,20 @@ impl fmt::Display for Card {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let r = &self.rank;
         let su = &self.suit;
-        let e = &self.enhancement;
-        let se = &self.seal;
+        let e_str = match &self.enhancement.exists() {
+            true => format!(" - {}", self.enhancement),
+            false => String::new(),
+        };
+        let se_str = match &self.seal.exists() {
+            true => format!(" - {}", self.seal),
+            false => String::new(),
+        };
         let d = &self.disabled;
         let ds = match d {
             true => "Disabled",
             false => "",
         };
         let fd = &self.face_down;
-        write!(f, "{ds} {r} of {su} - {e} - {se}")
+        write!(f, "{ds} {r} of {su}{e_str}{se_str}")
     }
 }

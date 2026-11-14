@@ -1,3 +1,5 @@
+use std::fmt::write;
+
 use mlua::Table;
 
 use super::*;
@@ -11,6 +13,10 @@ pub struct Sticker {
 impl Sticker {
     pub fn new(name: String, desc: String) -> Self {
         Sticker { name, desc }
+    }
+
+    pub fn exists(&self) -> bool {
+        !(self.name.is_empty() && self.desc.is_empty())
     }
 }
 
@@ -33,7 +39,11 @@ impl fmt::Display for Sticker {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let n = &self.name;
         let d = &self.desc;
-        write!(f, "{n} | Ability: {d}")
+        if self.exists() {
+            write!(f, "{n}/{d}")
+        } else {
+            write!(f, "")
+        }
     }
 }
 
@@ -46,6 +56,10 @@ pub struct Edition {
 impl Edition {
     pub fn new(name: String, desc: String) -> Self {
         Edition { name, desc }
+    }
+
+    pub fn exists(&self) -> bool {
+        !(self.name.is_empty() && self.desc.is_empty())
     }
 }
 
@@ -68,7 +82,11 @@ impl fmt::Display for Edition {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let n = &self.name;
         let d = &self.desc;
-        write!(f, "{n} | Ability: {d}")
+        if self.exists() {
+            write!(f, "{n}/{d}")
+        } else {
+            write!(f, "")
+        }
     }
 }
 
@@ -152,7 +170,7 @@ impl fmt::Display for Joker {
         let n = &self.name;
         let d = &self.desc;
         let e = &self.edition;
-        let sv = &self.sell_value;
+        let sv = self.sell_value;
         let disabled = &self.disabled;
         let invis_cnt = &self.invisible_cnt;
         let perish_cnt = &self.perish_cnt;
@@ -161,10 +179,11 @@ impl fmt::Display for Joker {
             true => "Disabled",
             false => "",
         };
+        let svs = match sv == 0 {
+            true => "",
+            false => &format!("-Can be sold for {}$", sv),
+        };
 
-        write!(
-            f,
-            " {ds} {n} | Ability: {d} | {e} | {st} | Can be sold for {sv}$"
-        )
+        write!(f, " {ds} {n} | {d}:{e}-{st}{svs}")
     }
 }

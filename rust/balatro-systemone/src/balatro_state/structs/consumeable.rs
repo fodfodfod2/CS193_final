@@ -53,9 +53,15 @@ impl fmt::Display for Planet {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let n = &self.name;
         let d = &self.desc;
-        let sv = &self.sell_value;
+        let sv = self.sell_value;
         let h = &self.hand;
-        write!(f, "{n} | upgrades {h} or can be sold for {sv}")
+
+        let svs = match sv == 0 {
+            true => "",
+            false => &format!("-Can be sold for {}$", sv),
+        };
+
+        write!(f, "{n} | upgrades {h}{svs}")
     }
 }
 
@@ -102,8 +108,14 @@ impl fmt::Display for Tarot {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let n = &self.name;
         let d = &self.desc;
-        let sv = &self.sell_value;
-        write!(f, "{n} | use to {d} or can be sold for {sv}")
+        let sv = self.sell_value;
+
+        let svs = match sv == 0 {
+            true => "",
+            false => &format!("-Can be sold for {}$", sv),
+        };
+
+        write!(f, "{n} | use to {d}{svs}")
     }
 }
 
@@ -151,8 +163,14 @@ impl fmt::Display for Spectral {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let n = &self.name;
         let d = &self.desc;
-        let sv = &self.sell_value;
-        write!(f, "{n} | use to {d} or can be sold for {sv}")
+        let sv = self.sell_value;
+
+        let svs = match sv == 0 {
+            true => "",
+            false => &format!("-Can be sold for {}$", sv),
+        };
+
+        write!(f, "{n} | use to {d}{svs}")
     }
 }
 

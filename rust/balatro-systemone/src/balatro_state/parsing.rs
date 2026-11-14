@@ -32,7 +32,7 @@ pub fn read_game_state() -> Option<GameState> {
     let tags_owned = parse_owned_tags(table.clone())?;
     let consumables = parse_owned_consumables(table.clone())?;
     let (current_blind, blinds) = Blind::parse(table.clone());
-    let ctx = match  Ctx::parse(table.clone()) {
+    let ctx = match Ctx::parse(table.clone()) {
         Ok(v) => v,
         Err(s) => panic!("{}", s),
     };
@@ -111,22 +111,4 @@ fn parse_hand(table: Table) -> Option<Vec<Card>> {
 fn parse_deck(table: Table) -> Option<Vec<Card>> {
     let deck: Table = table.get("DECK").ok()?;
     Some(parse_type_vec(deck))
-}
-
-fn parse_type_vec<T: Parsable>(table: Table) -> Vec<T> {
-    let mut counter = 1;
-    let mut res: Vec<T> = Vec::new();
-    loop {
-        let cur_card: Table = match table.get(counter) {
-            Ok(v) => v,
-            Err(_) => {
-                counter -= 1;
-                return res;
-            }
-        };
-
-        res.push(T::parse(cur_card).unwrap());
-        counter += 1;
-    }
-    res
 }
