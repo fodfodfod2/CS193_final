@@ -1,5 +1,3 @@
-use std::vec;
-
 use crate::systemone_api::*;
 
 mod balatro_state;
@@ -8,7 +6,8 @@ mod systemone_api;
 fn main() {
     let gs = balatro_state::parsing::read_game_state().unwrap();
     println!("{}", gs);
-    while let Some(apc) = &gs.get_possible_actions() {
+    let acts = &gs.get_possible_actions();
+    if let Some(apc) = acts {
         println!("{apc}");
     }
 
