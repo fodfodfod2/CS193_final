@@ -1,6 +1,4 @@
-use serde_json::{Value, json};
-use std::collections::HashMap;
-use std::fmt::write;
+use serde_json::Value;
 use std::{env, fmt};
 
 /* This will be passed in to specify which api to use */
@@ -44,6 +42,7 @@ impl fmt::Display for ApiChoice {
     }
 }
 
+#[allow(unused)]
 pub enum ApiQuestionCriteria {
     Choice(Vec<ApiChoice>),
     Noul(Option<(String, String)>),
@@ -123,10 +122,6 @@ impl ApiRequest {
         }
     }
 
-    pub fn as_json(&self) -> Value {
-        json!(&self.to_string())
-    }
-
     pub async fn get_response(&self, t: ApiType) -> Vec<ApiAnswer> {
         let url = t.get_url();
         let api_key = t.get_api_key();
@@ -152,7 +147,8 @@ impl ApiRequest {
         let body = res.text().await.unwrap();
         println!("BODY\n{body}\n\n");
         let mut answers: Vec<ApiAnswer> = Vec::new();
-        let body_v: Value = serde_json::from_str(&body).expect("Failed to parse Json body response");
+        let body_v: Value =
+            serde_json::from_str(&body).expect("Failed to parse Json body response");
         let ans_v = &body_v["answers"];
         for q in &self.questions {
             let qn = &q.name;
@@ -215,19 +211,19 @@ impl ApiAnswer {
                     .as_f64()
                     .expect("Failed to parse choice confidence from json response");
                 ApiAnswer::Choice((choice, confidence))
-            },
+            }
             "noul" => {
                 let ans: f64 = v["noul"]
                     .as_f64()
                     .expect("Failed to parse noul ans from json response");
                 ApiAnswer::Noul(ans)
-            },
+            }
             "score" => {
                 let ans: f64 = v["score"]
                     .as_f64()
                     .expect("Failed to parse score ans from json response");
                 ApiAnswer::Score(ans)
-            },
+            }
             t => panic!("Invalid type \"{}\" in json response", t),
         }
     }
@@ -236,7 +232,7 @@ impl ApiAnswer {
 impl fmt::Display for ApiAnswer {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            ApiAnswer::Choice((n,c)) => write!(f, "CHOICE:{n}| {c} confidence"),
+            ApiAnswer::Choice((n, c)) => write!(f, "CHOICE:{n}| {c} confidence"),
             ApiAnswer::Noul(n) => write!(f, "NOUL:{n}"),
             ApiAnswer::Score(s) => write!(f, "Score:{s}"),
         }
