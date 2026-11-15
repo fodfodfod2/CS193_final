@@ -52,7 +52,7 @@ function get_open_pack()
 end
 
 function get_shop_packs()
-  if not G.shop_booster and G.shop_booster.cards then return nil end
+  if not (G.shop_booster and G.shop_booster.cards) then return nil end
 
   local res = {}
   for i,c in ipairs(G.shop_booster.cards) do
