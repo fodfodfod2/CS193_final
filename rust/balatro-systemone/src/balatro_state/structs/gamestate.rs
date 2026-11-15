@@ -26,6 +26,7 @@ pub struct GameState {
 }
 
 impl GameState {
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         state: State,
         hand: Option<Vec<Card>>,
@@ -62,18 +63,22 @@ impl GameState {
         for j in &self.jokers_owned {
             let n = j.get_name();
             let sv = j.get_sell_value();
-            let cn_str = format!("Sell {n}");
-            let cd_str = format!("Sell Joker --{j}-- for {sv}$");
-            res.push(ApiChoice::new(&cn_str, &cd_str));
+            if sv > 0 {
+                let cn_str = format!("Sell {n}");
+                let cd_str = format!("Sell Joker --{j}-- for {sv}$");
+                res.push(ApiChoice::new(&cn_str, &cd_str));
+            }
         }
 
         for c in &self.consumables {
             let n = c.get_name();
             let tn = c.get_type_name();
             let sv = c.get_sell_value();
-            let cn_str = format!("Sell {n}");
-            let cd_str = format!("Sell {tn} --{c}-- for {sv}$");
-            res.push(ApiChoice::new(&cn_str, &cd_str));
+            if sv > 0 {
+                let cn_str = format!("Sell {n}");
+                let cd_str = format!("Sell {tn} --{c}-- for {sv}$");
+                res.push(ApiChoice::new(&cn_str, &cd_str));
+            }
         }
         res
     }
@@ -138,7 +143,7 @@ impl GameState {
             ));
         }
 
-        return match &self.state {
+        match &self.state {
             State::Shop => {
                 let mut shop_qs = self.get_shop_actions();
 
@@ -168,7 +173,7 @@ impl GameState {
                 ))
             }
             (s) => panic!("No matched state, got {}", s),
-        };
+        }
     }
 }
 
