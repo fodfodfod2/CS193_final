@@ -15,12 +15,12 @@ pub enum PackType {
 impl PackType {
     pub fn from_str(s: &str) -> Self {
         match s {
-            "Card" => PackType::Card,
-            "Joker" => PackType::Joker,
-            "Planet" => PackType::Planet,
-            "Tarot" => PackType::Tarot,
+            "Standard" => PackType::Card,
+            "Buffoon" => PackType::Joker,
+            "Celestial" => PackType::Planet,
+            "Arcana" => PackType::Tarot,
             "Spectral" => PackType::Spectral,
-            _ => panic!("No Valid pack type"),
+            t => panic!("inValid pack type {t}"),
         }
     }
 }
@@ -97,7 +97,7 @@ impl fmt::Display for ShopPack {
         let ic = &self.item_cnt;
         write!(
             f,
-            "{ptn} Pack, Open to select {sn} out of {ic} random {pcn}s.\
+            "{ptn} Pack, Open to select {sn} out of {ic} random {pcn}s. \
              Costs {c}$"
         )
     }
