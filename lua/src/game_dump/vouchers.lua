@@ -4,6 +4,9 @@ function shop_voucher(v)
   local vars = card_vars(v)
   local key = v.config.center.key
   local name, desc = loc_text("Voucher", key, vars)
+  for k,val in pairs(v) do
+    sendDebugMessage(tostring(k).."---"..tostring(val))
+  end
   return {NAME = name, COST = v.cost, DESC = desc}
 end
 
@@ -27,9 +30,9 @@ end
 
 function get_shop_vouchers()
   local res = {}
-  for key in pairs(G.shop_vouchers and G.shop_vouchers.cards or {}) do
-    local center = G.P_CENTERS[key]
-    if center then res[#res + 1] = shop_voucher(center, key) end
+  local cards = G.shop_vouchers and G.shop_vouchers.cards or {}
+  for _, card in ipairs(cards) do
+    res[#res + 1] = shop_voucher(card)
   end
   return res
 end
