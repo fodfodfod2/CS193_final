@@ -10,6 +10,8 @@ pub struct Ctx {
     max_hands: i8,
     max_discards: i8,
     money: i32,
+    max_joker_cnt: i8,
+    cur_joker_cnt: i8,
     last_played_consumable: Option<Consumable>,
     hands_played: HashMap<HandType, bool>,
     hand_lvls: HashMap<HandType, i16>,
@@ -24,6 +26,8 @@ impl Ctx {
         max_hands: i8,
         max_discards: i8,
         money: i32,
+        max_joker_cnt: i8,
+        cur_joker_cnt: i8,
         last_played_consumable: Option<Consumable>,
         hands_played: HashMap<HandType, bool>,
         hand_lvls: HashMap<HandType, i16>,
@@ -35,11 +39,17 @@ impl Ctx {
             max_hands,
             max_discards,
             money,
+            max_joker_cnt,
+            cur_joker_cnt,
             last_played_consumable,
             hands_played,
             hand_lvls,
             most_played_hand,
         }
+    }
+
+    pub fn get_money(&self) -> i32 {
+        self.money
     }
 }
 
@@ -70,6 +80,14 @@ impl Parsable for Ctx {
             .get("MONEY")
             .ok()
             .ok_or("failed to read money from ctx")?;
+        let max_joker_cnt: i8 = ctx_t
+            .get("MAX_JOKERS")
+            .ok()
+            .ok_or("failed to read max jokers from ctx")?;
+        let cur_joker_cnt: i8 = ctx_t
+            .get("JOKER_CNT")
+            .ok()
+            .ok_or("failed to read current jokers from ctx")?;
 
         let last_played_consumable: Table = ctx_t
             .get("LAST_PLAYED_CONSUMEABLE")
@@ -129,6 +147,8 @@ impl Parsable for Ctx {
             max_hands,
             max_discards,
             money,
+            max_joker_cnt,
+            cur_joker_cnt,
             last_played_consumable: lp_cns,
             hands_played,
             hand_lvls,
@@ -144,6 +164,9 @@ impl fmt::Display for Ctx {
         let mh = self.max_hands;
         let md = self.max_discards;
         let m = self.money;
+        let cj = self.cur_joker_cnt;
+        let mj = self.max_joker_cnt;
+
         let lpc_str = match &self.last_played_consumable {
             Some(v) => format!("{}", v),
             None => String::from("None"),
@@ -159,7 +182,8 @@ impl fmt::Display for Ctx {
             \n\t{d} out of {md} discards remaining\
             \n\tmost played hand: {mph}\
             \n\tLast Played Tarot or Planet: {lpc_str}\
-            \n\tYou have {m}$"
+            \n\tYou have {m}$\
+            \n\tYou are using{cj} out of {mj} Joker slots"
         )
     }
 }
