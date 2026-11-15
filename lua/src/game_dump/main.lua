@@ -33,7 +33,7 @@ local function get_shop()
   s.SPECTRAL = get_shop_spectrals()
   s.CARD = get_shop_cards()
   s.VOUCHER = get_shop_vouchers()
-  s.PACK=get_shop_packs()
+  s.PACK = get_shop_packs()
   return s
 end
 
@@ -65,6 +65,8 @@ local function dump_data()
   ctx.MONEY = G.GAME.dollars
   ctx.MAX_JOKERS = G.jokers.config.card_limit
   ctx.JOKER_CNT = #G.jokers.cards
+  ctx.MAX_CONSUMEABLES = G.consumeables.config.card_limit
+  ctx.CONSUMEABLE_CNT = #G.consumeables.cards
 
   local hand_lvls = {}
   local hands_played = {}
