@@ -3,15 +3,29 @@ assert(SMODS.load_file("jokers.lua"))()
 assert(SMODS.load_file("consumeables.lua"))()
 
 function shop_pack(p)
-    local center = p.config.center
-    local cfg = center.config or {}
-    local name, _ = loc_text("Other", center.key, { cfg.choose, cfg.extra })
-    return {
-        NAME = name ~= "" and name or p.ability.name,
-        SELECT_NUM = cfg.choose or 1,
-        SIZE = cfg.extra or 0,
-        COST = p.cost,
-    }
+  local center = p.config.center
+  local cfg = center.config or {}
+  local name, _ = loc_text("Other", center.key, { cfg.choose, cfg.extra })
+
+  local type = ""
+  for word in p.ability.name:gmatch("%S+") do
+    sendDebugMessage("\""..word.."\"")
+    if word == "Standard" or word == "Buffoon" or word == "Celestial"
+       or word == "Spectral" or word == "Arcana" then
+      type = word
+      break
+    end
+  end
+  if type == "" then
+    sendDebugMessage("Pack type conversion failed, name is "..name);
+  end
+  return {
+    NAME = name ~= "" and name or p.ability.name,
+    TYPE = type,
+    SELECT_NUM = cfg.choose or 1,
+    SIZE = cfg.extra or 0,
+    COST = p.cost,
+  }
 end
 
 function get_open_pack()
