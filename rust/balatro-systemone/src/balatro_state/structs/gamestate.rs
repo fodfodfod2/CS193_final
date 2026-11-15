@@ -84,8 +84,10 @@ impl GameState {
     }
 
     fn get_shop_actions(&self) -> Vec<ApiChoice> {
-        let mut res: Vec<ApiChoice> = Vec::new();
-        res
+        match &self.shop {
+            Some(s) => s.get_actions(&self.ctx),
+            None => panic!("Get shop actions called without an existing shop"),
+        }
     }
 
     fn get_pack_actions(&self) -> Vec<ApiChoice> {

@@ -1,5 +1,7 @@
 use mlua::Table;
 
+use crate::ApiChoice;
+
 use super::*;
 
 pub fn indent(s: &str, n: usize) -> String {
@@ -20,6 +22,17 @@ pub fn vec_to_str<T: fmt::Display>(title: &str, v: &Vec<T>) -> String {
 
 pub trait Parsable: Sized {
     fn parse(t: Table) -> Result<Self, &'static str>;
+}
+
+pub trait Buyable {
+    fn get_item_name(&self) -> &str;
+    fn get_price(&self) -> i16;
+}
+
+pub fn get_choice<T: Buyable + fmt::Display>(i: &T) -> ApiChoice {
+    let n = i.get_item_name();
+    let p = i.get_price();
+    ApiChoice::new(&format!("Buy {n}"), &format!("Buy {n} --{i}-- for {p}$"))
 }
 
 pub fn parse_type_vec<T: Parsable>(table: Table) -> Vec<T> {

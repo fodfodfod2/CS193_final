@@ -177,6 +177,16 @@ impl Parsable for Joker {
     }
 }
 
+impl Buyable for Joker {
+    fn get_price(&self) -> i16 {
+        self.sell_value
+    }
+
+    fn get_item_name(&self) -> &str {
+        "Joker"
+    }
+}
+
 impl fmt::Display for Joker {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let n = &self.name;
@@ -191,11 +201,7 @@ impl fmt::Display for Joker {
             true => "Disabled",
             false => "",
         };
-        let svs = match sv == 0 {
-            true => "",
-            false => &format!("-Can be sold for {}$", sv),
-        };
 
-        write!(f, " {ds} {n} | {d}:{e}-{st}{svs}")
+        write!(f, " {ds} {n} | {d}:{e}-{st}")
     }
 }

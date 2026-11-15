@@ -56,12 +56,7 @@ impl fmt::Display for Planet {
         let sv = self.sell_value;
         let h = &self.hand;
 
-        let svs = match sv == 0 {
-            true => "",
-            false => &format!("-Can be sold for {}$", sv),
-        };
-
-        write!(f, "{n} | upgrades {h}{svs}")
+        write!(f, "{n} | upgrades {h}")
     }
 }
 
@@ -110,12 +105,7 @@ impl fmt::Display for Tarot {
         let d = &self.desc;
         let sv = self.sell_value;
 
-        let svs = match sv == 0 {
-            true => "",
-            false => &format!("-Can be sold for {}$", sv),
-        };
-
-        write!(f, "{n} | use to {d}{svs}")
+        write!(f, "{n} | use to {d}")
     }
 }
 
@@ -165,12 +155,7 @@ impl fmt::Display for Spectral {
         let d = &self.desc;
         let sv = self.sell_value;
 
-        let svs = match sv == 0 {
-            true => "",
-            false => &format!("-Can be sold for {}$", sv),
-        };
-
-        write!(f, "{n} | use to {d}{svs}")
+        write!(f, "{n} | use to {d}")
     }
 }
 

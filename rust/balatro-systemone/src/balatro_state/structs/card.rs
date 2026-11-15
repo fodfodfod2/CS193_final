@@ -184,7 +184,7 @@ pub struct Card {
     suit: Suit,
     enhancement: Enhancement,
     seal: Seal,
-    cost: i8,
+    cost: i16,
     disabled: bool,
     face_down: bool,
 }
@@ -195,7 +195,7 @@ impl Card {
         suit: Suit,
         enhancement: Enhancement,
         seal: Seal,
-        cost: i8,
+        cost: i16,
         disabled: bool,
         face_down: bool,
     ) -> Self {
@@ -237,7 +237,7 @@ impl Parsable for Card {
             .get("FACE_DOWN")
             .ok()
             .ok_or("Failed to parse face_down while parsing Card")?;
-        let cost: i8 = t
+        let cost: i16 = t
             .get("COST")
             .ok()
             .ok_or("Failed to read cost when parsing card")?;
@@ -256,6 +256,16 @@ impl Parsable for Card {
             disabled,
             face_down,
         })
+    }
+}
+
+impl Buyable for Card {
+    fn get_price(&self) -> i16 {
+        self.cost
+    }
+
+    fn get_item_name(&self) -> &str {
+        "Card"
     }
 }
 

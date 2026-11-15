@@ -5,13 +5,8 @@ use super::*;
 /* This will represent a Voucher */
 pub struct Voucher {
     name: String,
+    cost: i16,
     desc: String,
-}
-
-impl Voucher {
-    pub fn new(name: String, desc: String) -> Self {
-        Voucher { name, desc }
-    }
 }
 
 impl Parsable for Voucher {
@@ -24,8 +19,22 @@ impl Parsable for Voucher {
             .get("DESC")
             .ok()
             .ok_or("Failed to parse Desc while parsing Voucher")?;
+        let cost: i16 = t
+            .get("COST")
+            .ok()
+            .ok_or("Failed to parse cost while parsing Voucher")?;
 
-        Ok(Voucher { name, desc })
+        Ok(Voucher { name, cost, desc })
+    }
+}
+
+impl Buyable for Voucher {
+    fn get_item_name(&self) -> &str {
+        "Voucher"
+    }
+
+    fn get_price(&self) -> i16 {
+        self.cost
     }
 }
 

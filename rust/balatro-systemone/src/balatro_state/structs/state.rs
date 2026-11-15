@@ -1,6 +1,7 @@
 use super::*;
 
 /* This represents possible game states */
+#[derive(PartialEq)]
 pub enum State {
     BlindSelect,
     Tutorial,
