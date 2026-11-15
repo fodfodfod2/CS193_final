@@ -9,6 +9,7 @@ pub struct Ctx {
     discards: i8,
     max_hands: i8,
     max_discards: i8,
+    money: i32,
     last_played_consumable: Option<Consumable>,
     hands_played: HashMap<HandType, bool>,
     hand_lvls: HashMap<HandType, i16>,
@@ -16,11 +17,13 @@ pub struct Ctx {
 }
 
 impl Ctx {
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         hands: i8,
         discards: i8,
         max_hands: i8,
         max_discards: i8,
+        money: i32,
         last_played_consumable: Option<Consumable>,
         hands_played: HashMap<HandType, bool>,
         hand_lvls: HashMap<HandType, i16>,
@@ -31,6 +34,7 @@ impl Ctx {
             discards,
             max_hands,
             max_discards,
+            money,
             last_played_consumable,
             hands_played,
             hand_lvls,
@@ -62,6 +66,10 @@ impl Parsable for Ctx {
             .get("MAX_DISCARDS")
             .ok()
             .ok_or("failed to read max discards")?;
+        let money: i32 = ctx_t
+            .get("MONEY")
+            .ok()
+            .ok_or("failed to read money from ctx")?;
 
         let last_played_consumable: Table = ctx_t
             .get("LAST_PLAYED_CONSUMEABLE")
@@ -120,6 +128,7 @@ impl Parsable for Ctx {
             discards,
             max_hands,
             max_discards,
+            money,
             last_played_consumable: lp_cns,
             hands_played,
             hand_lvls,
@@ -130,10 +139,11 @@ impl Parsable for Ctx {
 
 impl fmt::Display for Ctx {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let h = &self.hands;
-        let d = &self.discards;
-        let mh = &self.max_hands;
-        let md = &self.max_discards;
+        let h = self.hands;
+        let d = self.discards;
+        let mh = self.max_hands;
+        let md = self.max_discards;
+        let m = self.money;
         let lpc_str = match &self.last_played_consumable {
             Some(v) => format!("{}", v),
             None => String::from("None"),
@@ -148,7 +158,8 @@ impl fmt::Display for Ctx {
             \n\t{h} out of {mh} hands remaining\
             \n\t{d} out of {md} discards remaining\
             \n\tmost played hand: {mph}\
-            \n\tLast Played Tarot or Planet: {lpc_str}"
+            \n\tLast Played Tarot or Planet: {lpc_str}\
+            \n\tYou have {m}$"
         )
     }
 }
