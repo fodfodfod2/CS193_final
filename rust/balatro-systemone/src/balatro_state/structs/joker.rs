@@ -125,6 +125,18 @@ impl Joker {
             sticker,
         }
     }
+
+    pub fn get_name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn get_desc(&self) -> &str {
+        &self.desc
+    }
+
+    pub fn get_sell_value(&self) -> i16 {
+        self.sell_value
+    }
 }
 
 impl Parsable for Joker {

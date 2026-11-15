@@ -4,7 +4,7 @@ use super::*;
 
 /* This will represent a Planet card */
 pub struct Planet {
-    name: String,
+    pub name: String,
     desc: String,
     sell_value: i16,
     hand: HandType,
@@ -67,7 +67,7 @@ impl fmt::Display for Planet {
 
 /* This will represent a Tarot card */
 pub struct Tarot {
-    name: String,
+    pub name: String,
     desc: String,
     sell_value: i16,
 }
@@ -121,7 +121,7 @@ impl fmt::Display for Tarot {
 
 /* This will represent a spectral card */
 pub struct Spectral {
-    name: String,
+    pub name: String,
     desc: String,
     sell_value: i16,
 }
@@ -178,6 +178,40 @@ pub enum Consumable {
     Planet(Planet),
     Tarot(Tarot),
     Spectral(Spectral),
+}
+
+impl Consumable {
+    pub fn get_name(&self) -> &str {
+        match self {
+            Consumable::Tarot(t) => &t.name,
+            Consumable::Planet(p) => &p.name,
+            Consumable::Spectral(s) => &s.name,
+        }
+    }
+
+    pub fn get_type_name(&self) -> &str {
+        match self {
+            Consumable::Tarot(_) => "Tarot",
+            Consumable::Planet(_) => "Planet",
+            Consumable::Spectral(_) => "Spectral",
+        }
+    }
+
+    pub fn get_desc(&self) -> &str {
+        match self {
+            Consumable::Tarot(t) => &t.desc,
+            Consumable::Planet(p) => &p.desc,
+            Consumable::Spectral(s) => &s.desc,
+        }
+    }
+
+    pub fn get_sell_value(&self) -> i16 {
+        match self {
+            Consumable::Tarot(t) => t.sell_value,
+            Consumable::Planet(p) => p.sell_value,
+            Consumable::Spectral(s) => s.sell_value,
+        }
+    }
 }
 
 impl fmt::Display for Consumable {

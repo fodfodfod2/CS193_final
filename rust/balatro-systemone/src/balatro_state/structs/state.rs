@@ -61,6 +61,14 @@ impl State {
                 | State::StandardPack
                 | State::BuffPack
                 | State::Shop
+                | State::BlindSelect
+        )
+    }
+
+    pub fn is_pack_state(&self) -> bool {
+        matches!(
+            self,
+            State::TarotPack | State::PlanetPack | State::SpectralPack | State::StandardPack
         )
     }
 }
