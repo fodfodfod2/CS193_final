@@ -190,6 +190,8 @@ impl fmt::Display for Ctx {
         let m = self.money;
         let cj = self.cur_joker_cnt;
         let mj = self.max_joker_cnt;
+        let cc = self.cur_cons_cnt;
+        let mc = self.max_cons_cnt;
 
         let lpc_str = match &self.last_played_consumable {
             Some(v) => format!("{}", v),
@@ -207,7 +209,8 @@ impl fmt::Display for Ctx {
             \n\tmost played hand: {mph}\
             \n\tLast Played Tarot or Planet: {lpc_str}\
             \n\tYou have {m}$\
-            \n\tYou are using{cj} out of {mj} Joker slots"
+            \n\tYou are using {cj} out of {mj} Joker slots\
+            \n\tYou are using {cc} out of {mc} Consumable slots"
         )
     }
 }
