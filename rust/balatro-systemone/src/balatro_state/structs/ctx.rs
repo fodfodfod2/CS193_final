@@ -9,9 +9,11 @@ pub struct Ctx {
     discards: i8,
     max_hands: i8,
     max_discards: i8,
-    money: i32,
+    money: i16,
     max_joker_cnt: i8,
     cur_joker_cnt: i8,
+    max_cons_cnt: i8,
+    cur_cons_cnt: i8,
     last_played_consumable: Option<Consumable>,
     hands_played: HashMap<HandType, bool>,
     hand_lvls: HashMap<HandType, i16>,
@@ -25,9 +27,11 @@ impl Ctx {
         discards: i8,
         max_hands: i8,
         max_discards: i8,
-        money: i32,
+        money: i16,
         max_joker_cnt: i8,
         cur_joker_cnt: i8,
+        max_cons_cnt: i8,
+        cur_cons_cnt: i8,
         last_played_consumable: Option<Consumable>,
         hands_played: HashMap<HandType, bool>,
         hand_lvls: HashMap<HandType, i16>,
@@ -41,6 +45,8 @@ impl Ctx {
             money,
             max_joker_cnt,
             cur_joker_cnt,
+            max_cons_cnt,
+            cur_cons_cnt,
             last_played_consumable,
             hands_played,
             hand_lvls,
@@ -48,8 +54,16 @@ impl Ctx {
         }
     }
 
-    pub fn get_money(&self) -> i32 {
+    pub fn get_money(&self) -> i16 {
         self.money
+    }
+
+    pub fn get_open_joker_slots(&self) -> i8 {
+        self.max_joker_cnt - self.cur_joker_cnt
+    }
+
+    pub fn get_open_cons_slots(&self) -> i8 {
+        self.max_cons_cnt - self.cur_cons_cnt
     }
 }
 
@@ -76,7 +90,7 @@ impl Parsable for Ctx {
             .get("MAX_DISCARDS")
             .ok()
             .ok_or("failed to read max discards")?;
-        let money: i32 = ctx_t
+        let money: i16 = ctx_t
             .get("MONEY")
             .ok()
             .ok_or("failed to read money from ctx")?;
@@ -86,6 +100,14 @@ impl Parsable for Ctx {
             .ok_or("failed to read max jokers from ctx")?;
         let cur_joker_cnt: i8 = ctx_t
             .get("JOKER_CNT")
+            .ok()
+            .ok_or("failed to read current jokers from ctx")?;
+        let max_cons_cnt: i8 = ctx_t
+            .get("MAX_CONSUMEABLES")
+            .ok()
+            .ok_or("failed to read max consumeables from ctx")?;
+        let cur_cons_cnt: i8 = ctx_t
+            .get("CONSUMEABLE_CNT")
             .ok()
             .ok_or("failed to read current jokers from ctx")?;
 
@@ -149,6 +171,8 @@ impl Parsable for Ctx {
             money,
             max_joker_cnt,
             cur_joker_cnt,
+            max_cons_cnt,
+            cur_cons_cnt,
             last_played_consumable: lp_cns,
             hands_played,
             hand_lvls,
