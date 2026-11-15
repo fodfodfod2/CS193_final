@@ -63,6 +63,8 @@ local function dump_data()
   ctx.MAX_DISCARDS = G.GAME.round_resets.discards
   ctx.LAST_PLAYED_CONSUMEABLE = get_last_played_planet_or_tarot()
   ctx.MONEY = G.GAME.dollars
+  ctx.MAX_JOKERS = G.jokers.config.card_limit
+  ctx.JOKER_CNT = #G.jokers.cards
 
   local hand_lvls = {}
   local hands_played = {}
