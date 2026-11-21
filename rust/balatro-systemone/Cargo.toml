@@ -8,3 +8,4 @@ mlua = {version = "0.12.2", features = ["luajit", "serde"]}
 reqwest = { version = "0.12", features = ["json"] }
 tokio = { version = "1", features = ["full"] }
 serde_json = "1.0"
+strum = { version = "0.28.0", features = ["derive"] }
