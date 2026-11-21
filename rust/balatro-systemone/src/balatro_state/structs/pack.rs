@@ -23,23 +23,46 @@ impl PackType {
             t => panic!("inValid pack type {t}"),
         }
     }
+
+    pub fn to_str(&self) -> &'static str {
+        match &self {
+            PackType::Card => "Standard",
+            PackType::Joker => "Buffoon",
+            PackType::Planet => "Celestial",
+            PackType::Tarot => "Arcana",
+            PackType::Spectral => "Spectral",
+        }
+    }
 }
 
 pub struct ShopPack {
     pack_type: PackType,
     item_cnt: i8,
-    cost: i8,
+    cost: i16,
     select_num: i8,
+    name: String,
 }
 
 impl ShopPack {
-    pub fn new(pack_type: PackType, item_cnt: i8, cost: i8, select_num: i8) -> Self {
+    pub fn new(pack_type: PackType, item_cnt: i8, cost: i16, select_num: i8) -> Self {
+        let name: String =  format!("{} Pack", &pack_type.to_str());
         ShopPack {
             pack_type,
             item_cnt,
             cost,
             select_num,
+            name,
         }
+    }
+}
+
+impl Buyable for ShopPack {
+    fn get_price(&self) -> i16 {
+        return self.cost;
+    }
+
+    fn get_item_name(&self) -> &str {
+        return &self.name;
     }
 }
 
@@ -57,7 +80,7 @@ impl Parsable for ShopPack {
             .get("SIZE")
             .ok()
             .ok_or("Failed to get item cnt from shop pack")?;
-        let cost: i8 = t
+        let cost: i16 = t
             .get("COST")
             .ok()
             .ok_or("Failed to get cost while parsing shop pack")?;
@@ -67,12 +90,7 @@ impl Parsable for ShopPack {
             .ok_or("Failed to get type str from shop pack")?;
         let pack_type = PackType::from_str(&type_str);
 
-        Ok(ShopPack {
-            pack_type,
-            item_cnt,
-            cost,
-            select_num,
-        })
+        Ok(ShopPack::new(pack_type, item_cnt, cost, select_num))
     }
 }
 

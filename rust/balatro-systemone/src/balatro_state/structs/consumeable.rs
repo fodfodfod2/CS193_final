@@ -8,15 +8,17 @@ pub struct Planet {
     desc: String,
     sell_value: i16,
     hand: HandType,
+    cost: i16,
 }
 
 impl Planet {
-    pub fn new(name: String, desc: String, sell_value: i16, hand: HandType) -> Self {
+    pub fn new(name: String, desc: String, sell_value: i16, hand: HandType, cost: i16) -> Self {
         Planet {
             name,
             desc,
             sell_value,
             hand,
+            cost
         }
     }
 }
@@ -40,15 +42,31 @@ impl Parsable for Planet {
             .ok()
             .ok_or("Failed to parse hand id while parsing Planet")?;
         let hand = HandType::from_str(&hand_id);
+        let cost: i16 = t
+            .get("COST")
+            .ok()
+            .ok_or("Failed to parse cost while parsing Planet")?;
 
         Ok(Planet {
             name,
             desc,
             sell_value,
             hand,
+            cost,
         })
     }
 }
+
+impl Buyable for Planet {
+    fn get_item_name(&self) -> &str {
+        &self.name
+    }
+
+    fn get_price(&self) -> i16 {
+       self.cost
+    }
+}
+
 impl fmt::Display for Planet {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let n = &self.name;
@@ -65,15 +83,27 @@ pub struct Tarot {
     pub name: String,
     desc: String,
     sell_value: i16,
+    cost: i16,
 }
 
 impl Tarot {
-    pub fn new(name: String, desc: String, sell_value: i16) -> Self {
+    pub fn new(name: String, desc: String, sell_value: i16, cost: i16) -> Self {
         Tarot {
             name,
             desc,
             sell_value,
+            cost
         }
+    }
+}
+
+impl Buyable for Tarot {
+    fn get_item_name(&self) -> &str {
+        &self.name
+    }
+
+    fn get_price(&self) -> i16 {
+       self.cost
     }
 }
 
@@ -91,11 +121,15 @@ impl Parsable for Tarot {
             .get("SELL_VALUE")
             .ok()
             .ok_or("Failed to parse sell value while parsing Tarot")?;
-
+        let cost: i16 = t
+            .get("COST")
+            .ok()
+            .ok_or("Failed to parse cost while parsing Tarot")?;
         Ok(Tarot {
             name,
             desc,
             sell_value,
+            cost,
         })
     }
 }
@@ -114,15 +148,27 @@ pub struct Spectral {
     pub name: String,
     desc: String,
     sell_value: i16,
+    cost: i16,
 }
 
 impl Spectral {
-    pub fn new(name: String, desc: String, sell_value: i16) -> Self {
+    pub fn new(name: String, desc: String, sell_value: i16, cost: i16) -> Self {
         Spectral {
             name,
             desc,
             sell_value,
+            cost,
         }
+    }
+}
+
+impl Buyable for Spectral {
+    fn get_item_name(&self) -> &str {
+        &self.name
+    }
+
+    fn get_price(&self) -> i16 {
+       self.cost
     }
 }
 
@@ -140,11 +186,16 @@ impl Parsable for Spectral {
             .get("SELL_VALUE")
             .ok()
             .ok_or("Failed to parse sell value while parsing Spectral")?;
+        let cost: i16 = t
+            .get("COST")
+            .ok()
+            .ok_or("Failed to parse cost while parsing Spectral")?;
 
         Ok(Spectral {
             name,
             desc,
             sell_value,
+            cost,
         })
     }
 }

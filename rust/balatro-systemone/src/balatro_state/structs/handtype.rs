@@ -1,7 +1,9 @@
+use strum::EnumIter;
+
 use super::*;
 
 /* This represents the different hands the player can level and play */
-#[derive(Eq, Hash, PartialEq)]
+#[derive(Debug, Eq, Hash, PartialEq, EnumIter)]
 pub enum HandType {
     HighCard,
     Pair,
@@ -12,7 +14,8 @@ pub enum HandType {
     FullHouse,
     FourOfAKind,
     StraightFlush,
-    RoyalFlush,
+    // RoyalFlush,
+    // /* Royal flush is apparrently just a straight flush in balatro */
     FiveOfAKind,
     FlushHouse,
     FlushFive,
@@ -30,7 +33,6 @@ impl HandType {
             "Full House" => HandType::FullHouse,
             "Four of a Kind" => HandType::FourOfAKind,
             "Straight Flush" => HandType::StraightFlush,
-            "Royal Flush" => HandType::RoyalFlush,
             "Five of a Kind" => HandType::FiveOfAKind,
             "Flush House" => HandType::FlushHouse,
             "Flush Five" => HandType::FlushFive,
@@ -51,7 +53,6 @@ impl fmt::Display for HandType {
             HandType::FullHouse => write!(f, "Full House"),
             HandType::FourOfAKind => write!(f, "Four Of A Kind"),
             HandType::StraightFlush => write!(f, "Straight Flush"),
-            HandType::RoyalFlush => write!(f, "Royal Flush"),
             HandType::FiveOfAKind => write!(f, "Five Of A Kind"),
             HandType::FlushHouse => write!(f, "Flush House"),
             HandType::FlushFive => write!(f, "Flush Five"),

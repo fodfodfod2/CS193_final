@@ -1,8 +1,9 @@
-use std::fmt::write;
+use std::fmt::{format, write};
 
 use mlua::{Table, table};
 
 use super::*;
+use strum::IntoEnumIterator;
 
 pub struct Ctx {
     hands: i8,
@@ -156,11 +157,11 @@ impl Parsable for Ctx {
             hands_played.insert(HandType::from_str(&h), p);
         }
 
-        for pair in hl_t.pairs::<String, bool>() {
+        for pair in hl_t.pairs::<String, i16>() {
             let (h, l) = pair
                 .ok()
                 .ok_or("Failed to parse hand lvls from local table")?;
-            hands_played.insert(HandType::from_str(&h), l);
+            hand_lvls.insert(HandType::from_str(&h), l);
         }
 
         Ok(Ctx {
@@ -201,6 +202,11 @@ impl fmt::Display for Ctx {
         let hl = &self.hand_lvls;
         let mph = &self.most_played_hand;
 
+        let mut hs: String = String::from("HANDTYPES");
+        for ht in HandType::iter() {
+            hs += &format!("\n\t\t{ht}: Lvl:{}, Played:{}", hl.get(&ht).unwrap(), hp.get(&ht).unwrap());
+        }
+
         write!(
             f,
             "Context:\
@@ -210,7 +216,8 @@ impl fmt::Display for Ctx {
             \n\tLast Played Tarot or Planet: {lpc_str}\
             \n\tYou have {m}$\
             \n\tYou are using {cj} out of {mj} Joker slots\
-            \n\tYou are using {cc} out of {mc} Consumable slots"
+            \n\tYou are using {cc} out of {mc} Consumable slots\
+            \n\t{hs}"
         )
     }
 }

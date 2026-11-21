@@ -43,11 +43,51 @@ impl Shop {
 
         if c.get_open_joker_slots() > 0 {
             for j in &self.joker {
-                if j.get_price() > m {
+                if j.get_price() <= m {
                     res.push(get_choice(j));
                 }
             }
         }
+
+        if c.get_open_cons_slots() > 0 {
+            for p in &self.planet {
+                if p.get_price() <= m {
+                    res.push(get_choice(p));
+                }
+            }
+
+            for t in &self.tarot {
+                if t.get_price() <= m {
+                    res.push(get_choice(t));
+                }
+            }
+
+            for s in &self.spectral {
+                if s.get_price() <= m {
+                    res.push(get_choice(s));
+                }
+            }
+        }
+
+        for c in &self.card {
+            if c.get_price() <= m {
+                res.push(get_choice(c));
+            }
+        }
+
+        for p in &self.packs {
+            if p.get_price() <= m {
+                res.push(get_choice(p));
+            }
+        }
+
+        for v in &self.vouchers {
+            if v.get_price() <= m {
+                res.push(get_choice(v));
+            }
+        }
+        
+        res.push(ApiChoice::new("Advance", "Advance to blind selection"));
         res
     }
 }
