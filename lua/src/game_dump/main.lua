@@ -26,6 +26,7 @@ end
 
 
 local function get_shop()
+  if G.STATE ~= 5 then return nil end
   local s = {}
   s.JOKER = get_shop_jokers()
   s.PLANET = get_shop_planets()

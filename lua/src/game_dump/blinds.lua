@@ -52,7 +52,7 @@ end
 
 function get_blinds()
   local nxt_blind = G.GAME.blind_on_deck
-  cur = (nxt_blind == "Big" and 1) or (deck == "Boss" and 2) or 0
+  cur = (nxt_blind == "Big" and 1) or (nxt_blind == "Boss" and 2) or 0
 
   return {
     SMALL = get_small_blind(),
