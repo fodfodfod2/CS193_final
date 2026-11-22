@@ -2,214 +2,6 @@ use mlua::Table;
 
 use super::*;
 
-/* This will represent a Planet card */
-pub struct Planet {
-    pub name: String,
-    desc: String,
-    sell_value: i16,
-    hand: HandType,
-    cost: i16,
-}
-
-impl Planet {
-    pub fn new(name: String, desc: String, sell_value: i16, hand: HandType, cost: i16) -> Self {
-        Planet {
-            name,
-            desc,
-            sell_value,
-            hand,
-            cost
-        }
-    }
-}
-
-impl Parsable for Planet {
-    fn parse(t: Table) -> Result<Self, &'static str> {
-        let name: String = t
-            .get("NAME")
-            .ok()
-            .ok_or("Failed to parse Name while parsing Planet")?;
-        let desc: String = t
-            .get("DESC")
-            .ok()
-            .ok_or("Failed to parse Desc while parsing Planet")?;
-        let sell_value: i16 = t
-            .get("SELL_VALUE")
-            .ok()
-            .ok_or("Failed to parse sell value while parsing Planet")?;
-        let hand_id: String = t
-            .get("HAND_ID")
-            .ok()
-            .ok_or("Failed to parse hand id while parsing Planet")?;
-        let hand = HandType::from_str(&hand_id);
-        let cost: i16 = t
-            .get("COST")
-            .ok()
-            .ok_or("Failed to parse cost while parsing Planet")?;
-
-        Ok(Planet {
-            name,
-            desc,
-            sell_value,
-            hand,
-            cost,
-        })
-    }
-}
-
-impl Buyable for Planet {
-    fn get_item_name(&self) -> &str {
-        &self.name
-    }
-
-    fn get_price(&self) -> i16 {
-       self.cost
-    }
-}
-
-impl fmt::Display for Planet {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let n = &self.name;
-        let d = &self.desc;
-        let sv = self.sell_value;
-        let h = &self.hand;
-
-        write!(f, "{n} | upgrades {h}")
-    }
-}
-
-/* This will represent a Tarot card */
-pub struct Tarot {
-    pub name: String,
-    desc: String,
-    sell_value: i16,
-    cost: i16,
-}
-
-impl Tarot {
-    pub fn new(name: String, desc: String, sell_value: i16, cost: i16) -> Self {
-        Tarot {
-            name,
-            desc,
-            sell_value,
-            cost
-        }
-    }
-}
-
-impl Buyable for Tarot {
-    fn get_item_name(&self) -> &str {
-        &self.name
-    }
-
-    fn get_price(&self) -> i16 {
-       self.cost
-    }
-}
-
-impl Parsable for Tarot {
-    fn parse(t: Table) -> Result<Self, &'static str> {
-        let name: String = t
-            .get("NAME")
-            .ok()
-            .ok_or("Failed to parse Name while parsing Tarot")?;
-        let desc: String = t
-            .get("DESC")
-            .ok()
-            .ok_or("Failed to parse Desc while parsing Tarot")?;
-        let sell_value: i16 = t
-            .get("SELL_VALUE")
-            .ok()
-            .ok_or("Failed to parse sell value while parsing Tarot")?;
-        let cost: i16 = t
-            .get("COST")
-            .ok()
-            .ok_or("Failed to parse cost while parsing Tarot")?;
-        Ok(Tarot {
-            name,
-            desc,
-            sell_value,
-            cost,
-        })
-    }
-}
-impl fmt::Display for Tarot {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let n = &self.name;
-        let d = &self.desc;
-        let sv = self.sell_value;
-
-        write!(f, "{n} | use to {d}")
-    }
-}
-
-/* This will represent a spectral card */
-pub struct Spectral {
-    pub name: String,
-    desc: String,
-    sell_value: i16,
-    cost: i16,
-}
-
-impl Spectral {
-    pub fn new(name: String, desc: String, sell_value: i16, cost: i16) -> Self {
-        Spectral {
-            name,
-            desc,
-            sell_value,
-            cost,
-        }
-    }
-}
-
-impl Buyable for Spectral {
-    fn get_item_name(&self) -> &str {
-        &self.name
-    }
-
-    fn get_price(&self) -> i16 {
-       self.cost
-    }
-}
-
-impl Parsable for Spectral {
-    fn parse(t: Table) -> Result<Self, &'static str> {
-        let name: String = t
-            .get("NAME")
-            .ok()
-            .ok_or("Failed to parse Name while parsing Spectral")?;
-        let desc: String = t
-            .get("DESC")
-            .ok()
-            .ok_or("Failed to parse Desc while parsing Spectral")?;
-        let sell_value: i16 = t
-            .get("SELL_VALUE")
-            .ok()
-            .ok_or("Failed to parse sell value while parsing Spectral")?;
-        let cost: i16 = t
-            .get("COST")
-            .ok()
-            .ok_or("Failed to parse cost while parsing Spectral")?;
-
-        Ok(Spectral {
-            name,
-            desc,
-            sell_value,
-            cost,
-        })
-    }
-}
-
-impl fmt::Display for Spectral {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let n = &self.name;
-        let d = &self.desc;
-        let sv = self.sell_value;
-
-        write!(f, "{n} | use to {d}")
-    }
-}
-
 pub enum Consumable {
     Planet(Planet),
     Tarot(Tarot),
@@ -219,9 +11,9 @@ pub enum Consumable {
 impl Consumable {
     pub fn get_name(&self) -> &str {
         match self {
-            Consumable::Tarot(t) => &t.name,
-            Consumable::Planet(p) => &p.name,
-            Consumable::Spectral(s) => &s.name,
+            Consumable::Tarot(t) => &t.get_name(),
+            Consumable::Planet(p) => &p.get_name(),
+            Consumable::Spectral(s) => &s.get_name(),
         }
     }
 
@@ -235,17 +27,17 @@ impl Consumable {
 
     pub fn get_desc(&self) -> &str {
         match self {
-            Consumable::Tarot(t) => &t.desc,
-            Consumable::Planet(p) => &p.desc,
-            Consumable::Spectral(s) => &s.desc,
+            Consumable::Tarot(t) => &t.get_desc(),
+            Consumable::Planet(p) => &p.get_desc(),
+            Consumable::Spectral(s) => &s.get_desc(),
         }
     }
 
     pub fn get_sell_value(&self) -> i16 {
         match self {
-            Consumable::Tarot(t) => t.sell_value,
-            Consumable::Planet(p) => p.sell_value,
-            Consumable::Spectral(s) => s.sell_value,
+            Consumable::Tarot(t) => t.get_sell_val(),
+            Consumable::Planet(p) => p.get_sell_val(),
+            Consumable::Spectral(s) => s.get_sell_val(),
         }
     }
 }

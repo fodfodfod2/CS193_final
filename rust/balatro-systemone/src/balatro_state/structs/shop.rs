@@ -86,7 +86,7 @@ impl Shop {
                 res.push(get_choice(v));
             }
         }
-        
+
         res.push(ApiChoice::new("Advance", "Advance to blind selection"));
         res
     }
@@ -164,12 +164,18 @@ impl fmt::Display for Shop {
         let v_str = vec_to_str("Vouchers", &self.vouchers);
 
         let indented: String = indent(&jkr_str, 1)
-            + "\n" + &indent(&pnt_str, 1)
-            + "\n" + &indent(&tar_str, 1)
-            + "\n" + &indent(&spl_str, 1)
-            + "\n" + &indent(&crd_str, 1)
-            + "\n" + &indent(&pk_str, 1)
-            + "\n" + &indent(&v_str, 1);
+            + "\n"
+            + &indent(&pnt_str, 1)
+            + "\n"
+            + &indent(&tar_str, 1)
+            + "\n"
+            + &indent(&spl_str, 1)
+            + "\n"
+            + &indent(&crd_str, 1)
+            + "\n"
+            + &indent(&pk_str, 1)
+            + "\n"
+            + &indent(&v_str, 1);
 
         write!(f, "Shop:\n{indented}")
     }

@@ -204,7 +204,11 @@ impl fmt::Display for Ctx {
 
         let mut hs: String = String::from("HANDTYPES");
         for ht in HandType::iter() {
-            hs += &format!("\n\t\t{ht}: Lvl:{}, Played:{}", hl.get(&ht).unwrap(), hp.get(&ht).unwrap());
+            hs += &format!(
+                "\n\t\t{ht}: Lvl:{}, Played:{}",
+                hl.get(&ht).unwrap(),
+                hp.get(&ht).unwrap()
+            );
         }
 
         write!(

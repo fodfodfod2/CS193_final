@@ -45,7 +45,7 @@ pub struct ShopPack {
 
 impl ShopPack {
     pub fn new(pack_type: PackType, item_cnt: i8, cost: i16, select_num: i8) -> Self {
-        let name: String =  format!("{} Pack", &pack_type.to_str());
+        let name: String = format!("{} Pack", &pack_type.to_str());
         ShopPack {
             pack_type,
             item_cnt,
