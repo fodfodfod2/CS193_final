@@ -18,43 +18,10 @@ pub struct Ctx {
     last_played_consumable: Option<Consumable>,
     hands_played: HashMap<HandType, bool>,
     hand_lvls: HashMap<HandType, i16>,
-    most_played_hand: HandType,
+    most_played_hand: Option<HandType>,
 }
 
 impl Ctx {
-    #[allow(clippy::too_many_arguments)]
-    pub fn new(
-        hands: i8,
-        discards: i8,
-        max_hands: i8,
-        max_discards: i8,
-        money: i16,
-        max_joker_cnt: i8,
-        cur_joker_cnt: i8,
-        max_cons_cnt: i8,
-        cur_cons_cnt: i8,
-        last_played_consumable: Option<Consumable>,
-        hands_played: HashMap<HandType, bool>,
-        hand_lvls: HashMap<HandType, i16>,
-        most_played_hand: HandType,
-    ) -> Self {
-        Ctx {
-            hands,
-            discards,
-            max_hands,
-            max_discards,
-            money,
-            max_joker_cnt,
-            cur_joker_cnt,
-            max_cons_cnt,
-            cur_cons_cnt,
-            last_played_consumable,
-            hands_played,
-            hand_lvls,
-            most_played_hand,
-        }
-    }
-
     pub fn get_money(&self) -> i16 {
         self.money
     }
@@ -137,7 +104,10 @@ impl Parsable for Ctx {
             .ok()
             .ok_or("Failed to parse most_played_hand from ctx table")?;
 
-        let most_played_hand = HandType::from_str(&mps_str);
+        let most_played_hand = match mps_str.as_str() {
+            "" => None,
+            s => Some(HandType::from_str(&mps_str)),
+        };
 
         let mut hands_played: HashMap<HandType, bool> = HashMap::new();
         let mut hand_lvls: HashMap<HandType, i16> = HashMap::new();
@@ -201,6 +171,10 @@ impl fmt::Display for Ctx {
         let hp = &self.hands_played;
         let hl = &self.hand_lvls;
         let mph = &self.most_played_hand;
+        let mph_str = match mph {
+            Some(ht) => format!("{ht}"),
+            None => String::from("None"),
+        };
 
         let mut hs: String = String::from("HANDTYPES");
         for ht in HandType::iter() {
@@ -216,7 +190,7 @@ impl fmt::Display for Ctx {
             "Context:\
             \n\t{h} out of {mh} hands remaining\
             \n\t{d} out of {md} discards remaining\
-            \n\tmost played hand: {mph}\
+            \n\tmost played hand: {mph_str}\
             \n\tLast Played Tarot or Planet: {lpc_str}\
             \n\tYou have {m}$\
             \n\tYou are using {cj} out of {mj} Joker slots\

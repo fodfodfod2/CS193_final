@@ -87,7 +87,7 @@ impl TarotType {
     pub fn get_desc(&self) -> &'static str {
         match self {
             Self::TheFool => {
-                "Creates the last Tarot or Planet card used during this run (The Fool excluded)"
+                "Creates the last Tarot or Planet card used during this run (The Fool excluded). This card is in the context as Last Played Tarot or Planet"
             }
             Self::TheMagician => "Enhances 2 selected cards to Lucky Cards",
             Self::TheHighPriestess => "Creates up to 2 random Planet cards (Must have room)",

@@ -125,8 +125,12 @@ impl VoucherType {
             Self::RerollGlut => "Rerolls cost an additional $2 less",
             Self::CrystalBall => "+1 consumable slot",
             Self::OmenGlobe => "Spectral cards may appear in any of the Arcana Packs",
-            Self::Telescope => "Celestial Packs always contain the Planet card for your most played poker hand",
-            Self::Observatory => "Planet cards in your consumable area give X1.5 Mult for their specified poker hand",
+            Self::Telescope => {
+                "Celestial Packs always contain the Planet card for your most played poker hand"
+            }
+            Self::Observatory => {
+                "Planet cards in your consumable area give X1.5 Mult for their specified poker hand"
+            }
             Self::Grabber => "Permanently gain +1 hand per round",
             Self::NachoTong => "Permanently gain an additional +1 hand per round",
             Self::Wasteful => "Permanently gain +1 discard each round",
@@ -140,7 +144,9 @@ impl VoucherType {
             Self::Blank => "Does nothing?",
             Self::Antimatter => "+1 Joker slot",
             Self::MagicTrick => "Playing cards can be purchased from the shop",
-            Self::Illusion => "Playing cards in shop may have an Enhancement, Edition, and/or a Seal",
+            Self::Illusion => {
+                "Playing cards in shop may have an Enhancement, Edition, and/or a Seal"
+            }
             Self::Hieroglyph => "-1 Ante, -1 hand each round",
             Self::Petroglyph => "-1 Ante, -1 discard each round",
             Self::DirectorsCut => "Reroll Boss Blind 1 time per Ante, $10 per reroll",
@@ -182,7 +188,10 @@ impl Parsable for Voucher {
             .ok()
             .ok_or("Failed to parse cost while parsing Voucher")?;
 
-        Ok(Voucher { voucher_type: VoucherType::from_str(&name), cost})
+        Ok(Voucher {
+            voucher_type: VoucherType::from_str(&name),
+            cost,
+        })
     }
 }
 

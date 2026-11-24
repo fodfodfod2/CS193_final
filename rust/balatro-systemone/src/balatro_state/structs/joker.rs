@@ -96,36 +96,14 @@ pub struct Joker {
     desc: String,
     edition: Edition,
     sell_value: i16,
+    cost: i16,
     disabled: bool,
-    invisible_cnt: i16,
+    invis_cnt: i16,
     perish_cnt: i16,
     sticker: Sticker,
 }
 
 impl Joker {
-    #[allow(clippy::too_many_arguments)]
-    pub fn new(
-        name: String,
-        desc: String,
-        edition: Edition,
-        sell_value: i16,
-        disabled: bool,
-        invisible_cnt: i16,
-        perish_cnt: i16,
-        sticker: Sticker,
-    ) -> Self {
-        Joker {
-            name,
-            desc,
-            edition,
-            sell_value,
-            disabled,
-            invisible_cnt,
-            perish_cnt,
-            sticker,
-        }
-    }
-
     pub fn get_name(&self) -> &str {
         &self.name
     }
@@ -165,25 +143,37 @@ impl Parsable for Joker {
             .get("SELL_VALUE")
             .ok()
             .ok_or("Failed to parse sell_value while parsing Joker")?;
+        let cost: i16 = t
+            .get("COST")
+            .ok()
+            .ok_or("Failed to parse cost while parsing Joker")?;
         let invis_cnt: i16 = t.get("INVISIBLE_CNT").unwrap_or_default();
         let perish_cnt: i16 = t.get("PERISH_CNT").unwrap_or_default();
 
         let edition = Edition::parse(edition_t)?;
         let sticker = Sticker::parse(sticker_t)?;
 
-        Ok(Joker::new(
-            name, desc, edition, sell_value, disabled, invis_cnt, perish_cnt, sticker,
-        ))
+        Ok(Joker {
+            name,
+            desc,
+            edition,
+            sell_value,
+            cost,
+            disabled,
+            invis_cnt,
+            perish_cnt,
+            sticker,
+        })
     }
 }
 
 impl Buyable for Joker {
     fn get_price(&self) -> i16 {
-        self.sell_value
+        self.cost
     }
 
     fn get_item_name(&self) -> &str {
-        "Joker"
+        &self.name
     }
 }
 
@@ -194,7 +184,7 @@ impl fmt::Display for Joker {
         let e = &self.edition;
         let sv = self.sell_value;
         let disabled = &self.disabled;
-        let invis_cnt = &self.invisible_cnt;
+        let invis_cnt = &self.invis_cnt;
         let perish_cnt = &self.perish_cnt;
         let st = &self.sticker;
         let ds = match disabled {

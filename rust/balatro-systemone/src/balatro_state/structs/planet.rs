@@ -159,9 +159,8 @@ impl fmt::Display for Planet {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let n = &self.get_name();
         let d = &self.get_desc();
-        let sv = self.sell_value;
         let h = &self.get_hand();
 
-        write!(f, "{n} | upgrades {h}")
+        write!(f, "{n} | {d}")
     }
 }
