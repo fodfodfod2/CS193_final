@@ -5,7 +5,7 @@ assert(SMODS.load_file("description.lua"))()
 function tarot(card)
     local name, desc = loc_text("Tarot", card.config.center.key, card_vars(card))
     local res = {}
-    res.type = "TAROT"
+    res.TYPE = "TAROT"
     res.NAME = name
     res.DESC = desc
     res.COST = card.cost
@@ -106,10 +106,11 @@ function get_last_played_planet_or_tarot()
 
   if set == "Tarot" then
     local name, desc = loc_text("Tarot", key, {})
-    res.TAROT = {NAME = name, DESC = desc, COST = 0, SELL_VALUE = 0}
+    res.TAROT = {TYPE = "TAROT", NAME = name, DESC = desc, COST = 0, SELL_VALUE = 0}
   elseif set == "Planet" then
     local name, desc = loc_text("Planet", key, {})
     res.PLANET = {
+      TYPE = "PLANET",
       NAME = name,
       DESC = desc, SELL_VALUE = 0,
       COST = 0,
