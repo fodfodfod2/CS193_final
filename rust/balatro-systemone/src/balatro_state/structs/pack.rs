@@ -64,6 +64,10 @@ impl Buyable for ShopPack {
     fn get_item_name(&self) -> &str {
         return &self.name;
     }
+
+    fn get_action(&self, i: i16) -> crate::Action {
+        crate::Action::BuyPack(i)
+    }
 }
 
 impl Parsable for ShopPack {

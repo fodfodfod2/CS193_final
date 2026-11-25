@@ -153,6 +153,10 @@ impl Buyable for Planet {
     fn get_price(&self) -> i16 {
         self.cost
     }
+
+    fn get_action(&self, i: i16) -> crate::Action {
+        crate::Action::UseCons(i, (0, 0))
+    }
 }
 
 impl fmt::Display for Planet {

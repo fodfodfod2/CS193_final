@@ -1,5 +1,7 @@
 use mlua::Table;
 
+use crate::Action;
+
 use super::*;
 
 pub enum SpectralType {
@@ -99,6 +101,29 @@ impl SpectralType {
             Self::BlackHole => "Upgrade every poker hand by 1 level",
         }
     }
+
+    pub fn get_targets(&self) -> (i32, i32) {
+        match self {
+            Self::Familiar => (0, 0),
+            Self::Grim => (0, 0),
+            Self::Incantation => (0, 0),
+            Self::Talisman => (1, 1),
+            Self::Aura => (1, 1),
+            Self::Wraith => (0, 0),
+            Self::Sigil => (0, 0),
+            Self::Ouija => (0, 0),
+            Self::Ectoplasm => (0, 0),
+            Self::Immolate => (0, 0),
+            Self::Ankh => (0, 0),
+            Self::DejaVu => (1, 1),
+            Self::Hex => (1, 1),
+            Self::Trance => (1, 1),
+            Self::Medium => (1, 1),
+            Self::Cryptid => (0, 0),
+            Self::TheSoul => (0, 0),
+            Self::BlackHole => (0, 0),
+        }
+    }
 }
 
 /* This will represent a spectral card */
@@ -129,6 +154,10 @@ impl Buyable for Spectral {
 
     fn get_price(&self) -> i16 {
         self.cost
+    }
+
+    fn get_action(&self, i: i16) -> crate::Action {
+        Action::BuyCard(i)
     }
 }
 

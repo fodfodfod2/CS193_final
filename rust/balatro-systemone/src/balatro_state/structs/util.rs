@@ -1,6 +1,7 @@
 use mlua::Table;
 
 use crate::ApiChoice;
+use crate::game_interface::Action;
 
 use super::*;
 
@@ -27,12 +28,17 @@ pub trait Parsable: Sized {
 pub trait Buyable {
     fn get_item_name(&self) -> &str;
     fn get_price(&self) -> i16;
+    fn get_action(&self, i: i16) -> Action;
 }
 
-pub fn get_choice<T: Buyable + fmt::Display>(i: &T) -> ApiChoice {
+pub fn get_choice<T: Buyable + fmt::Display>(i: &T, idx: i16) -> ApiChoice {
     let n = i.get_item_name();
     let p = i.get_price();
-    ApiChoice::new(&format!("Buy {n}"), &format!("Buy {n} --{i}-- for {p}$"))
+    ApiChoice::new(
+        &format!("Buy {n}"),
+        &format!("Buy {n} --{i}-- for {p}$"),
+        i.get_action(idx),
+    )
 }
 
 pub fn parse_type_vec<T: Parsable>(table: Table) -> Vec<T> {

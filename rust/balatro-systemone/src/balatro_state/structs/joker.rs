@@ -175,6 +175,10 @@ impl Buyable for Joker {
     fn get_item_name(&self) -> &str {
         &self.name
     }
+
+    fn get_action(&self, i: i16) -> crate::Action {
+        crate::Action::BuyCard(i)
+    }
 }
 
 impl fmt::Display for Joker {

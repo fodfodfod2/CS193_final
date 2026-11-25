@@ -3,6 +3,7 @@ use std::{fmt::format, ptr::write, vec};
 use mlua::table::Table;
 
 use crate::ApiChoice;
+use crate::game_interface::Action;
 
 use super::*;
 
@@ -42,52 +43,63 @@ impl Shop {
         let m = c.get_money();
 
         if c.get_open_joker_slots() > 0 {
-            for j in &self.joker {
+            for i in 0..<i16>::try_from(self.joker.len()).unwrap() {
+                let j = &self.joker[i as usize];
                 if j.get_price() <= m {
-                    res.push(get_choice(j));
+                    res.push(get_choice(j, i));
                 }
             }
         }
 
         if c.get_open_cons_slots() > 0 {
-            for p in &self.planet {
+            for i in 0..<i16>::try_from(self.planet.len()).unwrap() {
+                let p = &self.planet[i as usize];
                 if p.get_price() <= m {
-                    res.push(get_choice(p));
+                    res.push(get_choice(p, i));
                 }
             }
 
-            for t in &self.tarot {
+            for i in 0..<i16>::try_from(self.tarot.len()).unwrap() {
+                let t = &self.tarot[i as usize];
                 if t.get_price() <= m {
-                    res.push(get_choice(t));
+                    res.push(get_choice(t, i));
                 }
             }
 
-            for s in &self.spectral {
+            for i in 0..<i16>::try_from(self.spectral.len()).unwrap() {
+                let s = &self.spectral[i as usize];
                 if s.get_price() <= m {
-                    res.push(get_choice(s));
+                    res.push(get_choice(s, i));
                 }
             }
         }
 
-        for c in &self.card {
+        for i in 0..<i16>::try_from(self.card.len()).unwrap() {
+            let c = &self.card[i as usize];
             if c.get_price() <= m {
-                res.push(get_choice(c));
+                res.push(get_choice(c, i));
             }
         }
 
-        for p in &self.packs {
+        for i in 0..<i16>::try_from(self.packs.len()).unwrap() {
+            let p = &self.packs[i as usize];
             if p.get_price() <= m {
-                res.push(get_choice(p));
+                res.push(get_choice(p, i));
             }
         }
 
-        for v in &self.vouchers {
+        for i in 0..<i16>::try_from(self.vouchers.len()).unwrap() {
+            let v = &self.vouchers[i as usize];
             if v.get_price() <= m {
-                res.push(get_choice(v));
+                res.push(get_choice(v, i));
             }
         }
 
-        res.push(ApiChoice::new("Advance", "Advance to blind selection"));
+        res.push(ApiChoice::new(
+            "Advance",
+            "Advance to blind selection",
+            Action::LeaveShop,
+        ));
         res
     }
 }

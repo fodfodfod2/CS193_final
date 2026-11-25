@@ -1,7 +1,9 @@
 #![allow(unused)]
 
+use super::*;
+use crate::{ApiQuestionCriteria::Choice, game_interface::Action};
 use serde_json::Value;
-use std::{env, fmt};
+use std::{env, fmt, panic};
 
 /* This will be passed in to specify which api to use */
 pub enum ApiType {
@@ -22,17 +24,28 @@ impl ApiType {
     }
 }
 
+#[derive(Clone)]
 pub struct ApiChoice {
     name: String,
     desc: String,
+    action: Action,
 }
 
 impl ApiChoice {
-    pub fn new(name: &str, desc: &str) -> Self {
+    pub fn new(name: &str, desc: &str, action: Action) -> Self {
         ApiChoice {
             name: String::from(name),
             desc: String::from(desc),
+            action,
         }
+    }
+
+    pub fn get_name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn get_action(&self) -> &Action {
+        &self.action
     }
 }
 
@@ -49,6 +62,15 @@ pub enum ApiQuestionCriteria {
     Choice(Vec<ApiChoice>),
     Noul(Option<(String, String)>),
     Score(Vec<String>),
+}
+
+impl ApiQuestionCriteria {
+    pub fn get_options(&self) -> &Vec<ApiChoice> {
+        if let Self::Choice(v) = &self {
+            return v;
+        }
+        panic!("Not a choice");
+    }
 }
 
 pub struct ApiQuestion {
@@ -155,7 +177,7 @@ impl ApiRequest {
         for q in &self.questions {
             let qn = &q.name;
             let qv = &ans_v[qn];
-            answers.push(ApiAnswer::from_json(qv));
+            answers.push(ApiAnswer::from_json(qv, q));
         }
         println!("answers:");
         for a in &answers {
@@ -168,7 +190,11 @@ impl ApiRequest {
 
 impl fmt::Display for ApiRequest {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let s = &self.state;
+        let s = &self
+            .state
+            .replace("\n", "\\n")
+            .replace("\t", "\\t")
+            .replace("\"", "\\\"");
         let m = &self.model;
         let qstr = (String::from("\n")
             + &self
@@ -192,13 +218,14 @@ impl fmt::Display for ApiRequest {
 }
 
 pub enum ApiAnswer {
-    Choice((String, f64)),
+    Choice(String, f64, Action),
     Noul(f64),
     Score(f64),
 }
 
 impl ApiAnswer {
-    pub fn from_json(v: &Value) -> Self {
+    pub fn from_json(v: &Value, question: &ApiQuestion) -> Self {
+        println!("PARSING {v}");
         match v["type"]
             .as_str()
             .expect("Failed to parse type from json response")
@@ -212,7 +239,20 @@ impl ApiAnswer {
                 let confidence: f64 = v["confidence"]
                     .as_f64()
                     .expect("Failed to parse choice confidence from json response");
-                ApiAnswer::Choice((choice, confidence))
+                let action = {
+                    let crit = &question.criteria;
+                    let opts = crit.get_options();
+                    let mut act = &Action::None;
+                    for o in opts {
+                        if choice == o.get_name() {
+                            act = o.get_action();
+                            break;
+                        }
+                    }
+                    act
+                };
+
+                ApiAnswer::Choice(choice, confidence, *action)
             }
             "noul" => {
                 let ans: f64 = v["noul"]
@@ -234,7 +274,7 @@ impl ApiAnswer {
 impl fmt::Display for ApiAnswer {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            ApiAnswer::Choice((n, c)) => write!(f, "CHOICE:{n}| {c} confidence"),
+            ApiAnswer::Choice(n, c, _) => write!(f, "CHOICE:{n}| {c} confidence"),
             ApiAnswer::Noul(n) => write!(f, "NOUL:{n}"),
             ApiAnswer::Score(s) => write!(f, "Score:{s}"),
         }

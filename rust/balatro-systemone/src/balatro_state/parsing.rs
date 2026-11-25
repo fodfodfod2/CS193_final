@@ -65,23 +65,11 @@ pub fn read_game_state() -> Option<GameState> {
 fn parse_owned_consumables(table: Table) -> Option<Vec<Consumable>> {
     let consumable_table: Table = table.get("CONSUMEABLES").ok()?;
 
-    let tarot_table: Table = consumable_table.get("TAROT").ok()?;
-    let planet_table: Table = consumable_table.get("PLANET").ok()?;
-    let spectral_table: Table = consumable_table.get("SPECTRAL").ok()?;
-
-    let mut tarot = parse_type_vec(tarot_table);
-    let mut planet = parse_type_vec(planet_table);
-    let mut spectral = parse_type_vec(spectral_table);
+    let mut consumables = parse_type_vec(consumable_table);
 
     let mut res: Vec<Consumable> = Vec::new();
-    for t in tarot {
-        res.push(Consumable::Tarot(t));
-    }
-    for p in planet {
-        res.push(Consumable::Planet(p));
-    }
-    for s in spectral {
-        res.push(Consumable::Spectral(s));
+    for c in consumables {
+        res.push(c);
     }
 
     Some(res)

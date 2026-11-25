@@ -267,6 +267,10 @@ impl Buyable for Card {
     fn get_item_name(&self) -> &str {
         "Card"
     }
+
+    fn get_action(&self, i: i16) -> crate::Action {
+        crate::Action::BuyCard(i)
+    }
 }
 
 impl fmt::Display for Card {

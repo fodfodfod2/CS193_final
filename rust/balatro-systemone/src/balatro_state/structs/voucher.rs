@@ -1,5 +1,7 @@
 use mlua::Table;
 
+use crate::Action;
+
 use super::*;
 
 pub enum VoucherType {
@@ -202,6 +204,10 @@ impl Buyable for Voucher {
 
     fn get_price(&self) -> i16 {
         self.cost
+    }
+
+    fn get_action(&self, i: i16) -> crate::Action {
+        Action::BuyVoucher(i)
     }
 }
 

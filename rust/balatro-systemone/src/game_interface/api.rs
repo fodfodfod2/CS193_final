@@ -1,5 +1,14 @@
+use std::fmt::format;
+
 use reqwest::{Client, Error, Response};
 use serde_json::{Value, json};
+
+use crate::{
+    ApiAnswer, ApiChoice, ApiQuestion,
+    ApiQuestionCriteria::{self},
+    ApiRequest, ApiType,
+    balatro_state::{Card, GameState, vec_to_str},
+};
 
 async fn send_payload(payload: Value) -> Result<Response, Error> {
     let client = Client::new();
@@ -234,4 +243,161 @@ pub async fn use_item(idx: i16, targets: Vec<i16>) -> Result<(), Error> {
 
     send_payload(payload).await?;
     Ok(())
+}
+
+#[derive(Clone, Copy)]
+pub enum Action {
+    NextBlind,
+    SkipBlind,
+    BuyCard(i16),
+    BuyPack(i16),
+    BuyVoucher(i16),
+    UsePackItem(i16, (i8, i8)),
+    SellJoker(i16),
+    SellCons(i16),
+    Reroll,
+    LeaveShop,
+    PlayHand,
+    DiscardHand,
+    RearrangeJokers,
+    UseCons(i16, (i8, i8)),
+    None,
+}
+
+impl Action {
+    async fn select_hand_targets(
+        prompt: &str,
+        min: i8,
+        max: i8,
+        hand: &Vec<Card>,
+        state: &str,
+    ) -> Result<Vec<i16>, Error> {
+        let full_prompt = vec_to_str(
+            &(String::from(prompt) + &format!(" \\nChoose between {min} and {max} targets")),
+            hand,
+        )
+        .replace("\n", "\\n")
+        .replace("\t", "\\t");
+        let mut options = Vec::new();
+
+        for i in 0..hand.len() {
+            let c = &hand[i];
+            options.push(ApiChoice::new(
+                &format!("{i}"),
+                &format!("Target card {i}: {c}"),
+                Action::None,
+            ));
+        }
+
+        let mut res = Vec::new();
+        for i in 0..max {
+            if i == min {
+                options.push(ApiChoice::new(
+                    "None",
+                    "Finish with the targets you have",
+                    Action::None,
+                ));
+            }
+            let apiqc = ApiQuestionCriteria::Choice(options.clone());
+            let apiq = ApiQuestion::new(
+                "hand target select",
+                &(format!(
+                    "you have chosen {i} targets so far. \
+                    choose your next card, if applicable.\\n{}",
+                    vec_to_str(
+                        "Current Targets",
+                        &res.iter().map(|&i| &hand[i as usize]).collect()
+                    )
+                    .replace("\n", "\\n")
+                    .replace("\t", "\\t")
+                ) + &full_prompt),
+                apiqc,
+            );
+
+            let apireq = ApiRequest::new(state, "jev-latest", vec![apiq]);
+            let apires = apireq.get_response(ApiType::Jev).await;
+            let ans_str = match &apires[0] {
+                ApiAnswer::Choice(s, _, _) => s.as_str(),
+                _ => {
+                    panic!("Somehow i got something other than a choice ans from a choice request")
+                }
+            };
+            if ans_str == "None" {
+                break;
+            }
+
+            let ans: i16 = ans_str.parse().unwrap();
+
+            res.push(ans);
+            for i in 0..options.len() {
+                if ans_str == options[i].get_name() {
+                    options.remove(i);
+                    break;
+                }
+            }
+        }
+
+        Ok(res)
+    }
+
+    pub async fn perform(&self, gs: GameState, state: &str) -> Result<(), Error> {
+        match self {
+            Self::NextBlind => next_blind().await,
+            Self::SkipBlind => skip_blind().await,
+            Self::BuyCard(i) => buy_card(*i).await,
+            Self::BuyPack(i) => buy_pack(*i).await,
+            Self::BuyVoucher(i) => buy_voucher(*i).await,
+            Self::UsePackItem(i, (min, max)) => Ok(()),
+            Self::SellJoker(i) => sell_joker(*i).await,
+            Self::SellCons(i) => sell_consumable(*i).await,
+            Self::Reroll => reroll_shop().await,
+            Self::LeaveShop => leave_shop().await,
+            Self::PlayHand => {
+                println!("PLAYING");
+                play_hand(
+                    &Self::select_hand_targets(
+                        "Which cards do you want to play?",
+                        1,
+                        5,
+                        gs.get_hand(),
+                        state,
+                    )
+                    .await
+                    .unwrap(),
+                )
+                .await
+            }
+            Self::DiscardHand => {
+                discard_hand(
+                    &Self::select_hand_targets(
+                        "Which cards do you want to discard?",
+                        1,
+                        5,
+                        gs.get_hand(),
+                        state,
+                    )
+                    .await
+                    .unwrap(),
+                )
+                .await
+            }
+            Self::RearrangeJokers => Ok(()),
+            Self::UseCons(i, (min, max)) => {
+                use_item(
+                    *i,
+                    Self::select_hand_targets(
+                        "Which cards do you want to discard?",
+                        *min,
+                        *max,
+                        gs.get_hand(),
+                        state,
+                    )
+                    .await
+                    .unwrap(),
+                )
+                .await
+            }
+            Self::None => Ok(()),
+        }
+    }
 }

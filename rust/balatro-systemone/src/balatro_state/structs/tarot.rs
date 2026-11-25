@@ -1,5 +1,7 @@
 use mlua::Table;
 
+use crate::Action;
+
 use super::*;
 
 /* This will represent a Tarot card */
@@ -172,6 +174,10 @@ impl Buyable for Tarot {
 
     fn get_price(&self) -> i16 {
         self.cost
+    }
+
+    fn get_action(&self, i: i16) -> crate::Action {
+        Action::UseCons(i, self.tarot_type.get_select_num())
     }
 }
 

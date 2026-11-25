@@ -11,9 +11,9 @@ pub enum Consumable {
 impl Consumable {
     pub fn get_name(&self) -> &str {
         match self {
-            Consumable::Tarot(t) => &t.get_name(),
-            Consumable::Planet(p) => &p.get_name(),
-            Consumable::Spectral(s) => &s.get_name(),
+            Consumable::Tarot(t) => t.get_name(),
+            Consumable::Planet(p) => p.get_name(),
+            Consumable::Spectral(s) => s.get_name(),
         }
     }
 
@@ -27,9 +27,9 @@ impl Consumable {
 
     pub fn get_desc(&self) -> &str {
         match self {
-            Consumable::Tarot(t) => &t.get_desc(),
-            Consumable::Planet(p) => &p.get_desc(),
-            Consumable::Spectral(s) => &s.get_desc(),
+            Consumable::Tarot(t) => t.get_desc(),
+            Consumable::Planet(p) => p.get_desc(),
+            Consumable::Spectral(s) => s.get_desc(),
         }
     }
 
@@ -38,6 +38,21 @@ impl Consumable {
             Consumable::Tarot(t) => t.get_sell_val(),
             Consumable::Planet(p) => p.get_sell_val(),
             Consumable::Spectral(s) => s.get_sell_val(),
+        }
+    }
+}
+
+impl Parsable for Consumable {
+    fn parse(t: Table) -> Result<Self, &'static str> {
+        let type_str: String = t
+            .get("TYPE")
+            .ok()
+            .ok_or("Failed to read type from Consumable")?;
+        match type_str.as_str() {
+            "TAROT" => Ok(Consumable::Tarot(Tarot::parse(t).unwrap())),
+            "PLANET" => Ok(Consumable::Planet(Planet::parse(t).unwrap())),
+            "SPECTRAL" => Ok(Consumable::Spectral(Spectral::parse(t).unwrap())),
+            s => panic!("Expected consumable type string, got {s}"),
         }
     }
 }

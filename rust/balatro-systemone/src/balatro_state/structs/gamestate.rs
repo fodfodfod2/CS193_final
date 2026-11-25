@@ -4,8 +4,10 @@ use std::{
 };
 
 use crate::{
+    Action::SellJoker,
     ApiChoice, ApiQuestion, ApiQuestionCriteria,
     balatro_state::Blind::{Boss, Small},
+    game_interface::Action,
 };
 
 use super::*;
@@ -60,24 +62,34 @@ impl GameState {
     fn get_sell_actions(&self) -> Vec<ApiChoice> {
         let mut res: Vec<ApiChoice> = Vec::new();
 
-        for j in &self.jokers_owned {
+        for i in 0..self.jokers_owned.len() {
+            let j = &self.jokers_owned[i];
             let n = j.get_name();
             let sv = j.get_sell_value();
             if sv > 0 {
                 let cn_str = format!("Sell {n}");
                 let cd_str = format!("Sell Joker --{j}-- for {sv}$");
-                res.push(ApiChoice::new(&cn_str, &cd_str));
+                res.push(ApiChoice::new(
+                    &cn_str,
+                    &cd_str,
+                    Action::SellJoker(<i16>::try_from(i).unwrap()),
+                ));
             }
         }
 
-        for c in &self.consumables {
+        for i in 0..self.consumables.len() {
+            let c = &self.consumables[i];
             let n = c.get_name();
             let tn = c.get_type_name();
             let sv = c.get_sell_value();
             if sv > 0 {
                 let cn_str = format!("Sell {n}");
                 let cd_str = format!("Sell {tn} --{c}-- for {sv}$");
-                res.push(ApiChoice::new(&cn_str, &cd_str));
+                res.push(ApiChoice::new(
+                    &cn_str,
+                    &cd_str,
+                    Action::SellCons(<i16>::try_from(i).unwrap()),
+                ));
             }
         }
         res
@@ -92,7 +104,14 @@ impl GameState {
 
     fn get_pack_actions(&self) -> Vec<ApiChoice> {
         let mut res: Vec<ApiChoice> = Vec::new();
-        res
+        res // TODO
+    }
+
+    pub fn get_hand(&self) -> &Vec<Card> {
+        match &self.hand {
+            Some(h) => h,
+            None => panic!("No hand exists"),
+        }
     }
 
     fn get_blind_actions(&self) -> Vec<ApiChoice> {
@@ -102,6 +121,7 @@ impl GameState {
             res.push(ApiChoice::new(
                 "Play",
                 &format!("Play the boss blind: {cur}"),
+                Action::NextBlind,
             ));
         } else {
             let tag = match cur {
@@ -114,10 +134,12 @@ impl GameState {
             res.push(ApiChoice::new(
                 "Play",
                 &format!("Play the next blind: {cur}"),
+                Action::NextBlind,
             ));
             res.push(ApiChoice::new(
                 "Skip",
                 &format!("Skip the next blind ({cur}) and gain a skip tag: {tag}"),
+                Action::SkipBlind,
             ));
         }
 
@@ -166,8 +188,19 @@ impl GameState {
                 ))
             }
             State::SelectingHand => {
-                let mut blind_qs = self.get_blind_actions();
-                sell_qs.extend(blind_qs);
+                let mut hand_qs = vec![
+                    ApiChoice::new("Play Hand", "Play cards from your hand", Action::PlayHand),
+                ];
+
+                if self.ctx.get_rem_discard() > 0 {
+                    hand_qs.push_mut(ApiChoice::new(
+                        "Discard Hand",
+                        "Discard cards from your hand",
+                        Action::DiscardHand,
+                    ));
+                }
+
+                sell_qs.extend(hand_qs);
                 Some(ApiQuestion::new(
                     qname,
                     qinstr,

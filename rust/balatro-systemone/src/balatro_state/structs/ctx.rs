@@ -33,6 +33,10 @@ impl Ctx {
     pub fn get_open_cons_slots(&self) -> i8 {
         self.max_cons_cnt - self.cur_cons_cnt
     }
+
+    pub fn get_rem_discard(&self) -> i8 {
+        self.discards
+    }
 }
 
 impl Parsable for Ctx {
