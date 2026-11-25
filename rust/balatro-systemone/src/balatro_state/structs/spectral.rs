@@ -1,6 +1,6 @@
 use mlua::Table;
 
-use crate::Action;
+use crate::{Action, balatro_state::SpectralType::Wraith};
 
 use super::*;
 
@@ -102,7 +102,30 @@ impl SpectralType {
         }
     }
 
-    pub fn get_targets(&self) -> (i32, i32) {
+    pub fn can_play(&self, ctx: &Ctx) -> bool {
+        match self {
+            Self::Familiar => true,
+            Self::Grim => true,
+            Self::Incantation => true,
+            Self::Talisman => true,
+            Self::Aura => true,
+            Self::Wraith => ctx.get_open_joker_slots() != 0,
+            Self::Sigil => true,
+            Self::Ouija => true,
+            Self::Ectoplasm => ctx.has_open_joker_slot(),
+            Self::Immolate => true,
+            Self::Ankh => ctx.has_open_joker_slot(),
+            Self::DejaVu => true,
+            Self::Hex => ctx.has_open_joker_slot(),
+            Self::Trance => true,
+            Self::Medium => true,
+            Self::Cryptid => true,
+            Self::TheSoul => ctx.has_open_joker_slot(),
+            Self::BlackHole => true,
+        }
+    }
+
+    pub fn get_targets(&self) -> (i8, i8) {
         match self {
             Self::Familiar => (0, 0),
             Self::Grim => (0, 0),
@@ -116,7 +139,7 @@ impl SpectralType {
             Self::Immolate => (0, 0),
             Self::Ankh => (0, 0),
             Self::DejaVu => (1, 1),
-            Self::Hex => (1, 1),
+            Self::Hex => (0, 0),
             Self::Trance => (1, 1),
             Self::Medium => (1, 1),
             Self::Cryptid => (0, 0),
@@ -135,21 +158,29 @@ pub struct Spectral {
 
 impl Spectral {
     pub fn get_name(&self) -> &'static str {
-        &self.spectral_type.get_name()
+        self.spectral_type.get_name()
     }
 
     pub fn get_desc(&self) -> &'static str {
-        &self.spectral_type.get_desc()
+        self.spectral_type.get_desc()
     }
 
     pub fn get_sell_val(&self) -> i16 {
         self.sell_value
     }
+
+    pub fn can_play(&self, ctx: &Ctx) -> bool {
+        self.spectral_type.can_play(ctx)
+    }
+
+    pub fn get_targets(&self) -> (i8, i8) {
+        self.spectral_type.get_targets()
+    }
 }
 
 impl Buyable for Spectral {
     fn get_item_name(&self) -> &str {
-        &self.get_name()
+        self.get_name()
     }
 
     fn get_price(&self) -> i16 {

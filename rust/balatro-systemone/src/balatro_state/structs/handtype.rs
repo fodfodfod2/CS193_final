@@ -44,8 +44,7 @@ impl HandType {
         }
     }
 
-    fn holds_card(c: &Vec<Card>, ignored_idx: Vec<i8>,
-                  s: Option<Suit>, r: Option<Rank>) -> i8 {
+    fn holds_card(c: &Vec<Card>, ignored_idx: Vec<i8>, s: Option<Suit>, r: Option<Rank>) -> i8 {
         let mut res = 0;
         'outer: for i in 0..c.len() {
             for j in 0..ignored_idx.len() {
@@ -79,8 +78,7 @@ impl HandType {
 
         let mut buffer = true;
         for i in 0..c.len() {
-            if Self::holds_card(c, vec![i as i8], None,
-                Some(*c[i].get_rank())) != 1 {
+            if Self::holds_card(c, vec![i as i8], None, Some(*c[i].get_rank())) != 1 {
                 if buffer {
                     buffer = false;
                 } else {
@@ -108,11 +106,9 @@ impl HandType {
             hands.insert(HandType::Flush, false);
         }
 
-        let mut pairs: Vec<i8> = vec![0,0,0,0,0];
+        let mut pairs: Vec<i8> = vec![0, 0, 0, 0, 0];
         for i in 0..c.len() {
-            pairs[
-                Self::holds_card(&c, vec![0], None, Some(*c[i].get_rank())) as usize
-            ] += 1;
+            pairs[Self::holds_card(&c, vec![0], None, Some(*c[i].get_rank())) as usize] += 1;
         }
 
         if pairs[4] != 5 {
@@ -134,7 +130,6 @@ impl HandType {
         if pairs[1] != 4 {
             hands.insert(Self::TwoPair, false);
         }
-
 
         if !Self::has_straight(&c) {
             hands.insert(Self::Straight, false);

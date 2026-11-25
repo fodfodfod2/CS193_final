@@ -1,6 +1,8 @@
-use std::panic;
+use std::{fmt::format, panic};
 
 use mlua::Table;
+
+use crate::{Action, ApiChoice};
 
 use super::*;
 
@@ -141,6 +143,77 @@ pub struct OpenPack {
 impl OpenPack {
     pub fn new(select_num: i8, items: PackContents) -> Self {
         OpenPack { select_num, items }
+    }
+
+    pub fn get_choices(&self, ctx: &Ctx) -> Vec<ApiChoice> {
+        match &self.items {
+            PackContents::Card(c) => c
+                .iter()
+                .enumerate()
+                .map(|(idx, card)| {
+                    ApiChoice::new(
+                        &format!("Pick {card}"),
+                        &format!("Add {card} to your deck"),
+                        Action::UsePackItem(idx as i16, (0, 0)),
+                    )
+                })
+                .collect(),
+            PackContents::Joker(j) => match ctx.get_open_joker_slots() {
+                0 => Vec::new(),
+                _ => j
+                    .iter()
+                    .enumerate()
+                    .map(|(idx, card)| {
+                        ApiChoice::new(
+                            &format!("Pick {card}"),
+                            &format!("Add {card} to your jokers"),
+                            Action::UsePackItem(idx as i16, (0, 0)),
+                        )
+                    })
+                    .collect(),
+            },
+            PackContents::Planet(p) => p
+                .iter()
+                .enumerate()
+                .map(|(idx, card)| {
+                    ApiChoice::new(
+                        &format!("Use {card}"),
+                        &format!("Play {} and {}", card.get_name(), card.get_desc()),
+                        Action::UsePackItem(idx as i16, (0, 0)),
+                    )
+                })
+                .collect(),
+            PackContents::Tarot(t) => t
+                .iter()
+                .enumerate()
+                .filter_map(|(idx, card)| {
+                    if card.can_play(ctx) {
+                        Some(ApiChoice::new(
+                            &format!("Use {card}"),
+                            &format!("Play {} and {}", card.get_name(), card.get_desc()),
+                            Action::UsePackItem(idx as i16, card.get_targets()),
+                        ))
+                    } else {
+                        None
+                    }
+                })
+                .collect(),
+            PackContents::Spectral(s) => s
+                .iter()
+                .enumerate()
+                .filter_map(|(idx, card)| {
+                    if card.can_play(ctx) {
+                        Some(ApiChoice::new(
+                            &format!("Use {card}"),
+                            &format!("Play {} and {}", card.get_name(), card.get_desc()),
+                            Action::UsePackItem(idx as i16, card.get_targets()),
+                        ))
+                    } else {
+                        None
+                    }
+                })
+                .collect(),
+        }
     }
 }
 

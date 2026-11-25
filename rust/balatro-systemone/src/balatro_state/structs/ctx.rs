@@ -30,12 +30,24 @@ impl Ctx {
         self.max_joker_cnt - self.cur_joker_cnt
     }
 
+    pub fn get_max_joker_slots(&self) -> i8 {
+        self.max_joker_cnt
+    }
+
+    pub fn has_open_joker_slot(&self) -> bool {
+        self.max_joker_cnt > self.cur_joker_cnt
+    }
+
     pub fn get_open_cons_slots(&self) -> i8 {
         self.max_cons_cnt - self.cur_cons_cnt
     }
 
     pub fn get_rem_discard(&self) -> i8 {
         self.discards
+    }
+
+    pub fn get_lp_cons(&self) -> &Option<Consumable> {
+        &self.last_played_consumable
     }
 }
 

@@ -103,8 +103,10 @@ impl GameState {
     }
 
     fn get_pack_actions(&self) -> Vec<ApiChoice> {
-        let mut res: Vec<ApiChoice> = Vec::new();
-        res // TODO
+        match &self.pack {
+            Some(p) => p.get_choices(&self.ctx),
+            None => panic!("Tried to get pack options with no open pack"),
+        }
     }
 
     pub fn get_hand(&self) -> &Vec<Card> {
@@ -156,17 +158,6 @@ impl GameState {
 
         let mut sell_qs = self.get_sell_actions();
 
-        if self.state.is_pack_state() {
-            let mut pack_qs = self.get_pack_actions();
-
-            sell_qs.extend(pack_qs);
-            return Some(ApiQuestion::new(
-                qname,
-                qinstr,
-                ApiQuestionCriteria::Choice(sell_qs),
-            ));
-        }
-
         match &self.state {
             State::Shop => {
                 let mut shop_qs = self.get_shop_actions();
@@ -187,10 +178,21 @@ impl GameState {
                     ApiQuestionCriteria::Choice(sell_qs),
                 ))
             }
+            State::PackOpening => {
+                let mut pack_qs = self.get_pack_actions();
+                sell_qs.extend(pack_qs);
+                Some(ApiQuestion::new(
+                    qname,
+                    qinstr,
+                    ApiQuestionCriteria::Choice(sell_qs),
+                ))
+            }
             State::SelectingHand => {
-                let mut hand_qs = vec![
-                    ApiChoice::new("Play Hand", "Play cards from your hand", Action::PlayHand),
-                ];
+                let mut hand_qs = vec![ApiChoice::new(
+                    "Play Hand",
+                    "Play cards from your hand",
+                    Action::PlayHand,
+                )];
 
                 if self.ctx.get_rem_discard() > 0 {
                     hand_qs.push_mut(ApiChoice::new(

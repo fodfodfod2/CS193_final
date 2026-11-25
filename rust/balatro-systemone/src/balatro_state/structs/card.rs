@@ -238,7 +238,6 @@ impl Card {
     pub fn get_rank(&self) -> &Rank {
         &self.rank
     }
-
 }
 
 impl Parsable for Card {

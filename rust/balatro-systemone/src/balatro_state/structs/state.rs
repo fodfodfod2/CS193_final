@@ -11,17 +11,12 @@ pub enum State {
     RoundEval,
     DrawToHand,
     Shop,
-    TarotPack,
-    PlanetPack,
-    SpectralPack,
-    StandardPack,
-    BuffPack,
     MainMenu,
     GameOver,
     NewRound,
     Splash,
     RedeemCustomVoucher,
-    CustomPack,
+    PackOpening,
     Sandbox,
 }
 
@@ -36,18 +31,18 @@ impl State {
             6 => State::PlayTarot,
             7 => State::BlindSelect,
             8 => State::RoundEval,
-            9 => State::TarotPack,
-            10 => State::PlanetPack,
+            9 => State::PackOpening,
+            10 => State::PackOpening,
             11 => State::MainMenu,
             12 => State::Tutorial,
             13 => State::Splash,
             14 => State::Sandbox,
-            15 => State::SpectralPack,
-            17 => State::StandardPack,
-            18 => State::BuffPack,
+            15 => State::PackOpening,
+            17 => State::PackOpening,
+            18 => State::PackOpening,
             19 => State::NewRound,
             998 => State::RedeemCustomVoucher,
-            999 => State::CustomPack,
+            999 => State::PackOpening,
             n => panic!("Unrecognized state {n}"),
         }
     }
@@ -55,21 +50,7 @@ impl State {
     pub fn is_decision_state(&self) -> bool {
         matches!(
             self,
-            State::SelectingHand
-                | State::TarotPack
-                | State::PlanetPack
-                | State::SpectralPack
-                | State::StandardPack
-                | State::BuffPack
-                | State::Shop
-                | State::BlindSelect
-        )
-    }
-
-    pub fn is_pack_state(&self) -> bool {
-        matches!(
-            self,
-            State::TarotPack | State::PlanetPack | State::SpectralPack | State::StandardPack
+            State::SelectingHand | State::PackOpening | State::Shop | State::BlindSelect
         )
     }
 }
@@ -85,17 +66,12 @@ impl fmt::Display for State {
             State::RoundEval => write!(f, "Round Eval"),
             State::DrawToHand => write!(f, "Draw To Hand"),
             State::Shop => write!(f, "Shop"),
-            State::TarotPack => write!(f, "TarotP ack"),
-            State::PlanetPack => write!(f, "Planet Pack"),
-            State::SpectralPack => write!(f, "Spectral Pack"),
-            State::StandardPack => write!(f, "Standard Pack"),
-            State::BuffPack => write!(f, "Buffoon Pack"),
             State::MainMenu => write!(f, "Main Menu"),
             State::GameOver => write!(f, "Game Over"),
             State::NewRound => write!(f, "New Round"),
             State::Splash => write!(f, "Splash Screen"),
             State::RedeemCustomVoucher => write!(f, "Redeeming Custom Voucher"),
-            State::CustomPack => write!(f, "Custom Pack Opening"),
+            State::PackOpening => write!(f, "Pack Opening"),
             State::Sandbox => write!(f, "Sandbox"),
         }
     }

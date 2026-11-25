@@ -119,7 +119,37 @@ impl TarotType {
         }
     }
 
-    pub fn get_select_num(&self) -> (i8, i8) {
+    pub fn can_play(&self, ctx: &Ctx) -> bool {
+        match self {
+            TarotType::TheFool => match ctx.get_lp_cons() {
+                Some(_) => true,
+                None => false,
+            },
+            TarotType::TheMagician => true,
+            TarotType::TheHighPriestess => true,
+            TarotType::TheEmpress => true,
+            TarotType::TheEmporer => ctx.get_open_cons_slots() != 0,
+            TarotType::TheHeirophant => true,
+            TarotType::TheLovers => true,
+            TarotType::TheChariot => true,
+            TarotType::Justice => true,
+            TarotType::TheHermit => true,
+            TarotType::TheWheelofFortune => ctx.has_open_joker_slot(),
+            TarotType::Strength => true,
+            TarotType::TheHangedMan => true,
+            TarotType::Death => true,
+            TarotType::Temperance => true,
+            TarotType::TheDevil => true,
+            TarotType::TheTower => true,
+            TarotType::TheStar => true,
+            TarotType::TheMoon => true,
+            TarotType::TheSun => true,
+            TarotType::Judgement => ctx.get_open_joker_slots() != 0,
+            TarotType::TheWorld => true,
+        }
+    }
+
+    pub fn get_targets(&self) -> (i8, i8) {
         match &self {
             TarotType::TheFool => (0, 0),
             TarotType::TheMagician => (1, 2),
@@ -155,21 +185,29 @@ pub struct Tarot {
 
 impl Tarot {
     pub fn get_name(&self) -> &'static str {
-        &self.tarot_type.get_name()
+        self.tarot_type.get_name()
     }
 
     pub fn get_desc(&self) -> &'static str {
-        &self.tarot_type.get_desc()
+        self.tarot_type.get_desc()
     }
 
     pub fn get_sell_val(&self) -> i16 {
         self.sell_value
     }
+
+    pub fn can_play(&self, ctx: &Ctx) -> bool {
+        self.tarot_type.can_play(ctx)
+    }
+
+    pub fn get_targets(&self) -> (i8, i8) {
+        self.tarot_type.get_targets()
+    }
 }
 
 impl Buyable for Tarot {
     fn get_item_name(&self) -> &str {
-        &self.tarot_type.get_name()
+        self.tarot_type.get_name()
     }
 
     fn get_price(&self) -> i16 {
@@ -177,7 +215,7 @@ impl Buyable for Tarot {
     }
 
     fn get_action(&self, i: i16) -> crate::Action {
-        Action::UseCons(i, self.tarot_type.get_select_num())
+        Action::BuyCard(i)
     }
 }
 
