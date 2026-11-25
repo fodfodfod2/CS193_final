@@ -291,13 +291,13 @@ impl Action {
 
         let mut res = Vec::new();
         for i in 0..max {
-            if i == min {
-                options.push(ApiChoice::new(
-                    "None",
-                    "Finish with the targets you have",
-                    Action::None,
-                ));
-            }
+            //if i == min {
+            //    options.push(ApiChoice::new(
+            //        "None",
+            //        "Finish with the targets you have, generally this should be your last choice. Remember scoring more cards is typically better",
+            //        Action::None,
+            //    ));
+            //}
             let apiqc = ApiQuestionCriteria::Choice(options.clone());
             let apiq = ApiQuestion::new(
                 "hand target select",
@@ -370,7 +370,7 @@ impl Action {
             Self::DiscardHand => {
                 discard_hand(
                     &Self::select_hand_targets(
-                        "Which cards do you want to discard?",
+                        "Which cards do you want to discard?, You have up to 5 cards, It is generally in your best interest to choose as many as possible, trying to form poker hands such as a straight, flush, pair etc. ",
                         1,
                         5,
                         gs.get_hand(),
@@ -386,7 +386,7 @@ impl Action {
                 use_item(
                     *i,
                     Self::select_hand_targets(
-                        "Which cards do you want to discard?",
+                        "Which cards do you want to discard? It is generally in your best interest to discard as many as possible (up to 5) in order to form poker hands such as a straight, flush, pair etc",
                         *min,
                         *max,
                         gs.get_hand(),

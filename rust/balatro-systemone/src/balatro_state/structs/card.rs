@@ -81,6 +81,7 @@ impl fmt::Display for Enhancement {
 }
 
 /* This represents the possible ranks a card can be */
+#[derive(PartialEq, PartialOrd, Clone, Copy)]
 pub enum Rank {
     Two,
     Three,
@@ -116,6 +117,25 @@ impl Rank {
             n => panic!("Invalid rank {n}"),
         }
     }
+
+    pub fn to_int(self) -> i8 {
+        match self {
+            Rank::Two => 2,
+            Rank::Three => 3,
+            Rank::Four => 4,
+            Rank::Five => 5,
+            Rank::Six => 6,
+            Rank::Seven => 7,
+            Rank::Eight => 8,
+            Rank::Nine => 9,
+            Rank::Ten => 10,
+            Rank::Jack => 11,
+            Rank::King => 13,
+            Rank::Queen => 12,
+            Rank::Ace => 14,
+            n => panic!("Invalid rank {n}"),
+        }
+    }
 }
 
 impl fmt::Display for Rank {
@@ -139,6 +159,7 @@ impl fmt::Display for Rank {
 }
 
 /* This represents the possible suits a card can be */
+#[derive(PartialEq, Clone, Copy)]
 pub enum Suit {
     Diamonds,
     Hearts,
@@ -209,6 +230,15 @@ impl Card {
             face_down,
         }
     }
+
+    pub fn get_suit(&self) -> &Suit {
+        &self.suit
+    }
+
+    pub fn get_rank(&self) -> &Rank {
+        &self.rank
+    }
+
 }
 
 impl Parsable for Card {
