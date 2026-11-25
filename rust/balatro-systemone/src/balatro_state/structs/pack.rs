@@ -47,7 +47,7 @@ pub struct ShopPack {
 
 impl ShopPack {
     pub fn new(pack_type: PackType, item_cnt: i8, cost: i16, select_num: i8) -> Self {
-        let name: String = format!("{} Pack", &pack_type.to_str());
+        let name: String = format!("{} Pack", pack_type.to_str());
         ShopPack {
             pack_type,
             item_cnt,
@@ -60,11 +60,11 @@ impl ShopPack {
 
 impl Buyable for ShopPack {
     fn get_price(&self) -> i16 {
-        return self.cost;
+        self.cost
     }
 
     fn get_item_name(&self) -> &str {
-        return &self.name;
+        &self.name
     }
 
     fn get_action(&self, i: i16) -> crate::Action {

@@ -1,4 +1,3 @@
-use std::fmt::format;
 
 use reqwest::{Client, Error, Response};
 use serde_json::{Value, json};
@@ -347,7 +346,7 @@ impl Action {
             Self::BuyCard(i) => buy_card(*i).await,
             Self::BuyPack(i) => buy_pack(*i).await,
             Self::BuyVoucher(i) => buy_voucher(*i).await,
-            Self::UsePackItem(i, (min, max)) => Ok(()),
+            Self::UsePackItem(_i, (_min, _max)) => Ok(()),
             Self::SellJoker(i) => sell_joker(*i).await,
             Self::SellCons(i) => sell_consumable(*i).await,
             Self::Reroll => reroll_shop().await,

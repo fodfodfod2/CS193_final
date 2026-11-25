@@ -1,5 +1,5 @@
 use crate::{
-    ApiAnswer::Choice, balatro_state::get_claude_gen_prompt, game_interface::*, systemone_api::*,
+    balatro_state::get_claude_gen_prompt, game_interface::*, systemone_api::*,
 };
 
 mod balatro_state;

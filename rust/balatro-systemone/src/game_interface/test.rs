@@ -1,4 +1,3 @@
-use super::*;
 
 #[cfg(test)]
 mod rearrange_tests {

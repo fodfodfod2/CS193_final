@@ -121,10 +121,7 @@ impl TarotType {
 
     pub fn can_play(&self, ctx: &Ctx) -> bool {
         match self {
-            TarotType::TheFool => match ctx.get_lp_cons() {
-                Some(_) => true,
-                None => false,
-            },
+            TarotType::TheFool => ctx.get_lp_cons().is_some(),
             TarotType::TheMagician => true,
             TarotType::TheHighPriestess => true,
             TarotType::TheEmpress => true,

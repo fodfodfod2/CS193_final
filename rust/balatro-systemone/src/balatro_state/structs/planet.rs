@@ -147,7 +147,7 @@ impl Parsable for Planet {
 
 impl Buyable for Planet {
     fn get_item_name(&self) -> &str {
-        &self.get_name()
+        self.get_name()
     }
 
     fn get_price(&self) -> i16 {

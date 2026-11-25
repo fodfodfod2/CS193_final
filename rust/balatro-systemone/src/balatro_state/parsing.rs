@@ -38,12 +38,12 @@ pub fn read_game_state() -> Option<GameState> {
     };
     let deck = parse_deck(table.clone())?;
 
-    let shop: Option<Shop>;
-    if state == State::Shop {
-        shop = Some(Shop::parse(table.clone()).unwrap());
+    
+    let shop: Option<Shop> = if state == State::Shop {
+        Some(Shop::parse(table.clone()).unwrap())
     } else {
-        shop = None
-    }
+        None
+    };
     let pack: Option<OpenPack> = None;
 
     Some(GameState::new(
