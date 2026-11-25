@@ -5,6 +5,7 @@ assert(SMODS.load_file("description.lua"))()
 function tarot(card)
     local name, desc = loc_text("Tarot", card.config.center.key, card_vars(card))
     local res = {}
+    res.type = "TAROT"
     res.NAME = name
     res.DESC = desc
     res.COST = card.cost
@@ -16,6 +17,7 @@ end
 function planet(card)
     local name, desc = loc_text("Planet", card.config.center.key, card_vars(card))
     local res = {}
+    res.TYPE = "PLANET"
     res.NAME = name
     res.DESC = desc
     res.HAND_ID = card.ability.hand_type
@@ -28,6 +30,7 @@ end
 function spectral(card)
     local name, desc = loc_text("Spectral", card.config.center.key, card_vars(card))
     local res = {}
+    res.TYPE = "SPECTRAL"
     res.NAME = name
     res.DESC = desc
     res.COST = card.cost
@@ -63,11 +66,18 @@ end
 function get_owned_consumables()
   if G.consumeables == nil then return {} end
   if G.consumeables.cards == nil then return {} end
-  return {
-    PLANET = get_planets(G.consumeables),
-    TAROT = get_tarots(G.consumeables),
-    SPECTRAL = get_spectrals(G.consumeables),
-  }
+  local res = {}
+
+  for _, c in ipairs(G.consumeables.cards) do
+    if c.ability.set == "Planet" then
+      res[#res+1] = planet(c)
+    elseif c.ability.set == "Tarot" then
+      res[#res+1] = tarot(c)
+    elseif c.ability.set == "Spectral" then
+      res[#res+1] = spectral(c)
+    end
+  end
+  return res
 end
 
 function get_shop_planets()

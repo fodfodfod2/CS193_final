@@ -4,9 +4,6 @@ function shop_voucher(v)
   local vars = card_vars(v)
   local key = v.config.center.key
   local name, desc = loc_text("Voucher", key, vars)
-  for k,val in pairs(v) do
-    sendDebugMessage(tostring(k).."---"..tostring(val))
-  end
   return {NAME = name, COST = v.cost, DESC = desc}
 end
 

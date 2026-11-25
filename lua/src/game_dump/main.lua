@@ -88,7 +88,6 @@ local function dump_data()
 
   d.CTX = ctx
   write_file(dump(d))
-  sendDebugMessage("wrote playing_cards!")
   return true
 end
 
@@ -99,7 +98,6 @@ function love.update(dt)
   acc = acc + dt
   if acc >= (INTERVAL or 1) then
     acc = 0
-    sendDebugMessage("Starting dump!")
     local ok, err = xpcall(dump_data, debug.traceback)
     if not ok then sendDebugMessage("dump_data FAILED: " .. tostring(err)) end
   end

@@ -9,7 +9,6 @@ function shop_pack(p)
 
   local type = ""
   for word in p.ability.name:gmatch("%S+") do
-    sendDebugMessage("\""..word.."\"")
     if word == "Standard" or word == "Buffoon" or word == "Celestial"
        or word == "Spectral" or word == "Arcana" then
       type = word
