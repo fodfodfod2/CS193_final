@@ -16,7 +16,7 @@ function shop_pack(p)
     end
   end
   if type == "" then
-    sendDebugMessage("Pack type conversion failed, name is "..name);
+    sendDebugMessage("Pack type conversion failed, name is \""..name.."\"");
   end
   return {
     NAME = name ~= "" and name or p.ability.name,
@@ -56,6 +56,12 @@ function get_open_pack()
     res.CONTENTS = {}
     for i,c in ipairs(cards) do
       res.CONTENTS[i] = joker(c)
+    end
+  elseif cards[1].ability.set == "Default" then
+    res.TYPE = "Card"
+    res.CONTENTS = {}
+    for i,c in ipairs(cards) do
+      res.CONTENTS[i] = card(c)
     end
   else
     sendDebugMessage("the type is "..cards[1].ability.set..".")
