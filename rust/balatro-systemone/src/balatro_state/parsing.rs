@@ -3,7 +3,7 @@
 use crate::balatro_state::structs::*;
 
 use mlua::{Lua, Table};
-use std::fs;
+use std::{fs, panic};
 
 const SAVE_PATH: &str = "/home/rlawyer/.local/share/Steam/steamapps/compatdata/2379780/pfx/drive_c/users/steamuser/AppData/Roaming/Balatro/DUMP.jkr";
 
@@ -38,13 +38,19 @@ pub fn read_game_state() -> Option<GameState> {
     };
     let deck = parse_deck(table.clone())?;
 
-    
     let shop: Option<Shop> = if state == State::Shop {
         Some(Shop::parse(table.clone()).unwrap())
     } else {
         None
     };
-    let pack: Option<OpenPack> = None;
+    let pack: Option<OpenPack> = if state == State::PackOpening {
+        Some(match OpenPack::parse(table.clone().get("PACK").ok()?) {
+            Ok(v) => v,
+            Err(s) => panic!("{}", s),
+        })
+    } else {
+        None
+    };
 
     Some(GameState::new(
         state,

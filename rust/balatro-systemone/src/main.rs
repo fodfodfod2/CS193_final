@@ -1,6 +1,4 @@
-use crate::{
-    balatro_state::get_claude_gen_prompt, game_interface::*, systemone_api::*,
-};
+use crate::{balatro_state::get_claude_gen_prompt, game_interface::*, systemone_api::*};
 
 mod balatro_state;
 mod game_interface;
@@ -17,7 +15,7 @@ async fn main() {
         let ar = ApiRequest::new(state, "jev-latest", vec![apc]);
         let ans = ar.get_response(ApiType::Jev).await;
         if let ApiAnswer::Choice(_, _, a) = ans[0] {
-            a.perform(gs, state).await.unwrap();
+            a.perform(&gs, state).await.unwrap();
         }
     }
 

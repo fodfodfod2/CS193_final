@@ -54,13 +54,15 @@ impl HandType {
             }
             let mut matches_pat = true;
             if let Some(s) = s
-                && s != *c[i].get_suit() {
-                    matches_pat = false;
-                }
+                && s != *c[i].get_suit()
+            {
+                matches_pat = false;
+            }
             if let Some(r) = r
-                && r != *c[i].get_rank() {
-                    matches_pat = false;
-                }
+                && r != *c[i].get_rank()
+            {
+                matches_pat = false;
+            }
 
             if matches_pat {
                 res += 1;

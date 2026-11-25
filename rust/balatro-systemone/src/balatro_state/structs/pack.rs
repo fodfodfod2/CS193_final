@@ -145,6 +145,16 @@ impl OpenPack {
         OpenPack { select_num, items }
     }
 
+    pub fn get_item(&self, idx: usize) -> Box<&dyn fmt::Display> {
+        match &self.items {
+            PackContents::Card(c) => Box::new(&c[idx]),
+            PackContents::Joker(j) => Box::new(&j[idx]),
+            PackContents::Planet(p) => Box::new(&p[idx]),
+            PackContents::Tarot(t) => Box::new(&t[idx]),
+            PackContents::Spectral(s) => Box::new(&s[idx]),
+        }
+    }
+
     pub fn get_choices(&self, ctx: &Ctx) -> Vec<ApiChoice> {
         match &self.items {
             PackContents::Card(c) => c

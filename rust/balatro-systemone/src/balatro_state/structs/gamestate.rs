@@ -116,6 +116,13 @@ impl GameState {
         }
     }
 
+    pub fn get_pack_item(&self, idx: usize) -> Box<&dyn fmt::Display> {
+        match &self.pack {
+            Some(p) => p.get_item(idx),
+            None => panic!("Tried to get pack item with no pack open"),
+        }
+    }
+
     fn get_blind_actions(&self) -> Vec<ApiChoice> {
         let mut res: Vec<ApiChoice> = Vec::new();
         let cur = &self.blinds[usize::from(self.current_blind)];

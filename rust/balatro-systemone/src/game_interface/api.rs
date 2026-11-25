@@ -1,4 +1,3 @@
-
 use reqwest::{Client, Error, Response};
 use serde_json::{Value, json};
 
@@ -339,14 +338,25 @@ impl Action {
         Ok(res)
     }
 
-    pub async fn perform(&self, gs: GameState, state: &str) -> Result<(), Error> {
+    pub async fn perform(&self, gs: &GameState, state: &str) -> Result<(), Error> {
         match self {
             Self::NextBlind => next_blind().await,
             Self::SkipBlind => skip_blind().await,
             Self::BuyCard(i) => buy_card(*i).await,
             Self::BuyPack(i) => buy_pack(*i).await,
             Self::BuyVoucher(i) => buy_voucher(*i).await,
-            Self::UsePackItem(_i, (_min, _max)) => Ok(()),
+            Self::UsePackItem(i, (min, max)) => select_pack_card(*i,
+                    &Self::select_hand_targets(
+                        &format!("Which cards do you want to target with {}?",
+                            gs.get_pack_item(*i as usize)),
+                        *min,
+                        *max,
+                        gs.get_hand(),
+                        state,
+                    )
+                    .await
+                    .unwrap()
+                , false).await,
             Self::SellJoker(i) => sell_joker(*i).await,
             Self::SellCons(i) => sell_consumable(*i).await,
             Self::Reroll => reroll_shop().await,
@@ -396,7 +406,7 @@ impl Action {
                 )
                 .await
             }
-            Self::None => Ok(()),
+            Self::None => panic!("None action was performed"),
         }
     }
 }
