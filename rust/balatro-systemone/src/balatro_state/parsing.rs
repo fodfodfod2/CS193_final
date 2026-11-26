@@ -5,12 +5,18 @@ use crate::balatro_state::structs::*;
 use mlua::{Lua, Table};
 use std::{fs, panic};
 
+/*
+ * The path of the dump, find relative to your AppData folder
+ * I run through proton, so you will probably want to change this
+ */
 const SAVE_PATH: &str = "/home/rlawyer/.local/share/Steam/steamapps/compatdata/2379780/pfx/drive_c/users/steamuser/AppData/Roaming/Balatro/DUMP.jkr";
 
+/* Read a file into a string */
 fn read_file() -> String {
     fs::read_to_string(SAVE_PATH).expect("Failed to read file")
 }
 
+/* Read the master table from the dump file */
 fn get_master_table() -> (Lua, Table) {
     let lua: Lua = Lua::new();
 
@@ -22,6 +28,9 @@ fn get_master_table() -> (Lua, Table) {
     (lua, res)
 }
 
+/*
+ * Read the gamestate from the master table
+ */
 pub fn read_game_state() -> Option<GameState> {
     let (lua, table) = get_master_table();
 
@@ -68,6 +77,7 @@ pub fn read_game_state() -> Option<GameState> {
     ))
 }
 
+/* parse the owned consumables from the master table */
 fn parse_owned_consumables(table: Table) -> Option<Vec<Consumable>> {
     let consumable_table: Table = table.get("CONSUMEABLES").ok()?;
 
@@ -81,31 +91,37 @@ fn parse_owned_consumables(table: Table) -> Option<Vec<Consumable>> {
     Some(res)
 }
 
+/* parse the owned tags from the master table */
 fn parse_owned_tags(table: Table) -> Option<Vec<Tag>> {
     let tags: Table = table.get("TAGS_OWNED").ok()?;
     Some(parse_type_vec(tags))
 }
 
+/* parse the owned vouchers from the master table */
 fn parse_owned_vouchers(table: Table) -> Option<Vec<Voucher>> {
     let vouchers: Table = table.get("VOUCHERS_OWNED").ok()?;
     Some(parse_type_vec(vouchers))
 }
 
+/* parse the owned jokers from the master table */
 fn parse_owned_jokers(table: Table) -> Option<Vec<Joker>> {
     let jokers: Table = table.get("JOKERS_OWNED").ok()?;
     Some(parse_type_vec(jokers))
 }
 
+/* parse the state from the master table */
 fn parse_state(table: Table) -> Option<State> {
     let val = table.get("STATE").ok()?;
     Some(State::from(val))
 }
 
+/* parse the hand from the master table */
 fn parse_hand(table: Table) -> Option<Vec<Card>> {
     let hand: Table = table.get("HAND").ok()?;
     Some(parse_type_vec(hand))
 }
 
+/* parse the deck from the master table */
 fn parse_deck(table: Table) -> Option<Vec<Card>> {
     let deck: Table = table.get("DECK").ok()?;
     Some(parse_type_vec(deck))
