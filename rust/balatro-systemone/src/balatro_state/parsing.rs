@@ -3,17 +3,17 @@
 use crate::balatro_state::structs::*;
 
 use mlua::{Lua, Table};
-use std::{fs, panic};
+use std::{env, fs, panic};
 
 /*
  * The path of the dump, find relative to your AppData folder
- * I run through proton, so you will probably want to change this
+ * Stored in the .envrc in the project root
  */
 const SAVE_PATH: &str = "/home/rlawyer/.local/share/Steam/steamapps/compatdata/2379780/pfx/drive_c/users/steamuser/AppData/Roaming/Balatro/DUMP.jkr";
 
 /* Read a file into a string */
 fn read_file() -> String {
-    fs::read_to_string(SAVE_PATH).expect("Failed to read file")
+    fs::read_to_string(env::var("DUMP_PATH").unwrap()).expect("Failed to read file")
 }
 
 /* Read the master table from the dump file */

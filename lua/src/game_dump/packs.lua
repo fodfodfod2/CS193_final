@@ -57,7 +57,7 @@ function get_open_pack()
     for i,c in ipairs(cards) do
       res.CONTENTS[i] = joker(c)
     end
-  elseif cards[1].ability.set == "Default" then
+  elseif cards[1].ability.set == "Default" or cards[1].ability.set == "Enhanced" then
     res.TYPE = "Card"
     res.CONTENTS = {}
     for i,c in ipairs(cards) do
