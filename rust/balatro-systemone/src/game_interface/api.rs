@@ -8,6 +8,14 @@ use crate::{
     balatro_state::{Card, GameState, vec_to_str},
 };
 
+/*
+ * This crate represents the interface with the game,
+ * using the balatrobot mod/api.
+ * Primary usage should be through Action and Action.perform()
+ */
+
+
+/* Helper function to send a payload to the balatrobot api */
 async fn send_payload(payload: Value) -> Result<Response, Error> {
     let client = Client::new();
     let res = client
@@ -19,12 +27,14 @@ async fn send_payload(payload: Value) -> Result<Response, Error> {
     Ok(res)
 }
 
+/* This represents the areas in the shop that can be bought from */
 enum ShopItem {
     Card,
     Voucher,
     Pack,
 }
 
+/* This will buy an item from the given area with the given idx */
 async fn buy(item: ShopItem, idx: i16) -> Result<(), Error> {
     let payload = json!({
         "jsonrpc" : "2.0",
@@ -40,18 +50,22 @@ async fn buy(item: ShopItem, idx: i16) -> Result<(), Error> {
     Ok(())
 }
 
+/* Buy an item from the card area with the given idx */
 pub async fn buy_card(idx: i16) -> Result<(), Error> {
     buy(ShopItem::Card, idx).await
 }
 
+/* Buy an item from the voucher area with the given idx */
 pub async fn buy_voucher(idx: i16) -> Result<(), Error> {
     buy(ShopItem::Voucher, idx).await
 }
 
+/* Buy an item from the pack area with the given idx */
 pub async fn buy_pack(idx: i16) -> Result<(), Error> {
     buy(ShopItem::Pack, idx).await
 }
 
+/* reroll the shop */
 pub async fn reroll_shop() -> Result<(), Error> {
     let payload = json!({
         "jsonrpc" : "2.0",
@@ -61,6 +75,12 @@ pub async fn reroll_shop() -> Result<(), Error> {
     Ok(())
 }
 
+/*
+ * Select a card from the given pack,
+ * if skip == true, then skip the pack and ignore everything else
+ * targets represents the targets of the picked card (such as targeted by a
+ * tarot card)
+ */
 pub async fn select_pack_card(idx: i16, targets: &Vec<i16>, skip: bool) -> Result<(), Error> {
     if skip {
         let payload = json!({
@@ -90,6 +110,7 @@ pub async fn select_pack_card(idx: i16, targets: &Vec<i16>, skip: bool) -> Resul
     Ok(())
 }
 
+/* Leave the shop */
 pub async fn leave_shop() -> Result<(), Error> {
     let payload = json!({
         "jsonrpc" : "2.0",
@@ -99,10 +120,13 @@ pub async fn leave_shop() -> Result<(), Error> {
     Ok(())
 }
 
+/* Different plays you can make from your hand */
 enum HandUse {
     Discard,
     Play,
 }
+
+/* This function will perform a handuse on the given card idxs */
 async fn use_hand(action: HandUse, cards: &Vec<i16>) -> Result<(), Error> {
     let payload = json!({
         "jsonrpc" : "2.0",
@@ -116,20 +140,24 @@ async fn use_hand(action: HandUse, cards: &Vec<i16>) -> Result<(), Error> {
     Ok(())
 }
 
+/* Play the cards with the given idxs */
 pub async fn play_hand(cards: &Vec<i16>) -> Result<(), Error> {
     use_hand(HandUse::Play, cards).await
 }
 
+/* Discard the cards with the given idxs */
 pub async fn discard_hand(cards: &Vec<i16>) -> Result<(), Error> {
     use_hand(HandUse::Discard, cards).await
 }
 
+/* The type of cards that can be rearranged */
 enum CardType {
     Hand,
     Jokers,
     Consumeables,
 }
 
+/* Rearrange a certain area of cards in hand */
 async fn rearrange_cards(card_type: CardType, targets: &Vec<i16>) -> Result<(), Error> {
     let payload = json!({
         "jsonrpc" : "2.0",
@@ -147,18 +175,32 @@ async fn rearrange_cards(card_type: CardType, targets: &Vec<i16>) -> Result<(), 
     Ok(())
 }
 
+/*
+ * Rearrange the hand. Targets should contain the full amount of cards
+ * ex: [0,1,2,4,3] to swap cards 5 and 4 in a 5 card hand
+ */
 pub async fn rearrange_hand(targets: &Vec<i16>) -> Result<(), Error> {
     rearrange_cards(CardType::Hand, targets).await
 }
 
+/*
+ * Rearrange the jokers. Targets should contain the full amount of jokers
+ * ex: [0,1,2,4,3] to swap jokers 5 and 4 with 5 jokers
+ */
 pub async fn rearrange_jokers(targets: &Vec<i16>) -> Result<(), Error> {
     rearrange_cards(CardType::Jokers, targets).await
 }
 
+/*
+ * Rearrange the consumables area. Targets should contain the full amount
+ * of consumables
+ * ex: [0,2,1] to swap consumables 2 and 3 with 3 consumables
+ */
 pub async fn rearrange_consumables(targets: &Vec<i16>) -> Result<(), Error> {
     rearrange_cards(CardType::Consumeables, targets).await
 }
 
+/* Move onto the next blind */
 pub async fn next_blind() -> Result<(), Error> {
     let payload = json!({
         "jsonrpc" : "2.0",
@@ -169,6 +211,7 @@ pub async fn next_blind() -> Result<(), Error> {
     Ok(())
 }
 
+/* Skip the next blind */
 pub async fn skip_blind() -> Result<(), Error> {
     let payload = json!({
         "jsonrpc" : "2.0",
@@ -179,11 +222,13 @@ pub async fn skip_blind() -> Result<(), Error> {
     Ok(())
 }
 
+/* Which kinds of items can be sold */
 enum SellItem {
     Joker,
     Consumable,
 }
 
+/* Sell an item of a certain type and of a given idx */
 async fn sell(item_type: SellItem, idx: i16) -> Result<(), Error> {
     let payload = json!({
         "jsonrpc" : "2.0",
@@ -200,14 +245,17 @@ async fn sell(item_type: SellItem, idx: i16) -> Result<(), Error> {
     Ok(())
 }
 
+/* Sell the joker of a given idx */
 pub async fn sell_joker(idx: i16) -> Result<(), Error> {
     sell(SellItem::Joker, idx).await
 }
 
+/* Sell the consumable of a given idx */
 pub async fn sell_consumable(idx: i16) -> Result<(), Error> {
     sell(SellItem::Consumable, idx).await
 }
 
+/* Collect cash after beating a blind */
 pub async fn cash_out() -> Result<(), Error> {
     let payload = json!({
         "jsonrpc" : "2.0",
@@ -218,6 +266,7 @@ pub async fn cash_out() -> Result<(), Error> {
     Ok(())
 }
 
+/* Use a consumable you own */
 pub async fn use_item(idx: i16, targets: Vec<i16>) -> Result<(), Error> {
     let payload = match targets.is_empty() {
         true => json!({
@@ -243,6 +292,7 @@ pub async fn use_item(idx: i16, targets: Vec<i16>) -> Result<(), Error> {
     Ok(())
 }
 
+/* This represents possible actions the player can take */
 #[derive(Clone, Copy)]
 pub enum Action {
     NextBlind,
@@ -264,6 +314,11 @@ pub enum Action {
 }
 
 impl Action {
+    /*
+     * Selected between min and max cards from from your hand
+     * For each card, it will prompt the systemone model to choose the next
+     * card. Returns a vec of the idx's of the cards
+     */
     async fn select_hand_targets(
         prompt: &str,
         min: i8,
@@ -339,6 +394,7 @@ impl Action {
         Ok(res)
     }
 
+    /* perform the Action */
     pub async fn perform(&self, gs: &GameState, state: &str) -> Result<(), Error> {
         match self {
             Self::NextBlind => next_blind().await,
