@@ -17,11 +17,12 @@ asking why we didn't use this for the game state, the answer is, I didn't
 realize this existed at that time, and at a point I'm in too deep to rewrite the
 entire balatro_state crate to work with it.
 
-
 # Planned features
-- multiplayer mod support
-- training custom models
-- pit fight between multiple different models
+- [ ] Support multiple systemone Api's
+- [ ] Multiplayer mod support
+- [ ] Training custom models
+- [ ] Pit fight between multiple different models
+- [ ] Rewrite balatro_state to work all through BalatroBot instead of custom mod
 
 # A note on AI use
 You may notice that this project is ~4000 lines of code, this was 95% hand
@@ -40,10 +41,23 @@ design and organization was done by me
 I had also AI generated an explanation of the game for the system prompt,
 however I intend to replace it.
 
-This was my first project in both Rust and Lua, some of my code will appear bad,
-rest assured the art of writing bad code by hand has not been lost.
+This was my first project in both Rust and Lua, rest assured that the ancient
+art of writing slop by hand without LLMs has not been lost
+
+# Apologies to the poor TA responsible for grading this
+I may have overestimated the expected scope of this project. I realized after I
+submitted the proposal that perhaps my project may have been too big, but its a
+little late for that now. This project requires quite a bit of setup and
+requires you to own Balatro (which if you don't its a great game) as well as set
+up a ton of other stuff. I am truly sorry for the pain this will cause you
+assuming you are required to get this running yourself.
 
 # Install Guide
+## Disclaimer
+This project was only tested on Arch Linux (btw) using a legally owned copy of
+Balatro through Steam, Not to say it won't work on other platforms, but that is
+outside the scope of this project
+
 ## Prereqs
 - A copy of Balatro (Tested with a copy owned on steam)
 - [Lovely Injector](github.com/ethangreen-dev/lovely-injector), [SteamModded](https://github.com/Steamodded/smods) and [BalatroBot](https://github.com/coder/balatrobot) installed
