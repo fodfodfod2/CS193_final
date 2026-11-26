@@ -11,8 +11,10 @@ use std::{env, fmt, panic};
 
 
 /* This will be passed in to specify which api to use */
+#[derive(Copy, Clone)]
 pub enum ApiType {
     Jev,
+    Laya,
 }
 
 impl ApiType {
@@ -20,6 +22,7 @@ impl ApiType {
     pub fn get_url(&self) -> &'static str {
         match self {
             ApiType::Jev => "https://api.typesafe.ai/v1/systemone",
+            ApiType::Laya => "http://127.0.0.1:8000/v1/systemone"
         }
     }
 
@@ -27,6 +30,15 @@ impl ApiType {
     pub fn get_api_key(&self) -> String {
         match self {
             ApiType::Jev => env::var("JEV_API_KEY").unwrap(),
+            ApiType::Laya => String::new(),
+        }
+    }
+
+    /* Get the name of the model to use from the given api */
+    pub fn get_model_name(&self) -> &'static str {
+        match self {
+            ApiType::Jev => "jev-latest",
+            ApiType::Laya => "english",
         }
     }
 }

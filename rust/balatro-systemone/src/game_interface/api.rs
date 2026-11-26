@@ -325,6 +325,7 @@ impl Action {
         max: i8,
         hand: &Vec<Card>,
         state: &str,
+        api_type: ApiType,
     ) -> Result<Vec<i16>, Error> {
         let full_prompt = vec_to_str(
             &(String::from(prompt) + &format!(" \\nChoose between {min} and {max} targets")),
@@ -368,8 +369,8 @@ impl Action {
                 apiqc,
             );
 
-            let apireq = ApiRequest::new(state, "jev-latest", vec![apiq]);
-            let apires = apireq.get_response(ApiType::Jev).await;
+            let apireq = ApiRequest::new(state, api_type.get_model_name(), vec![apiq]);
+            let apires = apireq.get_response(api_type).await;
             let ans_str = match &apires[0] {
                 ApiAnswer::Choice(s, _, _) => s.as_str(),
                 _ => {
@@ -395,7 +396,7 @@ impl Action {
     }
 
     /* perform the Action */
-    pub async fn perform(&self, gs: &GameState, state: &str) -> Result<(), Error> {
+    pub async fn perform(&self, gs: &GameState, state: &str, api_type: ApiType) -> Result<(), Error> {
         match self {
             Self::NextBlind => next_blind().await,
             Self::SkipBlind => skip_blind().await,
@@ -411,6 +412,7 @@ impl Action {
                         *max,
                         gs.get_hand(),
                         state,
+                        api_type,
                     )
                     .await
                     .unwrap()
@@ -428,6 +430,7 @@ impl Action {
                         5,
                         gs.get_hand(),
                         state,
+                        api_type,
                     )
                     .await
                     .unwrap(),
@@ -442,6 +445,7 @@ impl Action {
                         5,
                         gs.get_hand(),
                         state,
+                        api_type,
                     )
                     .await
                     .unwrap(),
@@ -458,6 +462,7 @@ impl Action {
                         *max,
                         gs.get_hand(),
                         state,
+                        api_type,
                     )
                     .await
                     .unwrap(),

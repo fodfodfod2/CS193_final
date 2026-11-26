@@ -18,7 +18,7 @@ realize this existed at that time, and at a point I'm in too deep to rewrite the
 entire balatro_state crate to work with it.
 
 # Planned features
-- [ ] Support multiple systemone Api's
+- [x] Support multiple systemone Api's
 - [ ] Multiplayer mod support
 - [ ] Training custom models
 - [ ] Pit fight between multiple different models
@@ -62,7 +62,8 @@ outside the scope of this project
 - A copy of Balatro (Tested with a copy owned on steam)
 - [Lovely Injector](github.com/ethangreen-dev/lovely-injector), [SteamModded](https://github.com/Steamodded/smods) and [BalatroBot](https://github.com/coder/balatrobot) installed
 - Cargo (rust build system/package manager)
-- A api key for Typesafe.ai (Jev) with some credits loaded.
+- A api key for Typesafe.ai (Jev) with some credits loaded. OR a local model
+  setup (after traditional install guide)
 
 ## How to find your Balatro Appdata folder
 You will need this when installing SMODS, however make sure to write it down, on
@@ -92,3 +93,12 @@ go to ```$YOUR_INSTALL_FOLDER/CS193_final/rust/balatro-systemone``` and run
 ```cargo run```. This will compile and run the program. For now each run
 completes one action in game (sell a card, play a hand, open a pack). If it is
 called in a state there aren't any decisions to be made in, nothing will happen.
+
+## How to use a local model
+In order to use a local model
+```
+cd local-model-laya\
+uv add laya\
+uv add laya[serve]\
+LAYA_HOST=127.0.0.1 LAYA_MODELS=english uv run laya-serve
+```
