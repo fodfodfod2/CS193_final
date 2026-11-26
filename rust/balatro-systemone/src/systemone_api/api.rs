@@ -5,18 +5,25 @@ use crate::{ApiQuestionCriteria::Choice, game_interface::Action};
 use serde_json::Value;
 use std::{env, fmt, panic};
 
+/*
+ * This file/crate is the access point for calls to the systemone api
+ */
+
+
 /* This will be passed in to specify which api to use */
 pub enum ApiType {
     Jev,
 }
 
 impl ApiType {
+    /* Get the url for the given api */
     pub fn get_url(&self) -> &'static str {
         match self {
             ApiType::Jev => "https://api.typesafe.ai/v1/systemone",
         }
     }
 
+    /* Get the api key for the given api */
     pub fn get_api_key(&self) -> String {
         match self {
             ApiType::Jev => env::var("JEV_API_KEY").unwrap(),
@@ -24,6 +31,12 @@ impl ApiType {
     }
 }
 
+/*
+ * This will represent a choice the AI can choose,
+ * name: the name of the choice
+ * desc: The desc of the choice
+ * action: the action that will be performed if it is chosen
+ */
 #[derive(Clone)]
 pub struct ApiChoice {
     name: String,
@@ -32,6 +45,7 @@ pub struct ApiChoice {
 }
 
 impl ApiChoice {
+    /* Create a new ApiChoice */
     pub fn new(name: &str, desc: &str, action: Action) -> Self {
         ApiChoice {
             name: String::from(name),
@@ -40,10 +54,12 @@ impl ApiChoice {
         }
     }
 
+    /* get the name of the ApiChoice */
     pub fn get_name(&self) -> &str {
         &self.name
     }
 
+    /* get the desc of the ApiChoice */
     pub fn get_action(&self) -> &Action {
         &self.action
     }
@@ -57,6 +73,11 @@ impl fmt::Display for ApiChoice {
     }
 }
 
+/*
+ * This will represent the type of question, only choice is used in this
+ * program however I have implemented the rest in case I decide to add more
+ * in the future
+ */
 #[allow(unused)]
 pub enum ApiQuestionCriteria {
     Choice(Vec<ApiChoice>),
@@ -65,6 +86,10 @@ pub enum ApiQuestionCriteria {
 }
 
 impl ApiQuestionCriteria {
+    /*
+     * This will get the Vec<ApiChoice> from a Self::Choice, panic if this
+     * is a Noul or Score object
+     */
     pub fn get_options(&self) -> &Vec<ApiChoice> {
         if let Self::Choice(v) = &self {
             return v;
@@ -73,6 +98,7 @@ impl ApiQuestionCriteria {
     }
 }
 
+/* This represents a question to the api */
 pub struct ApiQuestion {
     name: String,
     instructions: String,
@@ -80,6 +106,7 @@ pub struct ApiQuestion {
 }
 
 impl ApiQuestion {
+    /* Create a new api question */
     pub fn new(name: &str, instructions: &str, criteria: ApiQuestionCriteria) -> Self {
         ApiQuestion {
             name: String::from(name),
@@ -131,6 +158,7 @@ impl fmt::Display for ApiQuestion {
     }
 }
 
+/* This represents a full request to the systemone api */
 pub struct ApiRequest {
     state: String,
     model: String,
@@ -138,6 +166,7 @@ pub struct ApiRequest {
 }
 
 impl ApiRequest {
+    /* Create a new ApiRequest */
     pub fn new(state: &str, model: &str, questions: Vec<ApiQuestion>) -> Self {
         ApiRequest {
             state: String::from(state),
@@ -146,6 +175,7 @@ impl ApiRequest {
         }
     }
 
+    /* Send and get an answer fromt the systemone api */
     pub async fn get_response(&self, t: ApiType) -> Vec<ApiAnswer> {
         let url = t.get_url();
         let api_key = t.get_api_key();
@@ -217,6 +247,7 @@ impl fmt::Display for ApiRequest {
     }
 }
 
+/* This represents an answer from teh systemone api */
 pub enum ApiAnswer {
     Choice(String, f64, Action),
     Noul(f64),
@@ -224,6 +255,7 @@ pub enum ApiAnswer {
 }
 
 impl ApiAnswer {
+    /* Parse an answer from a json */
     pub fn from_json(v: &Value, question: &ApiQuestion) -> Self {
         println!("PARSING {v}");
         match v["type"]
