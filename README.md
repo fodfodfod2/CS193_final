@@ -95,13 +95,14 @@ completes one action in game (sell a card, play a hand, open a pack). If it is
 called in a state there aren't any decisions to be made in, nothing will happen.
 
 ## How to use a local model
-In order to use a local model
+In order to start the server for a local model, in another terminal
 ```
-cd local-model-laya\
-uv add laya\
-uv add laya[serve]\
+cd local-model-laya # This should be from project root, although any folder anywhere will work
+uv init # Create a new venv if not there already for some reason
+uv add laya
+uv add "laya[serve]"
 LAYA_HOST=127.0.0.1 LAYA_MODELS=english uv run laya-serve
 ```
 - This uses [Laya](https://github.com/nandhakishorm/laya), A local systemone
   model.
-- In order to use Laya over Jev, run with USE_LAYA=1 cargo run
+- In order to use Laya over Jev, run with ```USE_LAYA=1 cargo run```
