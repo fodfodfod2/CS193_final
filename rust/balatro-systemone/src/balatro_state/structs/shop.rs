@@ -7,6 +7,7 @@ use crate::game_interface::Action;
 
 use super::*;
 
+/* This will represent all items in a shop */
 pub struct Shop {
     joker: Vec<Joker>,
     planet: Vec<Planet>,
@@ -18,6 +19,7 @@ pub struct Shop {
 }
 
 impl Shop {
+    /* Create a new shop */
     pub fn new(
         joker: Vec<Joker>,
         planet: Vec<Planet>,
@@ -38,9 +40,12 @@ impl Shop {
         }
     }
 
+    /* Get the actions from buying items in the shop */
     pub fn get_actions(&self, c: &Ctx) -> Vec<ApiChoice> {
         let mut res = Vec::new();
         let m = c.get_money();
+
+        //TODO implement rerolls
 
         if c.get_open_joker_slots() > 0 {
             for i in 0..<i16>::try_from(self.joker.len()).unwrap() {

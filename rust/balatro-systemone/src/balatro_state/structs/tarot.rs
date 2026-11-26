@@ -31,6 +31,7 @@ pub enum TarotType {
 }
 
 impl TarotType {
+    /* Get a new tarot card from its name str */
     pub fn from_str(s: &str) -> Self {
         match s {
             "The Fool" => Self::TheFool,
@@ -59,6 +60,7 @@ impl TarotType {
         }
     }
 
+    /* Get the name of a tarot card */
     pub fn get_name(&self) -> &'static str {
         match self {
             Self::TheFool => "The Fool",
@@ -86,6 +88,7 @@ impl TarotType {
         }
     }
 
+    /* Get the desc of the ability of the tarot card */
     pub fn get_desc(&self) -> &'static str {
         match self {
             Self::TheFool => {
@@ -119,6 +122,7 @@ impl TarotType {
         }
     }
 
+    /* Can you play this card given the ctx? */
     pub fn can_play(&self, ctx: &Ctx) -> bool {
         match self {
             TarotType::TheFool => ctx.get_lp_cons().is_some(),
@@ -146,6 +150,7 @@ impl TarotType {
         }
     }
 
+    /* get the (min, max) number of cards this card targets */
     pub fn get_targets(&self) -> (i8, i8) {
         match &self {
             TarotType::TheFool => (0, 0),
@@ -174,6 +179,7 @@ impl TarotType {
     }
 }
 
+/* This will represent the actual tarot card */
 pub struct Tarot {
     tarot_type: TarotType,
     sell_value: i16,
@@ -181,22 +187,27 @@ pub struct Tarot {
 }
 
 impl Tarot {
+    /* get the name of the card */
     pub fn get_name(&self) -> &'static str {
         self.tarot_type.get_name()
     }
 
+    /* get the description of the ability of the card */
     pub fn get_desc(&self) -> &'static str {
         self.tarot_type.get_desc()
     }
 
+    /* get the sell value of this card */
     pub fn get_sell_val(&self) -> i16 {
         self.sell_value
     }
 
+    /* Can you play this card given the ctx? */
     pub fn can_play(&self, ctx: &Ctx) -> bool {
         self.tarot_type.can_play(ctx)
     }
 
+    /* get the (min, max) number of cards this card targets */
     pub fn get_targets(&self) -> (i8, i8) {
         self.tarot_type.get_targets()
     }

@@ -9,10 +9,12 @@ pub struct Seal {
 }
 
 impl Seal {
+    /* Create a new seal */
     pub fn new(name: String, desc: String) -> Self {
         Seal { name, desc }
     }
 
+    /* Checks if a seal exists */
     pub fn exists(&self) -> bool {
         !(self.name.is_empty() && self.desc.is_empty())
     }
@@ -48,10 +50,12 @@ pub struct Enhancement {
 }
 
 impl Enhancement {
+    /* Create a new Enhancement */
     pub fn new(name: String, desc: String) -> Self {
         Enhancement { name, desc }
     }
 
+    /* Checks if a Enhancement exists */
     pub fn exists(&self) -> bool {
         !(self.name.is_empty() && self.desc.is_empty())
     }
@@ -99,6 +103,7 @@ pub enum Rank {
 }
 
 impl Rank {
+    /* Get a rank from the given int, panic if invalid */
     pub fn from_int(int: i16) -> Self {
         match int {
             2 => Rank::Two,
@@ -118,6 +123,7 @@ impl Rank {
         }
     }
 
+    /* Turn the rank back into an int */
     pub fn to_int(self) -> i8 {
         match self {
             Rank::Two => 2,
@@ -168,6 +174,7 @@ pub enum Suit {
 }
 
 impl Suit {
+    /* Get a suit from a str, panic if invalid */
     pub fn from_str(string: &str) -> Self {
         match string {
             "Diamonds" => Suit::Diamonds,
@@ -177,6 +184,8 @@ impl Suit {
             s => panic!("Unrecognized suit {s}"),
         }
     }
+
+    /* get a suit from an int, panic if invalid */
     pub fn from_int(int: u8) -> Self {
         match int {
             0 => Suit::Hearts,
@@ -211,6 +220,7 @@ pub struct Card {
 }
 
 impl Card {
+    /* Create a new Card */
     pub fn new(
         rank: Rank,
         suit: Suit,
@@ -231,10 +241,12 @@ impl Card {
         }
     }
 
+    /* get the &Suit of the card */
     pub fn get_suit(&self) -> &Suit {
         &self.suit
     }
 
+    /* get the &Rank of the card */
     pub fn get_rank(&self) -> &Rank {
         &self.rank
     }

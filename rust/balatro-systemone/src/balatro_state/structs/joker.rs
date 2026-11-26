@@ -11,10 +11,12 @@ pub struct Sticker {
 }
 
 impl Sticker {
+    /* Create a new sticker */
     pub fn new(name: String, desc: String) -> Self {
         Sticker { name, desc }
     }
 
+    /* This will check if a sticker exists */
     pub fn exists(&self) -> bool {
         !(self.name.is_empty() && self.desc.is_empty())
     }
@@ -54,10 +56,12 @@ pub struct Edition {
 }
 
 impl Edition {
+    /* Create a new Edition */
     pub fn new(name: String, desc: String) -> Self {
         Edition { name, desc }
     }
 
+    /* This will check if an edition exists */
     pub fn exists(&self) -> bool {
         !(self.name.is_empty() && self.desc.is_empty())
     }
@@ -104,14 +108,17 @@ pub struct Joker {
 }
 
 impl Joker {
+    /* Get the name of the joker */
     pub fn get_name(&self) -> &str {
         &self.name
     }
 
+    /* Get the desc of the jokers ability */
     pub fn get_desc(&self) -> &str {
         &self.desc
     }
 
+    /* Get the sell sell_value of the joker */
     pub fn get_sell_value(&self) -> i16 {
         self.sell_value
     }

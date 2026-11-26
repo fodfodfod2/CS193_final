@@ -2,6 +2,10 @@ use mlua::Table;
 
 use super::*;
 
+/*
+ * This can represent any Consumable, either a planet, tarot,
+ * or spectral card
+ */
 pub enum Consumable {
     Planet(Planet),
     Tarot(Tarot),
@@ -9,6 +13,7 @@ pub enum Consumable {
 }
 
 impl Consumable {
+    /* Get the name of the Consumable */
     pub fn get_name(&self) -> &str {
         match self {
             Consumable::Tarot(t) => t.get_name(),
@@ -17,6 +22,7 @@ impl Consumable {
         }
     }
 
+    /* Get the name of the type of the Consumable */
     pub fn get_type_name(&self) -> &str {
         match self {
             Consumable::Tarot(_) => "Tarot",
@@ -25,6 +31,7 @@ impl Consumable {
         }
     }
 
+    /* Get the desc of the Consumable */
     pub fn get_desc(&self) -> &str {
         match self {
             Consumable::Tarot(t) => t.get_desc(),
@@ -33,6 +40,7 @@ impl Consumable {
         }
     }
 
+    /* get the sell value of a consumable */
     pub fn get_sell_value(&self) -> i16 {
         match self {
             Consumable::Tarot(t) => t.get_sell_val(),

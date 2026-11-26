@@ -6,6 +6,7 @@ use crate::{Action, ApiChoice};
 
 use super::*;
 
+/* This represents the possible types of packs in the shop */
 pub enum PackType {
     Card,
     Joker,
@@ -15,6 +16,7 @@ pub enum PackType {
 }
 
 impl PackType {
+    /* This will parse a pack type from a str, panic if invalid */
     pub fn from_str(s: &str) -> Self {
         match s {
             "Standard" => PackType::Card,
@@ -26,6 +28,7 @@ impl PackType {
         }
     }
 
+    /* This will turn a PackType back into a string */
     pub fn to_str(&self) -> &'static str {
         match &self {
             PackType::Card => "Standard",
@@ -37,6 +40,7 @@ impl PackType {
     }
 }
 
+/* This represents a pack in the shop before it is bought */
 pub struct ShopPack {
     pack_type: PackType,
     item_cnt: i8,
@@ -46,6 +50,7 @@ pub struct ShopPack {
 }
 
 impl ShopPack {
+    /* Create a new ShopPack */
     pub fn new(pack_type: PackType, item_cnt: i8, cost: i16, select_num: i8) -> Self {
         let name: String = format!("{} Pack", pack_type.to_str());
         ShopPack {
@@ -127,6 +132,7 @@ impl fmt::Display for ShopPack {
     }
 }
 
+/* This will represents the contents of a pack that is already open */
 pub enum PackContents {
     Card(Vec<Card>),
     Joker(Vec<Joker>),
@@ -135,16 +141,19 @@ pub enum PackContents {
     Spectral(Vec<Spectral>),
 }
 
+/* This will represents packs that are already open */
 pub struct OpenPack {
     select_num: i8,
     items: PackContents,
 }
 
 impl OpenPack {
+    /* Create a new OpenPack */
     pub fn new(select_num: i8, items: PackContents) -> Self {
         OpenPack { select_num, items }
     }
 
+    /* Get an item at the given idx in the pack, only for Display purposes */
     pub fn get_item(&self, idx: usize) -> Box<&dyn fmt::Display> {
         match &self.items {
             PackContents::Card(c) => Box::new(&c[idx]),
@@ -155,6 +164,10 @@ impl OpenPack {
         }
     }
 
+    /*
+     * Get the choices of picking each item in the pack with the given
+     * ctx
+     */
     pub fn get_choices(&self, ctx: &Ctx) -> Vec<ApiChoice> {
         match &self.items {
             PackContents::Card(c) => c

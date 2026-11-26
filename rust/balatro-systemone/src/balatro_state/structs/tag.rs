@@ -9,15 +9,9 @@ pub struct Tag {
 }
 
 impl Tag {
+    /* Create a new tag */
     pub fn new(name: String, desc: String) -> Self {
         Tag { name, desc }
-    }
-
-    pub fn default() -> Self {
-        Tag {
-            name: String::from(""),
-            desc: String::from(""),
-        }
     }
 }
 

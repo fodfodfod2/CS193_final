@@ -4,6 +4,7 @@ use crate::{Action, balatro_state::SpectralType::Wraith};
 
 use super::*;
 
+/* This will represent the type of spectral card */
 pub enum SpectralType {
     Familiar,
     Grim,
@@ -26,6 +27,7 @@ pub enum SpectralType {
 }
 
 impl SpectralType {
+    /* This will get the type of spectral from a string */
     pub fn from_str(s: &str) -> Self {
         match s {
             "Familiar" => Self::Familiar,
@@ -50,6 +52,7 @@ impl SpectralType {
         }
     }
 
+    /* This will get the name of the spectral card */
     pub fn get_name(&self) -> &'static str {
         match self {
             Self::Familiar => "Familiar",
@@ -73,6 +76,7 @@ impl SpectralType {
         }
     }
 
+    /* This will get the desc of the ability of the spectral card */
     pub fn get_desc(&self) -> &'static str {
         match self {
             Self::Familiar => {
@@ -102,6 +106,7 @@ impl SpectralType {
         }
     }
 
+    /* Can you currently play this card given this ctx? */
     pub fn can_play(&self, ctx: &Ctx) -> bool {
         match self {
             Self::Familiar => true,
@@ -125,6 +130,7 @@ impl SpectralType {
         }
     }
 
+    /* Get the (min, max) number of cards targeted by this card */
     pub fn get_targets(&self) -> (i8, i8) {
         match self {
             Self::Familiar => (0, 0),
@@ -157,22 +163,27 @@ pub struct Spectral {
 }
 
 impl Spectral {
+    /* This will get the name of the spectral card */
     pub fn get_name(&self) -> &'static str {
         self.spectral_type.get_name()
     }
 
+    /* This will get the desc of the ability of the spectral card */
     pub fn get_desc(&self) -> &'static str {
         self.spectral_type.get_desc()
     }
 
+    /* Get the sell value of the spectral card */
     pub fn get_sell_val(&self) -> i16 {
         self.sell_value
     }
 
+    /* Can you play this card? */
     pub fn can_play(&self, ctx: &Ctx) -> bool {
         self.spectral_type.can_play(ctx)
     }
 
+    /* Get the (min, max) number of cards targeted by this card */
     pub fn get_targets(&self) -> (i8, i8) {
         self.spectral_type.get_targets()
     }

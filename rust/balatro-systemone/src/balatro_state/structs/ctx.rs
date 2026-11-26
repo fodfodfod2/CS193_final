@@ -5,6 +5,10 @@ use mlua::{Table, table};
 use super::*;
 use strum::IntoEnumIterator;
 
+/*
+ * This represents a bunch of miscellaneous context data about the game
+ * state,
+ */
 pub struct Ctx {
     hands: i8,
     discards: i8,
@@ -22,30 +26,37 @@ pub struct Ctx {
 }
 
 impl Ctx {
+    /* Get the current budget/money */
     pub fn get_money(&self) -> i16 {
         self.money
     }
 
+    /* Get the amount of open joker slots */
     pub fn get_open_joker_slots(&self) -> i8 {
         self.max_joker_cnt - self.cur_joker_cnt
     }
 
+    /* get the maximum amount of joker slots */
     pub fn get_max_joker_slots(&self) -> i8 {
         self.max_joker_cnt
     }
 
+    /* Is there an open joker slot */
     pub fn has_open_joker_slot(&self) -> bool {
         self.max_joker_cnt > self.cur_joker_cnt
     }
 
+    /* get the amount of open Consumable slots */
     pub fn get_open_cons_slots(&self) -> i8 {
         self.max_cons_cnt - self.cur_cons_cnt
     }
 
+    /* get the amount of remaining discards this blind */
     pub fn get_rem_discard(&self) -> i8 {
         self.discards
     }
 
+    /* get the last last_played_consumable, if applicable */
     pub fn get_lp_cons(&self) -> &Option<Consumable> {
         &self.last_played_consumable
     }

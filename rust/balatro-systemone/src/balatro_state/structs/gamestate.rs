@@ -12,6 +12,7 @@ use crate::{
 
 use super::*;
 
+/* This is the master GameState object, everything else runs through this */
 pub struct GameState {
     state: State,
     hand: Option<Vec<Card>>,
@@ -59,6 +60,7 @@ impl GameState {
         }
     }
 
+    /* This will get the actions from selling jokers or consumables */
     fn get_sell_actions(&self) -> Vec<ApiChoice> {
         let mut res: Vec<ApiChoice> = Vec::new();
 
@@ -95,6 +97,7 @@ impl GameState {
         res
     }
 
+    /* This will get the actions from a shop, panic if none exists */
     fn get_shop_actions(&self) -> Vec<ApiChoice> {
         match &self.shop {
             Some(s) => s.get_actions(&self.ctx),
@@ -102,6 +105,9 @@ impl GameState {
         }
     }
 
+    /*
+     * This will get the actions of picking cards from a pack, panic if no pack is open
+     */
     fn get_pack_actions(&self) -> Vec<ApiChoice> {
         match &self.pack {
             Some(p) => p.get_choices(&self.ctx),
@@ -109,6 +115,7 @@ impl GameState {
         }
     }
 
+    /* This function will get the current hand, panic if none exists */
     pub fn get_hand(&self) -> &Vec<Card> {
         match &self.hand {
             Some(h) => h,
@@ -116,6 +123,10 @@ impl GameState {
         }
     }
 
+    /*
+     * This will get an item with a certain idx in a pack
+     * panic if no pack is open
+     */
     pub fn get_pack_item(&self, idx: usize) -> Box<&dyn fmt::Display> {
         match &self.pack {
             Some(p) => p.get_item(idx),
@@ -123,6 +134,9 @@ impl GameState {
         }
     }
 
+    /*
+     * This will get the actions at blind selection, such as skip or play
+     */
     fn get_blind_actions(&self) -> Vec<ApiChoice> {
         let mut res: Vec<ApiChoice> = Vec::new();
         let cur = &self.blinds[usize::from(self.current_blind)];
@@ -155,6 +169,9 @@ impl GameState {
         res
     }
 
+    /*
+     * This will get all possible actions for the current game state
+     */
     pub fn get_possible_actions(&self) -> Option<ApiQuestion> {
         if !self.state.is_decision_state() {
             return None;
@@ -193,6 +210,11 @@ impl GameState {
                     qinstr,
                     ApiQuestionCriteria::Choice(sell_qs),
                 ))
+            }
+            State::RoundEval => {
+                let ac = vec![ApiChoice::new("Continue", "Continue to the next blind", Action::EndRoundEval)];
+                Some(ApiQuestion::new(
+                        qname, qinstr, ApiQuestionCriteria::Choice(ac)))
             }
             State::SelectingHand => {
                 let mut hand_qs = vec![ApiChoice::new(

@@ -4,6 +4,7 @@ use crate::Action;
 
 use super::*;
 
+/* This will represent the type of voucher */
 pub enum VoucherType {
     Overstock,
     OverstockPlus,
@@ -40,6 +41,7 @@ pub enum VoucherType {
 }
 
 impl VoucherType {
+    /* This will get the type of voucher from the name str */
     pub fn from_str(s: &str) -> Self {
         match s {
             "Overstock" => Self::Overstock,
@@ -78,6 +80,7 @@ impl VoucherType {
         }
     }
 
+    /* Get the name of the voucher */
     pub fn get_name(&self) -> &'static str {
         match self {
             Self::Overstock => "Overstock",
@@ -115,6 +118,7 @@ impl VoucherType {
         }
     }
 
+    /* Get the desc of the ability of the voucher */
     pub fn get_desc(&self) -> &'static str {
         match self {
             Self::Overstock => "+1 card slot available in shop (to 3 card slots)",
@@ -166,10 +170,12 @@ pub struct Voucher {
 }
 
 impl Voucher {
+    /* Get the name of this voucher */
     pub fn get_name(&self) -> &'static str {
         self.voucher_type.get_name()
     }
 
+    /* This will get the desc of the ability of the voucher */
     pub fn get_desc(&self) -> &'static str {
         self.voucher_type.get_desc()
     }

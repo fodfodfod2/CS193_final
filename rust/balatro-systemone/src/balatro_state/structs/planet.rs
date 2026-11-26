@@ -2,6 +2,7 @@ use mlua::Table;
 
 use super::*;
 
+/* This will represent a type of planet card */
 pub enum PlanetType {
     Pluto,
     Mercury,
@@ -18,6 +19,7 @@ pub enum PlanetType {
 }
 
 impl PlanetType {
+    /* Parse the type of planet card from a str */
     pub fn from_str(s: &str) -> Self {
         match s {
             "Pluto" => Self::Pluto,
@@ -36,6 +38,7 @@ impl PlanetType {
         }
     }
 
+    /* get the name of the planet */
     pub fn get_name(&self) -> &'static str {
         match self {
             Self::Pluto => "Pluto",
@@ -53,6 +56,7 @@ impl PlanetType {
         }
     }
 
+    /* Get the desc of the ability of the planet */
     pub fn get_desc(&self) -> &'static str {
         match self {
             Self::Pluto => "Level up High Card, +1 Mult and +10 Chips",
@@ -70,6 +74,7 @@ impl PlanetType {
         }
     }
 
+    /* Get the HandType the planet upgrades */
     pub fn get_hand(&self) -> HandType {
         match self {
             Self::Pluto => HandType::HighCard,
@@ -96,18 +101,22 @@ pub struct Planet {
 }
 
 impl Planet {
+    /* This will get the name of the planet card */
     pub fn get_name(&self) -> &'static str {
         self.planet_type.get_name()
     }
 
+    /* This will get the desc of the planet cards ability */
     pub fn get_desc(&self) -> &'static str {
         self.planet_type.get_desc()
     }
 
+    /* This will get the sell value of the planet card */
     pub fn get_sell_val(&self) -> i16 {
         self.sell_value
     }
 
+    /* This will get the HandType of the planet */
     pub fn get_hand(&self) -> HandType {
         self.planet_type.get_hand()
     }

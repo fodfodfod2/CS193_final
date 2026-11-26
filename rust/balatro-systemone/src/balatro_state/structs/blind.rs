@@ -4,12 +4,15 @@ use super::*;
 
 /* This represents possible blinds the player may face */
 pub enum Blind {
-    Small(u64, Tag),
-    Big(u64, Tag),
-    Boss(u64, String, String),
+    Small(u64, Tag), /* Score: u64, skip tag */
+    Big(u64, Tag), /* Score: u64, skip tag */
+    Boss(u64, String, String), /* Score: u64, boss name, boss desc */
 }
 
 impl Blind {
+    /*
+     * This function will take a master table and parse each of the blinds from
+     * it, returns (current_blind: u8, [small, big, boss] */
     pub fn parse(t: Table) -> (u8, [Blind; 3]) {
         let blinds: Table = t
             .get("BLINDS")
