@@ -254,6 +254,7 @@ pub enum Action {
     SellJoker(i16),
     SellCons(i16),
     Reroll,
+    EndRoundEval,
     LeaveShop,
     PlayHand,
     DiscardHand,
@@ -282,7 +283,7 @@ impl Action {
             let c = &hand[i];
             options.push(ApiChoice::new(
                 &format!("{i}"),
-                &format!("Target card {i}: {c}"),
+                &format!("Use card {i}: {c}"),
                 Action::None,
             ));
         }
@@ -344,6 +345,7 @@ impl Action {
             Self::SkipBlind => skip_blind().await,
             Self::BuyCard(i) => buy_card(*i).await,
             Self::BuyPack(i) => buy_pack(*i).await,
+            Self::EndRoundEval => cash_out().await,
             Self::BuyVoucher(i) => buy_voucher(*i).await,
             Self::UsePackItem(i, (min, max)) => select_pack_card(*i,
                     &Self::select_hand_targets(
