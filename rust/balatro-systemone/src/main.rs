@@ -1,3 +1,5 @@
+use core::panic;
+
 use crate::{balatro_state::get_claude_gen_prompt, game_interface::*, systemone_api::*};
 
 mod balatro_state;
@@ -6,7 +8,13 @@ mod systemone_api;
 
 #[tokio::main]
 async fn main() {
-    let api_type = ApiType::Laya;
+    let api_type = match std::env::var("USE_LAYA") {
+        Ok(s) => match s.as_str() {
+            "1" => ApiType::Laya,
+            _ => ApiType::Jev,
+        }
+        Err(_) => ApiType::Jev,
+    };
 
     let gs = balatro_state::parsing::read_game_state().unwrap();
     println!("{}", gs);
@@ -20,12 +28,4 @@ async fn main() {
             a.perform(&gs, state, api_type).await.unwrap();
         }
     }
-
-    // let a = ApiChoice::new("Red", "The thing is red");
-    // let b = ApiChoice::new("Blue", "The thing is blue");
-
-    // let qs = vec![a, b];
-    // let aqc = ApiQuestionCriteria::Choice(qs);
-
-    // let aq = ApiQuestion::new("Q1", "What color are apples?", aqc);
 }

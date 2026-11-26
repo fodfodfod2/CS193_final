@@ -102,3 +102,6 @@ uv add laya\
 uv add laya[serve]\
 LAYA_HOST=127.0.0.1 LAYA_MODELS=english uv run laya-serve
 ```
+- This uses [Laya](https://github.com/nandhakishorm/laya), A local systemone
+  model.
+- In order to use Laya over Jev, run with USE_LAYA=1 cargo run
