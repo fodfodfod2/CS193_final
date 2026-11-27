@@ -8,7 +8,7 @@ use crate::balatro_state::HandType::{FourOfAKind, HighCard};
 use super::*;
 
 /* This represents the different hands the player can level and play */
-#[derive(Debug, Eq, Hash, PartialEq, PartialOrd, EnumIter, Clone, Copy)]
+#[derive(Debug, Eq, Hash, PartialEq, PartialOrd, Ord, EnumIter, Clone, Copy)]
 pub enum HandType {
     None,
     HighCard,
@@ -164,7 +164,7 @@ impl HandType {
         res
     }
 
-    pub fn get_possible_hands(num: i32, hand: &Vec<Card>) -> Vec<(Vec<&Card>, Self)> {
+    pub fn get_possible_hands(num: usize, hand: &Vec<Card>) -> Vec<(Vec<&Card>, Self)> {
         let combos: Vec<Vec<&Card>> = hand.iter().combinations(5).collect();
         let mut res = Vec::new();
 
@@ -174,26 +174,13 @@ impl HandType {
 
         for c in combos {
             let ht = Self::from_cards(&c);
-            println!(
-                "Comparing {ht} to {} -- {}",
-                res[(num - 1) as usize].1,
-                ht > res[(num - 1) as usize].1
-            );
-            if ht > res[(num - 1) as usize].1 {
-                if res[0].1 < ht {
-                    res[0] = (c.clone(), ht)
-                } else {
-                    for i in 1..num {
-                        if res[(num - 1 - i) as usize].1 > ht {
-                            res[(num - i) as usize] = (c.clone(), ht);
-                        }
-                    }
-                }
-            }
+            res.push((c, ht));
         }
+        res.sort_by_key(|x| std::cmp::Reverse(x.1));
         res.into_iter()
-            .filter_map(|(c, ht)| {
-                if ht != HandType::None {
+            .enumerate()
+            .filter_map(|(i, (c, ht))| {
+                if ht != HandType::None && i < num {
                     Some((c, ht))
                 } else {
                     None

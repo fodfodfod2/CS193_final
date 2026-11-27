@@ -410,13 +410,13 @@ impl Action {
 
         let mut res = Vec::new();
         for i in 0..max {
-            //if i == min {
-            //    options.push(ApiChoice::new(
-            //        "None",
-            //        "Finish with the targets you have, generally this should be your last choice. Remember scoring more cards is typically better",
-            //        Action::None,
-            //    ));
-            //}
+            if i == min {
+                options.push(ApiChoice::new(
+                    "None",
+                    "Finish with the targets you have, generally this should be your last choice. Remember scoring more cards is typically better. THERE IS RARELY A BENEFIT TO CHOOSING THIS, only do it if you are willing to give up free utility",
+                    Action::None,
+                ));
+            }
             let apiqc = ApiQuestionCriteria::Choice(options.clone());
             let apiq = ApiQuestion::new(
                 "hand target select",
@@ -492,16 +492,6 @@ impl Action {
             Self::LeaveShop => leave_shop().await,
             Self::PlayHand => {
                 play_hand(
-                    //&Self::select_hand_targets(
-                    //    "Which cards do you want to play?",
-                    //    1,
-                    //    5,
-                    //    gs.get_hand(),
-                    //    state,
-                    //    api_type,
-                    //)
-                    //.await
-                    //.unwrap(),
                     &Self::select_hand_type(
                         "Which cards do you want to play?",
                         state,
