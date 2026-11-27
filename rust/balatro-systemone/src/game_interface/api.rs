@@ -492,12 +492,22 @@ impl Action {
             Self::LeaveShop => leave_shop().await,
             Self::PlayHand => {
                 play_hand(
-                    &Self::select_hand_type(
+                    &(match false {
+                        true => {Self::select_hand_type(
                         "Which cards do you want to play?",
                         state,
                         gs.get_hand(),
                         api_type,
-                    ).await.unwrap(),
+                    ).await.unwrap()},
+                    false => {Self::select_hand_targets(
+                        "Which cards do you want to play?, You have up to 5 cards, It is generally in your best interest to choose as many as possible, trying to form poker hands such as a straight, flush, pair etc. ",
+                        1,
+                        5,
+                        gs.get_hand(),
+                        state,
+                        api_type,
+                    ).await.unwrap()},
+                    }),
                     gs,
                 )
                 .await
@@ -505,7 +515,7 @@ impl Action {
             Self::DiscardHand => {
                 discard_hand(
                     &Self::select_hand_targets(
-                        "Which cards do you want to discard?, You have up to 5 cards, It is generally in your best interest to choose as many as possible, trying to form poker hands such as a straight, flush, pair etc. ",
+                        "Which cards do you want to discard?, You have up to 5 cards, It is generally in your best interest to choose as many as possible, trying to form poker hands such as a straight, flush, pair etc. REMEMBER you are not playing these cards, you want to leave cards that you want to play and discard everything else.",
                         1,
                         5,
                         gs.get_hand(),

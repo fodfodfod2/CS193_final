@@ -192,7 +192,6 @@ impl ApiRequest {
         let api_key = t.get_api_key();
 
         let client = reqwest::Client::new();
-        println!("REQUEST\n{self}");
 
         let res = client
             .post(url)
@@ -210,7 +209,6 @@ impl ApiRequest {
             );
         }
         let body = res.text().await.unwrap();
-        println!("BODY\n{body}\n\n");
         let mut answers: Vec<ApiAnswer> = Vec::new();
         let body_v: Value =
             serde_json::from_str(&body).expect("Failed to parse Json body response");
@@ -220,7 +218,6 @@ impl ApiRequest {
             let qv = &ans_v[qn];
             answers.push(ApiAnswer::from_json(qv, q));
         }
-        println!("answers:");
         for a in &answers {
             println!("{}", a);
         }

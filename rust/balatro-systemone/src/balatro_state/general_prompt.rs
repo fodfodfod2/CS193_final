@@ -1,7 +1,13 @@
 #![allow(unused)]
+use const_str::replace;
 
-pub fn get_general_prompt() -> &'static str {
-    "You are playing Balatro, a rogulike deck building \
+/* This will get the system prompt for the systemone api */
+pub fn get_system_prompt() -> &'static str {
+    get_human_prompt()
+}
+
+fn get_human_prompt() -> &'static str {
+    replace!(replace!("You are playing Balatro, a rogulike deck building \
     game. During the game, you start with a deck of 52 \
     standard playing cards, and try to form poker hands. \
     Throughout the game you will gain jokers, which give \
@@ -14,7 +20,7 @@ pub fn get_general_prompt() -> &'static str {
     \
     \nUnlike normal poker, you will have a set hand size \
     that can be increased or decreased by various \
-    effects, and you can select up to 5 of which to play \
+    effects, and you can select up to 5 of which to play or discard \
     Each card scores chips (by default, \
     11 for aces, \
     10 for face cards, \
@@ -31,15 +37,71 @@ pub fn get_general_prompt() -> &'static str {
     \n After each blind, you will reach a shop, where you can buy upgrades, \
     These include: \
     \nJoker: These give you their effect as long as you own them. \
-           You have a limited number of Joker slots. Jokers can have permanent \
+           \tYou have a limited number of Joker slots. Jokers can have permanent \
            debuffs such as:
-           \nPerishable: After 5 turns, the Joker becomes debuffed and loses its effect \
-           \nEternal: Can never be sold \
-           \nRental: Costs you 3$ at the end of the round \
+           \t\tPerishable: After 5 turns, the Joker becomes debuffed and loses its effect \
+           \t\tEternal: Can never be sold \
+           \t\tRental: Costs you 3$ at the end of the round \
+           \tThey can also have upgrades called editions such as:
+           \t\tPolychrome: *1.5 mult
+           \t\tHolographic: +10 mult
+           \t\tFoil: +50 chips
     \n\n\
-    Consumeables, these can have effects to add enhancements, shape your deck, \
-    or upgrade your hands\
-    "
+    Consumeables: these can have effects to add enhancements, shape your deck, \
+    or upgrade your hands. You have 2 Consumeable slots by default, which can be \
+    increased to 3 by a certain voucher. The types of Consumeable cards are:
+        \tPlanet: These will upgrade a certain hand type, adding additional chips and mult. \
+        \tTarot: These have tons of different effects, either giving you money\
+        or letting you upgrade your cards or jokers
+        \tSpectral: These are basically more advanced Tarot cards, they are much \
+        rarer, and often have more extreme effects.
+    \n\n\
+    Cards: These form your deck and hand, and can also be rarely bought in the shop \
+    They can sometimes appear with enhancements or seals, each of which add beneficial effects:
+        \tBonus: +30 chips
+        \tMult: +4 mult
+        \tWild: Counts as any suit, this works for beneficial and detrimental \
+        effects
+        \tGlass: *2 mult with a 1/4 chance to break when played
+        \tSteel: *1.5 mult WHILE HELD IN HAND. It is generally not in your best interest to play or discard these cards
+        \tStone: +50 chips, however does not have a rank or suit. This means it cannot form hands, however it will always score no matter what. These often work well tagged onto a pair or two pair
+        \tGold: +3$ if held in hand at the end of the round
+        \tLucky: 1/5 chance for +20 mult and 1/15 chance for +20$
+        \tGold Seal: +3$ when played
+        \tRed Seal: Triggers an additional time, this is especially powerful if on top of an enhanced card
+        \tPurple seal: Gain a Tarot card when discarded, this is usually a very good card to discard
+        \tBlue seal: Creates the planet for your last played hand at the end of the round if held in hand. This can be super powerful if you leave it in your hand, however it is usually not worth playing around
+    \n\n\n\n\
+    The actual game loop:
+        \tThe game is organized into rounds called Antes, to win you must beat \
+        8 antes. Each ante contains 3 blinds, a small, a big, and a boss \
+        blind. You may choose to skip the small or big blind for a skip tag, \
+        that could provide beneficial effects, however you miss out of the \
+        money provided from beating that blind as well as the shop after it. \
+        It is generally a good idea to play blinds as much as possible unless \
+        The skip tag is incredibly helpful or you have a joker that benefits \
+        from skipping.
+        \tEach boss blind will have a detrimental effect, such as forcing you \
+        to always play 5 cards.
+        \tDuring each blind you will play hands, trying to score as high as possible
+    Strategy:
+        \tDuring shops, try and select jokers that complement each other
+        \tDuring hand selection, focus on using discards to build powerful \
+        hands such as flushes or straights.
+        \tTry and keep money above multiples of 5$(up to 25$), as at the end \
+        of each blind, you will gain 1 additional $ for every 5$ you have (up \
+        to a max of 5$ obtained)
+        \tALWAYS USE YOUR DISCARDS. There is rarely a benefit to saving them, \
+        use them to build stronger hands
+        \tBuy things at shops, saving money is awesome, but it does you \
+        no good if you don't live to the next shop. Buy jokers or planets \
+        to make your score stronger, this should always be your 1st priority
+        \tAVOID SKIPPING BLINDS in general, playing blinds is almost always \
+        a better idea due to the income and seeing the shop
+        \tBUY JOKERS IN THE SHOP. Jokers are pretty much always core to your \
+        Success, please spend your money on jokers or \
+        other upgrades at the shop
+    ", "\n", "\\n"), "\t", "\\t")
 }
 
 /*
@@ -48,7 +110,7 @@ pub fn get_general_prompt() -> &'static str {
  * replace later if i want to and it works for now
  */
 
-pub fn get_claude_gen_prompt() -> &'static str {
+fn get_claude_gen_prompt() -> &'static str {
     r##"You are an AI agent playing Balatro, a poker-themed roguelike deckbuilder. Your goal is to beat all 8 Antes (24 blinds) by scoring enough points in each blind. You receive the game state and a list of options each turn, and you choose one. Think about long-term run strategy, not just the current hand.
 
 # CORE STRUCTURE

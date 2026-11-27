@@ -150,7 +150,7 @@ impl HandType {
             hands.insert(Self::TwoPair, false);
         }
 
-        if !Self::has_straight(&c) {
+        if !Self::has_straight(c) {
             hands.insert(Self::Straight, false);
             hands.insert(Self::StraightFlush, false);
         }

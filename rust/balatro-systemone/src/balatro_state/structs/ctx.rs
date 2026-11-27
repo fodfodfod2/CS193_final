@@ -118,7 +118,6 @@ impl Parsable for Ctx {
             .get("PLANET")
             .ok()
             .ok_or("Failed to read Planet from last played consumeable")?;
-        println!("{}", serde_json::to_string(&lp_tarot).unwrap());
         let lp_cns: Option<Consumable> = match Tarot::parse(lp_tarot) {
             Ok(t) => Some(Consumable::Tarot(t)),
             Err(_) => match Planet::parse(lp_planet) {
