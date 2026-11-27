@@ -107,6 +107,16 @@ function get_shop_spectrals()
   return get_spectrals(G.shop_jokers)
 end
 
+function consumeable(c)
+  if c.ability.set == "Planet" then
+    return planet(c)
+  elseif c.ability.set == "Tarot" then
+    return tarot(c)
+  elseif c.ability.set == "Spectral" then
+    return spectral(c)
+  end
+end
+
 -- Get the last played planet or tarot, this is used exclusively for the fool
 -- tarot card
 function get_last_played_planet_or_tarot()

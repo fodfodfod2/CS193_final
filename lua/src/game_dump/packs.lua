@@ -35,23 +35,24 @@ function get_open_pack()
   local res = {}
   local cards = G.pack_cards.cards
   res.SELECT_NUM = G.GAME.pack_choices
-  if cards[1].ability.set == "Tarot" then
+  if cards[1].ability.set == "Tarot" or
+     cards[2].ability.set == "Tarot" then
     res.TYPE = "Tarot"
     res.CONTENTS = {}
     for i,c in ipairs(cards) do
-      res.CONTENTS[i] = tarot(c)
+      res.CONTENTS[i] = consumeable(c)
     end
   elseif cards[1].ability.set == "Planet" then
     res.TYPE = "Planet"
     res.CONTENTS = {}
     for i,c in ipairs(cards) do
-      res.CONTENTS[i] = planet(c)
+      res.CONTENTS[i] = consumeable(c)
     end
   elseif cards[1].ability.set == "Spectral" then
     res.TYPE = "Spectral"
     res.CONTENTS = {}
     for i,c in ipairs(cards) do
-      res.CONTENTS[i] = spectral(c)
+      res.CONTENTS[i] = consumeable(c)
     end
   elseif cards[1].ability.set == "Joker" then
     res.TYPE = "Joker"

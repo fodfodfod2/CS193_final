@@ -103,7 +103,8 @@ function love.update(dt)
     acc = 0
     -- Call safely so if there is an error the entire game doesn't crash
     local ok, err = xpcall(dump_data, debug.traceback)
-    if not ok then sendDebugMessage("dump_data FAILED: " .. tostring(err)) end
+    if not ok then sendDebugMessage("dump_data FAILED: " .. tostring(err))
+    else sendDebugMessage("DUMP SUCCEEDED") end
   end
 end
 
