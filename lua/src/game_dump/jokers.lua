@@ -13,7 +13,7 @@ local facing = {
   ["back"] = true,
 }
 
-
+-- the constructor for a joker sticker
 local function sticker(card)
   if card == nil then
     return {NAME = "", DESC = ""}
@@ -35,6 +35,7 @@ local function sticker(card)
   return {NAME = name, DESC = desc}
 end
 
+-- the constructor for a joker edition
 local function edition(card)
   if card.edition == nil then
     return {NAME = "", DESC = ""}
@@ -49,6 +50,7 @@ local function edition(card)
   return editions[e]
 end
 
+-- the constructor for a joker
 function joker(j)
   if j == nil or j.base == nil or j.ability.set ~= "Joker" then
     return nil
@@ -79,6 +81,7 @@ function joker(j)
   }
 end
 
+-- Get the jokers from a given area
 local function get_jokers(a)
   local res = {}
   if a and a.cards then
@@ -90,10 +93,12 @@ local function get_jokers(a)
   return res
 end
 
+-- Get the jokers owned by the player
 function get_owned_jokers()
   return get_jokers(G.jokers)
 end
 
+-- Get the jokers in the shop
 function get_shop_jokers()
   return get_jokers(G.shop_jokers)
 end

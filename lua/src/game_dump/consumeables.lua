@@ -1,7 +1,7 @@
 assert(SMODS.load_file("description.lua"))()
 
 
-
+-- The constructor for a tarot card
 function tarot(card)
     local name, desc = loc_text("Tarot", card.config.center.key, card_vars(card))
     local res = {}
@@ -14,6 +14,7 @@ function tarot(card)
     return res
 end
 
+-- The constructor for a planet card
 function planet(card)
     local name, desc = loc_text("Planet", card.config.center.key, card_vars(card))
     local res = {}
@@ -27,6 +28,7 @@ function planet(card)
     return res
 end
 
+-- The constructor for a spectral card
 function spectral(card)
     local name, desc = loc_text("Spectral", card.config.center.key, card_vars(card))
     local res = {}
@@ -39,9 +41,11 @@ function spectral(card)
     return res
 end
 
+-- Get all of the consumeables in a given area of the given set using the given
+-- constructor fn
 function get_consumeable_from_area(area, set, fn)
   if area == nil then return nil end
-  cards = {}
+  local cards = {}
 
   for i, c in ipairs(area.cards) do
     if c.ability.set == set then
@@ -52,18 +56,22 @@ function get_consumeable_from_area(area, set, fn)
   return cards
 end
 
+-- Get all the planets from a given area
 local function get_planets(area)
   return get_consumeable_from_area(area, "Planet", planet)
 end
 
+-- Get all the tarot cards from a given area
 local function get_tarots(area)
   return get_consumeable_from_area(area, "Tarot", tarot)
 end
 
+-- Get all the spectral cards from a given area
 local function get_spectrals(area)
   return get_consumeable_from_area(area, "Spectral", spectral)
 end
 
+-- Get all of the consumeables in the owned consumeables area
 function get_owned_consumables()
   if G.consumeables == nil then return {} end
   if G.consumeables.cards == nil then return {} end
@@ -81,18 +89,23 @@ function get_owned_consumables()
   return res
 end
 
+-- Get the planets from the shop
 function get_shop_planets()
   return get_planets(G.shop_jokers)
 end
 
+-- Get the tarot cards from the shop
 function get_shop_tarots()
   return get_tarots(G.shop_jokers)
 end
 
+-- Get the spectral cards from the shop
 function get_shop_spectrals()
   return get_spectrals(G.shop_jokers)
 end
 
+-- Get the last played planet or tarot, this is used exclusively for the fool
+-- tarot card
 function get_last_played_planet_or_tarot()
   local key = G.GAME.last_tarot_planet
   local center = key and G.P_CENTERS[key]

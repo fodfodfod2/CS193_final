@@ -1,5 +1,6 @@
 assert(SMODS.load_file("description.lua"))()
 
+-- This is the constructor for a voucher still in the shop
 function shop_voucher(v)
   local vars = card_vars(v)
   local key = v.config.center.key
@@ -7,7 +8,7 @@ function shop_voucher(v)
   return {NAME = name, COST = v.cost, DESC = desc}
 end
 
-
+-- This is the constructor for a voucher owned by the player
 local function owned_voucher(v, key)
   local cfg = v.config or {}
   local vars = { cfg.extra, cfg.dollars, cfg.hand_size,
@@ -16,6 +17,7 @@ local function owned_voucher(v, key)
   return {NAME = name, COST = 0, DESC = desc}
 end
 
+-- Get the owned vouchers
 function get_owned_vouchers()
   local res = {}
   for key in pairs(G.GAME.used_vouchers or {}) do
@@ -25,6 +27,7 @@ function get_owned_vouchers()
   return res
 end
 
+-- Get the vouchers from the shop
 function get_shop_vouchers()
   local res = {}
   local cards = G.shop_vouchers and G.shop_vouchers.cards or {}

@@ -9,6 +9,7 @@ assert(SMODS.load_file("blinds.lua"))()
 assert(SMODS.load_file("packs.lua"))()
 
 -- Credit for this func https://blog.stephansama.info/articles/how-to-print-a-lua-table/
+-- It has been modified signifigantly
 local function dump(o)
   if type(o) == 'table' then
     local s = '{'
@@ -24,7 +25,7 @@ local function dump(o)
   end
 end
 
-
+-- This will get the current shop
 local function get_shop()
   if G.STATE ~= 5 then return nil end
   local s = {}
@@ -38,12 +39,12 @@ local function get_shop()
   return s
 end
 
-
-
+-- write to the dump file, this is DUMP.jkr by default
 local function write_file(s)
   love.filesystem.write(OUT_FILE, s)
 end
 
+-- Do a full dump of the gamestate
 local function dump_data()
   local d = {}
   d.STATE = G.STATE
@@ -93,11 +94,14 @@ end
 
 local acc = 0
 local orig_update = love.update
+-- This is the update that runs every frame
 function love.update(dt)
   orig_update(dt)
   acc = acc + dt
+  -- Every 1 second do a dump
   if acc >= (INTERVAL or 1) then
     acc = 0
+    -- Call safely so if there is an error the entire game doesn't crash
     local ok, err = xpcall(dump_data, debug.traceback)
     if not ok then sendDebugMessage("dump_data FAILED: " .. tostring(err)) end
   end

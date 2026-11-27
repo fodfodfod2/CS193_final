@@ -45,6 +45,7 @@ local facing = {
   ["back"] = true,
 }
 
+-- The constructor for a card enhancement
 local function enhancement(card)
   e = card.ability.effect
   if e == nil then
@@ -57,6 +58,7 @@ local function enhancement(card)
   return enhancements[e]
 end
 
+-- The constructor for a card seal
 local function seal(card)
   s = card.seal
   if s == nil then
@@ -68,6 +70,7 @@ local function seal(card)
   return seals[s]
 end
 
+-- The constructor for a card
 function card(c)
   if c == nil or c.base == nil then
     return nil
@@ -83,6 +86,7 @@ function card(c)
   }
 end
 
+-- Get cards from a certain area
 local function get_cards(a)
   local res = {}
   if a and a.cards then
@@ -97,14 +101,17 @@ local function get_cards(a)
   return res
 end
 
+-- Get the deck table
 function get_deck()
   return get_cards(G.deck)
 end
 
+-- Get the hand table
 function get_hand()
   return get_cards(G.hand)
 end
 
+-- Get the cards from the shop as a table
 function get_shop_cards()
   return get_cards(G.shop_jokers)
 end

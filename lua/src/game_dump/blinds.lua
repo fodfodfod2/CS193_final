@@ -1,5 +1,6 @@
 assert(SMODS.load_file("tags.lua"))()
 
+-- Get the score required to beat a given blind
 local function blind_amount(kind)
   local key = G.GAME.round_resets.blind_choices[kind]
   local b = G.P_BLINDS[key]
@@ -8,6 +9,7 @@ local function blind_amount(kind)
                     * b.mult * G.GAME.starting_params.ante_scaling)
 end
 
+-- Get the skip tag for a given blind_tag
 local function blind_tag(kind)
   local key = G.GAME.round_resets.blind_tags and
               G.GAME.round_resets.blind_tags[kind]
@@ -21,6 +23,7 @@ local function blind_tag(kind)
   return tag(t)
 end
 
+-- Get the small blind object
 local function get_small_blind()
   local tag = blind_tag("Small")
   local score = blind_amount("Small")
@@ -30,6 +33,7 @@ local function get_small_blind()
   }
 end
 
+-- Get the big blind object
 local function get_big_blind()
   local tag = blind_tag("Big")
   local score = blind_amount("Big")
@@ -39,6 +43,7 @@ local function get_big_blind()
   }
 end
 
+-- Get the boss blind object
 local function get_boss_blind()
   local score = blind_amount("Boss")
   local boss_key = G.GAME.round_resets.blind_choices.Boss
@@ -50,6 +55,7 @@ local function get_boss_blind()
   }
 end
 
+-- Get the full blinds table
 function get_blinds()
   local nxt_blind = G.GAME.blind_on_deck
   cur = (nxt_blind == "Big" and 1) or (nxt_blind == "Boss" and 2) or 0

@@ -2,6 +2,7 @@ assert(SMODS.load_file("cards.lua"))()
 assert(SMODS.load_file("jokers.lua"))()
 assert(SMODS.load_file("consumeables.lua"))()
 
+-- This is the constructor for a pack in the shop before it is bought
 function shop_pack(p)
   local center = p.config.center
   local cfg = center.config or {}
@@ -27,6 +28,7 @@ function shop_pack(p)
   }
 end
 
+-- This is the constructor to get an opened pack during pack openings
 function get_open_pack()
   if not (G.pack_cards and G.pack_cards.cards) then return nil end
 
@@ -70,6 +72,7 @@ function get_open_pack()
   return res
 end
 
+-- Get the packs from the shop
 function get_shop_packs()
   if not (G.shop_booster and G.shop_booster.cards) then return nil end
 
