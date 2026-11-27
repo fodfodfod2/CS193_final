@@ -43,9 +43,10 @@ function get_consumeable_from_area(area, set, fn)
   if area == nil then return nil end
   cards = {}
 
-  for _, c in ipairs(area.cards) do
+  for i, c in ipairs(area.cards) do
     if c.ability.set == set then
       cards[#cards+1] = fn(c)
+      cards[#cards].IDX = i
     end
   end
   return cards

@@ -86,11 +86,11 @@ end
 local function get_cards(a)
   local res = {}
   if a and a.cards then
-    for _, c in ipairs(a.cards) do
+    for i, c in ipairs(a.cards) do
       local set = c.ability.set
       if c.base and (set == "Default" or set == "Enhanced") then
-        -- if c is a card
         res[#res + 1] = card(c)
+        res[#res].IDX = i
       end
     end
   end

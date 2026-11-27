@@ -84,6 +84,7 @@ local function get_jokers(a)
   if a and a.cards then
     for i, j in ipairs(a.cards) do
       res[#res + 1] = joker(j)
+      cards[#cards].IDX = i
     end
   end
   return res
