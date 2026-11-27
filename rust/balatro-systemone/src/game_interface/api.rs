@@ -1,3 +1,5 @@
+use std::vec;
+
 use reqwest::{Client, Error, Response};
 use serde_json::{Value, json};
 
@@ -127,27 +129,36 @@ enum HandUse {
 }
 
 /* This function will perform a handuse on the given card idxs */
-async fn use_hand(action: HandUse, cards: &Vec<i16>) -> Result<(), Error> {
+async fn use_hand(action: HandUse, cards: &Vec<i16>, gs: &GameState) -> Result<(), Error> {
+    let hand_size = gs.get_hand().len();
+    let mut hand_rearrange = cards.clone();
+    for n in 0..hand_size {
+       if !hand_rearrange.contains(&(n as i16)) {
+            hand_rearrange.push(n as i16);
+        }
+    }
+    rearrange_hand(&hand_rearrange).await.unwrap();
+
     let payload = json!({
         "jsonrpc" : "2.0",
         "method" : match action {
             HandUse::Discard => "discard",
             HandUse::Play => "play",
         },
-        "params" : {"cards" : cards},
+        "params" : {"cards" : (0..cards.iter().len()).collect::<Vec<usize>>()},
         "id" : 1});
     send_payload(payload).await?;
     Ok(())
 }
 
 /* Play the cards with the given idxs */
-pub async fn play_hand(cards: &Vec<i16>) -> Result<(), Error> {
-    use_hand(HandUse::Play, cards).await
+pub async fn play_hand(cards: &Vec<i16>, gs: &GameState) -> Result<(), Error> {
+    use_hand(HandUse::Play, cards, gs).await
 }
 
 /* Discard the cards with the given idxs */
-pub async fn discard_hand(cards: &Vec<i16>) -> Result<(), Error> {
-    use_hand(HandUse::Discard, cards).await
+pub async fn discard_hand(cards: &Vec<i16>, gs: &GameState) -> Result<(), Error> {
+    use_hand(HandUse::Discard, cards, gs).await
 }
 
 /* The type of cards that can be rearranged */
@@ -434,6 +445,7 @@ impl Action {
                     )
                     .await
                     .unwrap(),
+                    gs,
                 )
                 .await
             }
@@ -449,6 +461,7 @@ impl Action {
                     )
                     .await
                     .unwrap(),
+                    gs,
                 )
                 .await
             }
