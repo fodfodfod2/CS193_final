@@ -4,10 +4,11 @@ use reqwest::{Client, Error, Response};
 use serde_json::{Value, json};
 
 use crate::{
-    ApiAnswer, ApiChoice, ApiQuestion,
+    ApiAnswer::{self, Choice},
+    ApiChoice, ApiQuestion,
     ApiQuestionCriteria::{self},
     ApiRequest, ApiType,
-    balatro_state::{Card, GameState, vec_to_str},
+    balatro_state::{Card, GameState, HandType, state, vec_to_str},
 };
 
 /*
@@ -15,7 +16,6 @@ use crate::{
  * using the balatrobot mod/api.
  * Primary usage should be through Action and Action.perform()
  */
-
 
 /* Helper function to send a payload to the balatrobot api */
 async fn send_payload(payload: Value) -> Result<Response, Error> {
@@ -133,7 +133,7 @@ async fn use_hand(action: HandUse, cards: &Vec<i16>, gs: &GameState) -> Result<(
     let hand_size = gs.get_hand().len();
     let mut hand_rearrange = cards.clone();
     for n in 0..hand_size {
-       if !hand_rearrange.contains(&(n as i16)) {
+        if !hand_rearrange.contains(&(n as i16)) {
             hand_rearrange.push(n as i16);
         }
     }
@@ -326,6 +326,60 @@ pub enum Action {
 
 impl Action {
     /*
+     * This is an alternative to select_hand_targets, it prescans
+     * for good hands and will offer each top choice
+     * This should only be used with play_hand
+     */
+    async fn select_hand_type(
+        prompt: &str,
+        state: &str,
+        hand: &Vec<Card>,
+        api_type: ApiType,
+    ) -> Result<Vec<i16>, Error> {
+        let hands = HandType::get_possible_hands(10, hand);
+        let options: Vec<ApiChoice> = hands
+            .iter()
+            .enumerate()
+            .map(|(i, (c, ht))| {
+                ApiChoice::new(
+                    &format!("Play {ht} - choice: {i}"),
+                    &format!("Play {ht} using \n{}", vec_to_str("Cards", c))
+                        .replace("\n", "\\n")
+                        .replace("\t", "\\t"),
+                    Action::None,
+                )
+            })
+            .collect();
+
+        let apiqc = ApiQuestionCriteria::Choice(options);
+        let apiq = ApiQuestion::new(
+            "play hand select",
+            &(String::from(prompt) + "\\n Which hand do you want to play?"),
+            apiqc,
+        );
+
+        let apireq = ApiRequest::new(state, api_type.get_model_name(), vec![apiq]);
+        let apires = apireq.get_response(api_type).await;
+        if let ApiAnswer::Choice(s, _, _) = &apires[0] {
+            let (_, suffix) = s.rsplit_once(" ").unwrap();
+            let chosen_idx: usize = suffix.parse().unwrap();
+            let chosen_hand = &hands[chosen_idx].0;
+            let mut res = vec![];
+            'outer: for c in chosen_hand {
+                for (i, hc) in hand.iter().enumerate() {
+                    if hc == *c {
+                        res.push(i as i16);
+                        continue 'outer;
+                    }
+                }
+            }
+            Ok(res)
+        } else {
+            panic!("Somehow got a non-choice from my choice");
+        }
+    }
+
+    /*
      * Selected between min and max cards from from your hand
      * For each card, it will prompt the systemone model to choose the next
      * card. Returns a vec of the idx's of the cards
@@ -346,8 +400,7 @@ impl Action {
         .replace("\t", "\\t");
         let mut options = Vec::new();
 
-        for i in 0..hand.len() {
-            let c = &hand[i];
+        for (i, c) in hand.iter().enumerate() {
             options.push(ApiChoice::new(
                 &format!("{i}"),
                 &format!("Use card {i}: {c}"),
@@ -407,7 +460,12 @@ impl Action {
     }
 
     /* perform the Action */
-    pub async fn perform(&self, gs: &GameState, state: &str, api_type: ApiType) -> Result<(), Error> {
+    pub async fn perform(
+        &self,
+        gs: &GameState,
+        state: &str,
+        api_type: ApiType,
+    ) -> Result<(), Error> {
         match self {
             Self::NextBlind => next_blind().await,
             Self::SkipBlind => skip_blind().await,
@@ -433,18 +491,23 @@ impl Action {
             Self::Reroll => reroll_shop().await,
             Self::LeaveShop => leave_shop().await,
             Self::PlayHand => {
-                println!("PLAYING");
                 play_hand(
-                    &Self::select_hand_targets(
+                    //&Self::select_hand_targets(
+                    //    "Which cards do you want to play?",
+                    //    1,
+                    //    5,
+                    //    gs.get_hand(),
+                    //    state,
+                    //    api_type,
+                    //)
+                    //.await
+                    //.unwrap(),
+                    &Self::select_hand_type(
                         "Which cards do you want to play?",
-                        1,
-                        5,
-                        gs.get_hand(),
                         state,
+                        gs.get_hand(),
                         api_type,
-                    )
-                    .await
-                    .unwrap(),
+                    ).await.unwrap(),
                     gs,
                 )
                 .await

@@ -1,5 +1,6 @@
-use std::hash::Hash;
+use std::{fmt::write, hash::Hash};
 
+use itertools::Itertools;
 use strum::{EnumIter, IntoEnumIterator};
 
 use crate::balatro_state::HandType::{FourOfAKind, HighCard};
@@ -7,8 +8,9 @@ use crate::balatro_state::HandType::{FourOfAKind, HighCard};
 use super::*;
 
 /* This represents the different hands the player can level and play */
-#[derive(Debug, Eq, Hash, PartialEq, EnumIter, Clone, Copy)]
+#[derive(Debug, Eq, Hash, PartialEq, PartialOrd, EnumIter, Clone, Copy)]
 pub enum HandType {
+    None,
     HighCard,
     Pair,
     TwoPair,
@@ -42,6 +44,163 @@ impl HandType {
             s => panic!("Unrecognized HandType \"{s}\""),
         }
     }
+
+    fn holds_card(c: &Vec<&Card>, ignored_idx: Vec<i8>, s: Option<Suit>, r: Option<Rank>) -> i8 {
+        let mut res = 0;
+        'outer: for i in 0..c.len() {
+            for j in 0..ignored_idx.len() {
+                if i as i8 == ignored_idx[j] {
+                    continue 'outer;
+                }
+            }
+            let mut matches_pat = true;
+            if let Some(s) = s {
+                if s != *c[i].get_suit() {
+                    matches_pat = false;
+                }
+            }
+            if let Some(r) = r {
+                if r != *c[i].get_rank() {
+                    matches_pat = false;
+                }
+            }
+
+            if matches_pat {
+                res += 1;
+            }
+        }
+        res
+    }
+
+    fn has_straight(c: &Vec<&Card>) -> bool {
+        if c.len() != 5 {
+            return false;
+        }
+
+        /* Check for wraparound straights */
+        if ((Self::holds_card(c, Vec::new(), None, Some(Rank::Two)) > 0)
+            && (Self::holds_card(c, Vec::new(), None, Some(Rank::King)) > 0))
+        {
+            return false;
+        }
+
+        let mut buffer = 2;
+        for i in 0..c.len() {
+            let next_rank = Rank::from_int((((c[i].get_rank().to_int() + 1) % 13) + 2) as i16);
+            let last_rank = Rank::from_int((((c[i].get_rank().to_int() - 1 + 13) % 13) + 2) as i16);
+            if Self::holds_card(c, vec![i as i8], None, Some(next_rank)) != 1 {
+                if buffer > 0 {
+                    buffer -= 1;
+                } else {
+                    return false;
+                }
+            }
+
+            if Self::holds_card(c, vec![i as i8], None, Some(last_rank)) != 1 {
+                if buffer > 0 {
+                    buffer -= 1;
+                } else {
+                    return false;
+                }
+            }
+        }
+        true
+    }
+
+    fn from_cards(c: &Vec<&Card>) -> Self {
+        if c.is_empty() || c.len() > 5 {
+            panic!("Invalid hand size");
+        }
+
+        let mut hands: HashMap<HandType, bool> = HashMap::new();
+        for ht in HandType::iter() {
+            hands.insert(ht, true);
+        }
+
+        if Self::holds_card(c, vec![0], Some(*c[0].get_suit()), None) != 4 {
+            hands.insert(HandType::FlushFive, false);
+            hands.insert(HandType::FlushHouse, false);
+            hands.insert(HandType::StraightFlush, false);
+            hands.insert(HandType::Flush, false);
+        }
+
+        let mut pairs: Vec<i8> = vec![0, 0, 0, 0, 0];
+        for i in 0..c.len() {
+            pairs[Self::holds_card(c, vec![i as i8], None, Some(*c[i].get_rank())) as usize] += 1;
+        }
+
+        if pairs[4] != 5 {
+            hands.insert(Self::FiveOfAKind, false);
+            hands.insert(HandType::FlushFive, false);
+        }
+        if pairs[3] != 4 {
+            hands.insert(Self::FourOfAKind, false);
+        }
+        if pairs[2] != 3 {
+            hands.insert(Self::ThreeOfAKind, false);
+            hands.insert(Self::FullHouse, false);
+            hands.insert(Self::FlushHouse, false);
+        }
+        if pairs[1] != 2 {
+            hands.insert(Self::Pair, false);
+            hands.insert(Self::FullHouse, false);
+            hands.insert(Self::FlushHouse, false);
+        }
+        if pairs[1] != 4 {
+            hands.insert(Self::TwoPair, false);
+        }
+
+        if !Self::has_straight(&c) {
+            hands.insert(Self::Straight, false);
+            hands.insert(Self::StraightFlush, false);
+        }
+
+        let mut res = Self::HighCard;
+        for ht in HandType::iter() {
+            if *hands.get(&ht).unwrap() {
+                res = ht;
+            }
+        }
+        res
+    }
+
+    pub fn get_possible_hands(num: i32, hand: &Vec<Card>) -> Vec<(Vec<&Card>, Self)> {
+        let combos: Vec<Vec<&Card>> = hand.iter().combinations(5).collect();
+        let mut res = Vec::new();
+
+        for i in 0..num {
+            res.push((Vec::new(), HandType::None));
+        }
+
+        for c in combos {
+            let ht = Self::from_cards(&c);
+            println!(
+                "Comparing {ht} to {} -- {}",
+                res[(num - 1) as usize].1,
+                ht > res[(num - 1) as usize].1
+            );
+            if ht > res[(num - 1) as usize].1 {
+                if res[0].1 < ht {
+                    res[0] = (c.clone(), ht)
+                } else {
+                    for i in 1..num {
+                        if res[(num - 1 - i) as usize].1 > ht {
+                            res[(num - i) as usize] = (c.clone(), ht);
+                        }
+                    }
+                }
+            }
+        }
+        res.into_iter()
+            .filter_map(|(c, ht)| {
+                if ht != HandType::None {
+                    Some((c, ht))
+                } else {
+                    None
+                }
+            })
+            .collect()
+    }
 }
 
 impl fmt::Display for HandType {
@@ -59,7 +218,7 @@ impl fmt::Display for HandType {
             HandType::FiveOfAKind => write!(f, "Five Of A Kind"),
             HandType::FlushHouse => write!(f, "Flush House"),
             HandType::FlushFive => write!(f, "Flush Five"),
-            s => panic!("handtype {s} not recognized"),
+            HandType::None => write!(f, "NONE ERR"),
         }
     }
 }

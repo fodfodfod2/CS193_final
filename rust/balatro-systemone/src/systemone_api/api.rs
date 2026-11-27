@@ -9,7 +9,6 @@ use std::{env, fmt, panic};
  * This file/crate is the access point for calls to the systemone api
  */
 
-
 /* This will be passed in to specify which api to use */
 #[derive(Copy, Clone)]
 pub enum ApiType {
@@ -22,7 +21,7 @@ impl ApiType {
     pub fn get_url(&self) -> &'static str {
         match self {
             ApiType::Jev => "https://api.typesafe.ai/v1/systemone",
-            ApiType::Laya => "http://127.0.0.1:8000/v1/systemone"
+            ApiType::Laya => "http://127.0.0.1:8000/v1/systemone",
         }
     }
 

@@ -52,7 +52,11 @@ impl State {
     pub fn is_decision_state(&self) -> bool {
         matches!(
             self,
-            State::SelectingHand | State::PackOpening | State::Shop | State::BlindSelect | State::RoundEval
+            State::SelectingHand
+                | State::PackOpening
+                | State::Shop
+                | State::BlindSelect
+                | State::RoundEval
         )
     }
 }

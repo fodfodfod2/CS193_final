@@ -205,6 +205,9 @@ impl fmt::Display for Ctx {
 
         let mut hs: String = String::from("HANDTYPES");
         for ht in HandType::iter() {
+            if ht == HandType::None {
+                continue;
+            }
             hs += &format!(
                 "\n\t\t{ht}: Lvl:{}, Played:{}",
                 hl.get(&ht).unwrap(),

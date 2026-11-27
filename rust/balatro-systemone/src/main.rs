@@ -12,7 +12,7 @@ async fn main() {
         Ok(s) => match s.as_str() {
             "1" => ApiType::Laya,
             _ => ApiType::Jev,
-        }
+        },
         Err(_) => ApiType::Jev,
     };
 

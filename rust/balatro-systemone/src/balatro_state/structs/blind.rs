@@ -4,8 +4,8 @@ use super::*;
 
 /* This represents possible blinds the player may face */
 pub enum Blind {
-    Small(u64, Tag), /* Score: u64, skip tag */
-    Big(u64, Tag), /* Score: u64, skip tag */
+    Small(u64, Tag),           /* Score: u64, skip tag */
+    Big(u64, Tag),             /* Score: u64, skip tag */
     Boss(u64, String, String), /* Score: u64, boss name, boss desc */
 }
 

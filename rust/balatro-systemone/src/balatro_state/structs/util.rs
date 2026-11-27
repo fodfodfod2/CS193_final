@@ -37,7 +37,7 @@ pub fn vec_to_str<T: fmt::Display>(title: &str, v: &Vec<T>) -> String {
 pub trait Parsable: Sized {
     /*
      * This function will Parse a Self object from a table
-     * and return Ok(the result) or Err(a str representing the err 
+     * and return Ok(the result) or Err(a str representing the err
      * if one occured
      */
     fn parse(t: Table) -> Result<Self, &'static str>;

@@ -3,6 +3,7 @@ use mlua::Table;
 use super::*;
 
 /* This will store a Seal applicable to cards */
+#[derive(PartialEq)]
 pub struct Seal {
     name: String,
     desc: String,
@@ -44,6 +45,7 @@ impl fmt::Display for Seal {
 }
 
 /* This will store a Enhancement applicable to cards */
+#[derive(PartialEq)]
 pub struct Enhancement {
     name: String,
     desc: String,
@@ -116,8 +118,8 @@ impl Rank {
             9 => Rank::Nine,
             10 => Rank::Ten,
             11 => Rank::Jack,
-            13 => Rank::King,
             12 => Rank::Queen,
+            13 => Rank::King,
             14 => Rank::Ace,
             n => panic!("Invalid rank {n}"),
         }
@@ -209,6 +211,7 @@ impl fmt::Display for Suit {
 }
 
 /* This will hold all of the pub structs and pub enums used for the game state */
+#[derive(PartialEq)]
 pub struct Card {
     rank: Rank,
     suit: Suit,

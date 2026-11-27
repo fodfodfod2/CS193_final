@@ -212,9 +212,16 @@ impl GameState {
                 ))
             }
             State::RoundEval => {
-                let ac = vec![ApiChoice::new("Continue", "Continue to the next blind", Action::EndRoundEval)];
+                let ac = vec![ApiChoice::new(
+                    "Continue",
+                    "Continue to the next blind",
+                    Action::EndRoundEval,
+                )];
                 Some(ApiQuestion::new(
-                        qname, qinstr, ApiQuestionCriteria::Choice(ac)))
+                    qname,
+                    qinstr,
+                    ApiQuestionCriteria::Choice(ac),
+                ))
             }
             State::SelectingHand => {
                 let mut hand_qs = vec![ApiChoice::new(
