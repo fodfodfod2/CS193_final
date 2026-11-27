@@ -49,8 +49,11 @@ function get_consumeable_from_area(area, set, fn)
 
   for i, c in ipairs(area.cards) do
     if c.ability.set == set then
-      cards[#cards+1] = fn(c)
-      cards[#cards].IDX = i
+      local card = fn(c)
+      if card then
+        cards[#cards+1] = fn(c)
+        cards[#cards].IDX = i
+      end
     end
   end
   return cards
