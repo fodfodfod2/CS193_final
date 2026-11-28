@@ -220,6 +220,7 @@ pub struct Card {
     cost: i16,
     disabled: bool,
     face_down: bool,
+    idx: i16,
 }
 
 impl Card {
@@ -241,6 +242,7 @@ impl Card {
             cost,
             disabled,
             face_down,
+            idx: 0,
         }
     }
 
@@ -285,6 +287,12 @@ impl Parsable for Card {
             .get("COST")
             .ok()
             .ok_or("Failed to read cost when parsing card")?;
+        let mut idx: i16 = t
+            .get("IDX")
+            .ok()
+            .ok_or("Failed to read idx when parsing card")
+            .unwrap_or(-1);
+        idx -= 1;
 
         let rank = Rank::from_int(rank_v);
         let suit = Suit::from_int(suit_i);
@@ -299,6 +307,7 @@ impl Parsable for Card {
             cost,
             disabled,
             face_down,
+            idx,
         })
     }
 }
@@ -312,8 +321,8 @@ impl Buyable for Card {
         "Card"
     }
 
-    fn get_action(&self, i: i16) -> crate::Action {
-        crate::Action::BuyCard(i)
+    fn get_action(&self, _: i16) -> crate::Action {
+        crate::Action::BuyCard(self.idx)
     }
 }
 

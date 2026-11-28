@@ -105,6 +105,7 @@ pub struct Joker {
     invis_cnt: i16,
     perish_cnt: i16,
     sticker: Sticker,
+    idx: i16,
 }
 
 impl Joker {
@@ -154,6 +155,11 @@ impl Parsable for Joker {
             .get("COST")
             .ok()
             .ok_or("Failed to parse cost while parsing Joker")?;
+        let mut idx: i16 = t
+            .get("IDX")
+            .ok()
+            .ok_or("Failed to parse idx while parsing Joker")?;
+        idx -= 1;
         let invis_cnt: i16 = t.get("INVISIBLE_CNT").unwrap_or_default();
         let perish_cnt: i16 = t.get("PERISH_CNT").unwrap_or_default();
 
@@ -170,6 +176,7 @@ impl Parsable for Joker {
             invis_cnt,
             perish_cnt,
             sticker,
+            idx,
         })
     }
 }
@@ -183,8 +190,8 @@ impl Buyable for Joker {
         &self.name
     }
 
-    fn get_action(&self, i: i16) -> crate::Action {
-        crate::Action::BuyCard(i)
+    fn get_action(&self, _: i16) -> crate::Action {
+        crate::Action::BuyCard(self.idx)
     }
 }
 

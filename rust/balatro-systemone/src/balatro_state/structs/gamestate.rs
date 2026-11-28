@@ -170,6 +170,27 @@ impl GameState {
     }
 
     /*
+     * This will get the actions from using consumables
+     */
+    fn get_consumable_actions(&self) -> Vec<ApiChoice>{
+        let mut res: Vec<ApiChoice> = Vec::new();
+        for (i, cons) in self.consumables.iter().enumerate() {
+            if cons.can_play(&self.ctx) {
+                res.push(
+                    ApiChoice::new(
+                        &format!("Play {}", cons.get_name()),
+                        &format!("Play {} | {}",
+                            cons.get_name(), cons.get_desc()),
+                        Action::UseCons(i as i16, cons.get_targets())
+                    )
+                );
+            }
+        }
+
+        res
+    }
+
+    /*
      * This will get all possible actions for the current game state
      */
     pub fn get_possible_actions(&self) -> Option<ApiQuestion> {
@@ -181,34 +202,39 @@ impl GameState {
         let qinstr = "Which action should you take?";
 
         let mut sell_qs = self.get_sell_actions();
+        let mut cons_qs = self.get_consumable_actions();
+
+        let mut gen_qs = Vec::new();
+        gen_qs.extend(sell_qs);
+        gen_qs.extend(cons_qs);
 
         match &self.state {
             State::Shop => {
                 let mut shop_qs = self.get_shop_actions();
 
-                sell_qs.extend(shop_qs);
+                gen_qs.extend(shop_qs);
                 Some(ApiQuestion::new(
                     qname,
                     qinstr,
-                    ApiQuestionCriteria::Choice(sell_qs),
+                    ApiQuestionCriteria::Choice(gen_qs),
                 ))
             }
             State::BlindSelect => {
                 let mut blind_qs = self.get_blind_actions();
-                sell_qs.extend(blind_qs);
+                gen_qs.extend(blind_qs);
                 Some(ApiQuestion::new(
                     qname,
                     qinstr,
-                    ApiQuestionCriteria::Choice(sell_qs),
+                    ApiQuestionCriteria::Choice(gen_qs),
                 ))
             }
             State::PackOpening => {
                 let mut pack_qs = self.get_pack_actions();
-                sell_qs.extend(pack_qs);
+                gen_qs.extend(pack_qs);
                 Some(ApiQuestion::new(
                     qname,
                     qinstr,
-                    ApiQuestionCriteria::Choice(sell_qs),
+                    ApiQuestionCriteria::Choice(gen_qs),
                 ))
             }
             State::RoundEval => {
@@ -238,11 +264,11 @@ impl GameState {
                     ));
                 }
 
-                sell_qs.extend(hand_qs);
+                gen_qs.extend(hand_qs);
                 Some(ApiQuestion::new(
                     qname,
                     qinstr,
-                    ApiQuestionCriteria::Choice(sell_qs),
+                    ApiQuestionCriteria::Choice(gen_qs),
                 ))
             }
             (s) => panic!("No matched state, got {}", s),

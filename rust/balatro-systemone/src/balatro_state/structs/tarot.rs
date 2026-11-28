@@ -28,6 +28,7 @@ pub enum TarotType {
     TheSun,
     Judgement,
     TheWorld,
+    TheSoul
 }
 
 impl TarotType {
@@ -56,6 +57,7 @@ impl TarotType {
             "The Sun" => Self::TheSun,
             "Judgement" => Self::Judgement,
             "The World" => Self::TheWorld,
+            "The Soul" => Self::TheSoul,
             s => panic!("Failed to match tarot to {}", s),
         }
     }
@@ -85,6 +87,7 @@ impl TarotType {
             Self::TheSun => "The Sun",
             Self::Judgement => "Judgement",
             Self::TheWorld => "The World",
+            Self::TheSoul => "The Soul",
         }
     }
 
@@ -119,6 +122,7 @@ impl TarotType {
             Self::TheSun => "Converts up to 3 selected cards to Hearts",
             Self::Judgement => "Creates a random Joker card (Must have room)",
             Self::TheWorld => "Converts up to 3 selected cards to Spades",
+            Self::TheSoul => "Gain a Legendary joker. This is exceptionally rare and powerful",
         }
     }
 
@@ -147,6 +151,7 @@ impl TarotType {
             TarotType::TheSun => true,
             TarotType::Judgement => ctx.get_open_joker_slots() != 0,
             TarotType::TheWorld => true,
+            TarotType::TheSoul => ctx.get_open_joker_slots() != 0,
         }
     }
 
@@ -175,6 +180,7 @@ impl TarotType {
             TarotType::TheSun => (1, 3),
             TarotType::Judgement => (0, 0),
             TarotType::TheWorld => (1, 3),
+            TarotType::TheSoul => (0, 0),
         }
     }
 }
@@ -184,6 +190,7 @@ pub struct Tarot {
     tarot_type: TarotType,
     sell_value: i16,
     cost: i16,
+    idx: i16,
 }
 
 impl Tarot {
@@ -222,8 +229,8 @@ impl Buyable for Tarot {
         self.cost
     }
 
-    fn get_action(&self, i: i16) -> crate::Action {
-        Action::BuyCard(i)
+    fn get_action(&self, _: i16) -> crate::Action {
+        Action::BuyCard(self.idx)
     }
 }
 
@@ -241,10 +248,16 @@ impl Parsable for Tarot {
             .get("COST")
             .ok()
             .ok_or("Failed to parse cost while parsing Tarot")?;
+        let mut idx: i16 = t
+            .get("IDX")
+            .ok()
+            .ok_or("Failed to parse idx while parsing Tarot")?;
+        idx -= 1;
         Ok(Tarot {
             tarot_type: TarotType::from_str(&name),
             sell_value,
             cost,
+            idx,
         })
     }
 }

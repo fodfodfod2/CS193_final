@@ -98,6 +98,7 @@ pub struct Planet {
     planet_type: PlanetType,
     sell_value: i16,
     cost: i16,
+    idx: i16,
 }
 
 impl Planet {
@@ -145,11 +146,17 @@ impl Parsable for Planet {
             .get("COST")
             .ok()
             .ok_or("Failed to parse cost while parsing Planet")?;
+        let mut idx: i16 = t
+            .get("IDX")
+            .ok()
+            .ok_or("Failed to parse idx while parsing Planet")?;
+        idx -= 1;
 
         Ok(Planet {
             planet_type: PlanetType::from_str(&name),
             sell_value,
             cost,
+            idx,
         })
     }
 }
@@ -163,8 +170,8 @@ impl Buyable for Planet {
         self.cost
     }
 
-    fn get_action(&self, i: i16) -> crate::Action {
-        crate::Action::UseCons(i, (0, 0))
+    fn get_action(&self, _: i16) -> crate::Action {
+        crate::Action::BuyCard(self.idx)
     }
 }
 

@@ -160,6 +160,7 @@ pub struct Spectral {
     spectral_type: SpectralType,
     sell_value: i16,
     cost: i16,
+    idx: i16
 }
 
 impl Spectral {
@@ -198,8 +199,8 @@ impl Buyable for Spectral {
         self.cost
     }
 
-    fn get_action(&self, i: i16) -> crate::Action {
-        Action::BuyCard(i)
+    fn get_action(&self, _: i16) -> crate::Action {
+        Action::BuyCard(self.idx)
     }
 }
 
@@ -221,11 +222,17 @@ impl Parsable for Spectral {
             .get("COST")
             .ok()
             .ok_or("Failed to parse cost while parsing Spectral")?;
+        let mut idx: i16 = t
+            .get("IDX")
+            .ok()
+            .ok_or("Failed to parse idx while parsing Spectral")?;
+        idx -= 1;
 
         Ok(Spectral {
             spectral_type: SpectralType::from_str(&name),
             sell_value,
             cost,
+            idx,
         })
     }
 }

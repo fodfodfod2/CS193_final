@@ -48,6 +48,28 @@ impl Consumable {
             Consumable::Spectral(s) => s.get_sell_val(),
         }
     }
+
+    /* get the whether you can play of a consumable */
+    pub fn can_play(&self, ctx: &Ctx) -> bool {
+        match self {
+            Consumable::Tarot(t) => t.can_play(ctx),
+            Consumable::Planet(p) => true,
+            Consumable::Spectral(s) => s.can_play(ctx),
+        }
+    }
+
+
+    /*
+     * get the (min, max) amt of cards targeted by a
+     * consumable
+     */
+    pub fn get_targets(&self) -> (i8, i8) {
+        match self {
+            Consumable::Tarot(t) => t.get_targets(),
+            Consumable::Planet(p) => (0,0),
+            Consumable::Spectral(s) => s.get_targets(),
+        }
+    }
 }
 
 impl Parsable for Consumable {
