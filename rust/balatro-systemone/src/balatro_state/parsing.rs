@@ -13,7 +13,10 @@ const SAVE_PATH: &str = "/home/rlawyer/.local/share/Steam/steamapps/compatdata/2
 
 /* Read a file into a string */
 fn read_file() -> String {
-    fs::read_to_string(env::var("DUMP_PATH").unwrap()).expect("Failed to read file")
+    fs::read_to_string(match env::var("DUMP_PATH") {
+        Ok(s) => s,
+        Err(_) => panic!("No DUMP_PATH environment variable found"),
+    }).expect("Failed to read DUMP.jkr")
 }
 
 /* Read the master table from the dump file */

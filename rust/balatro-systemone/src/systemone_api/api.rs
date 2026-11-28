@@ -28,7 +28,10 @@ impl ApiType {
     /* Get the api key for the given api */
     pub fn get_api_key(&self) -> String {
         match self {
-            ApiType::Jev => env::var("JEV_API_KEY").unwrap(),
+            ApiType::Jev => match env::var("JEV_API_KEY") {
+                Ok(s) => s,
+                Err(_) => panic!("No JEV_API_KEY env var found, or you forgot to use USE_LAYA=1"),
+            },
             ApiType::Laya => String::new(),
         }
     }
