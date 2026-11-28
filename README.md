@@ -2,6 +2,11 @@
 Final for CS193, a program to use systemone ML models to play balatro
 
 **This project is a work in progress**
+# Problem Statement
+The goal of this project is simply to get a systemone balatro model to play
+through a few ante's of Balatro. I may have initially aimed for creating a
+worthy opponent, however this has proven extremely difficult. When in doubt,
+lower your standards for success.
 
 # Program Format
 ## Reading from Balatro
