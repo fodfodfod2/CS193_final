@@ -71,6 +71,7 @@ fn get_human_prompt() -> &'static str {
         \tRed Seal: Triggers an additional time, this is especially powerful if on top of an enhanced card
         \tPurple seal: Gain a Tarot card when discarded, this is usually a very good card to discard
         \tBlue seal: Creates the planet for your last played hand at the end of the round if held in hand. This can be super powerful if you leave it in your hand, however it is usually not worth playing around
+    Some cards could be debuffed, this means their enhancements, seals, and score do not count, however they can still form hands. In some scenarios, you should play debuffed cards, such as to make a flush when you don't have any other good hands
     \n\n\n\n\
     The actual game loop:
         \tThe game is organized into rounds called Antes, to win you must beat \
