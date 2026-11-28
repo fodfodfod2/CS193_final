@@ -64,7 +64,7 @@ enjoy looking over it!
 # Install Guide
 ## Disclaimer
 This project was only tested on Arch Linux (btw) using a legally owned copy of
-Balatro through Steam, Not to say it won't work on other platforms, but that is
+Balatro running through Proton using Steam, Not to say it won't work on other platforms, but that is
 outside the scope of this project
 
 ## Prereqs
