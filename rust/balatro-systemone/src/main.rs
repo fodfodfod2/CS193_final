@@ -6,8 +6,8 @@ mod balatro_state;
 mod game_interface;
 mod systemone_api;
 
-/* This is how many .5 sec breaks the game will take before breaking */
-const COUNTER_MAX: usize = 30;
+/* This is how many .75 sec breaks the game will take before breaking */
+const COUNTER_MAX: usize = 20;
 
 #[tokio::main]
 async fn main() {
@@ -26,7 +26,7 @@ async fn game_loop() {
     let mut counter = COUNTER_MAX;
     while counter > 0 {
         let gs_opt = balatro_state::parsing::read_game_state();
-        sleep(Duration::from_millis(500));
+        sleep(Duration::from_millis(750));
         if let Some(gs) = gs_opt {
 
             let acts = gs.get_possible_actions();
