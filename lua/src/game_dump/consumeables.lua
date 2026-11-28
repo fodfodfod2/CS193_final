@@ -80,13 +80,25 @@ function get_owned_consumables()
   if G.consumeables.cards == nil then return {} end
   local res = {}
 
-  for _, c in ipairs(G.consumeables.cards) do
+  for i, c in ipairs(G.consumeables.cards) do
     if c.ability.set == "Planet" then
-      res[#res+1] = planet(c)
+      local p = planet(c)
+      if p then
+        p.IDX = i
+        res[#res+1] = p
+      end
     elseif c.ability.set == "Tarot" then
-      res[#res+1] = tarot(c)
+      local t = tarot(c)
+      if t then
+        t.IDX = i
+        res[#res+1] = t
+      end
     elseif c.ability.set == "Spectral" then
-      res[#res+1] = spectral(c)
+      local s = spectral(c)
+      if s then
+        s.IDX = i
+        res[#res+1] = s
+      end
     end
   end
   return res

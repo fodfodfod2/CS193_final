@@ -11,7 +11,7 @@ function shop_pack(p)
   local type = ""
   for word in p.ability.name:gmatch("%S+") do
     if word == "Standard" or word == "Buffoon" or word == "Celestial"
-       or word == "Spectral" or word == "Arcana" then
+      or word == "Spectral" or word == "Arcana" then
       type = word
       break
     end
@@ -33,43 +33,37 @@ function get_open_pack()
   if not (G.pack_cards and G.pack_cards.cards) then return nil end
 
   local res = {}
+  res.CONTENTS = {}
+  local fn
   local cards = G.pack_cards.cards
   res.SELECT_NUM = G.GAME.pack_choices
   if cards[1].ability.set == "Tarot" or
-     cards[2].ability.set == "Tarot" then
+    cards[2].ability.set == "Tarot" then
     res.TYPE = "Tarot"
-    res.CONTENTS = {}
-    for i,c in ipairs(cards) do
-      res.CONTENTS[i] = consumeable(c)
-    end
+    fn = consumeable
   elseif cards[1].ability.set == "Planet" then
     res.TYPE = "Planet"
-    res.CONTENTS = {}
-    for i,c in ipairs(cards) do
-      res.CONTENTS[i] = consumeable(c)
-    end
+    fn = consumeable
   elseif cards[1].ability.set == "Spectral" then
     res.TYPE = "Spectral"
-    res.CONTENTS = {}
-    for i,c in ipairs(cards) do
-      res.CONTENTS[i] = consumeable(c)
-    end
+    fn = consumeable
   elseif cards[1].ability.set == "Joker" then
     res.TYPE = "Joker"
-    res.CONTENTS = {}
-    for i,c in ipairs(cards) do
-      res.CONTENTS[i] = joker(c)
-    end
+    fn = joker
   elseif cards[1].ability.set == "Default" or cards[1].ability.set == "Enhanced" then
     res.TYPE = "Card"
-    res.CONTENTS = {}
-    for i,c in ipairs(cards) do
-      res.CONTENTS[i] = card(c)
-    end
+    fn = card
   else
     sendDebugMessage("the type is "..cards[1].ability.set..".")
   end
 
+  for i, c in ipairs(cards) do
+    local parse_res = fn(c)
+    if parse_res then
+      res.CONTENTS[i] = parse_res
+      res.CONTENTS[i].IDX = i
+    end
+  end
   return res
 end
 
