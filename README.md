@@ -105,7 +105,7 @@ terminal, you should now see log messages that say ```DUMP SUCCEEDED```. This is
 the game_dump mod working! If you don't see this, double check you added the
 symlink correctly. Now
 go to ```$YOUR_INSTALL_FOLDER/CS193_final/rust/balatro-systemone``` and run
-```cargo run```. The game should start playing itself! It will play until a run
+```cargo run```(or ```./balatro-systemone```/executable name if you downloaded from releases). The game should start playing itself! It will play until a run
 wins or dies (almost definitely dies). It's not that good at the game. This was
 primarily tested on lower stakes.
 
@@ -120,7 +120,7 @@ LAYA_HOST=127.0.0.1 LAYA_MODELS=english uv run laya-serve
 ```
 - This uses [Laya](https://github.com/nandhakishorm/laya), A local systemone
   model.
-- In order to use Laya over Jev, run with ```USE_LAYA=1 cargo run```
+- In order to use Laya over Jev, run with ```USE_LAYA=1 cargo run``` or ```USE_LAYA=1 ./balatro-systemone```
 
 
 ## Some troubleshooting
